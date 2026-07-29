@@ -6,7 +6,7 @@
 
 using System.Windows;
 using System.Windows.Media.Animation;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Splash
 {

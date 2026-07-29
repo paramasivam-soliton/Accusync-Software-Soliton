@@ -3,7 +3,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Helpers;
 using AccuSync.Services;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;

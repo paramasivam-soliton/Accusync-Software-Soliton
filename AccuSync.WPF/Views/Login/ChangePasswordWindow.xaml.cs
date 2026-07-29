@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AccuSync.WPF.Resources;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Login
 {
