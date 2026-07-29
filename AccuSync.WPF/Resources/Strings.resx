@@ -1,0 +1,3706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ABRConfigurationView_AbrConfiguration" xml:space="preserve">
+    <value>ABR Configuration</value>
+  </data>
+  <data name="ABRConfigurationView_AbrLevel" xml:space="preserve">
+    <value>ABR Level</value>
+  </data>
+  <data name="ABRConfigurationView_AbrProtocols" xml:space="preserve">
+    <value>ABR PROTOCOLS</value>
+  </data>
+  <data name="ABRConfigurationView_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="ABRConfigurationView_Basic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="ABRConfigurationView_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ABRConfigurationView_CategoryLabel" xml:space="preserve">
+    <value>CATEGORY</value>
+  </data>
+  <data name="ABRConfigurationView_CommonInformation" xml:space="preserve">
+    <value>Common Information</value>
+  </data>
+  <data name="ABRConfigurationView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="ABRConfigurationView_ConfirmDeleteProtocol" xml:space="preserve">
+    <value>Are you sure you want to delete protocol '{0}'?</value>
+  </data>
+  <data name="ABRConfigurationView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ABRConfigurationView_Enhanced" xml:space="preserve">
+    <value>Enhanced</value>
+  </data>
+  <data name="ABRConfigurationView_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="ABRConfigurationView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ABRConfigurationView_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ABRConfigurationView_NoProtocolsAvailable" xml:space="preserve">
+    <value>No ABR test protocols available</value>
+  </data>
+  <data name="ABRConfigurationView_NotchFilter" xml:space="preserve">
+    <value>Notch Filter</value>
+  </data>
+  <data name="ABRConfigurationView_ProtocolDetails" xml:space="preserve">
+    <value>ABR TEST PROTOCOL DETAILS</value>
+  </data>
+  <data name="ABRConfigurationView_ProtocolSaved" xml:space="preserve">
+    <value>ABR protocol saved.</value>
+  </data>
+  <data name="ABRConfigurationView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ABRConfigurationView_SelectProtocolToViewDetails" xml:space="preserve">
+    <value>Select a protocol to view details</value>
+  </data>
+  <data name="ABRConfigurationView_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ABRConfigurationView_StatusLabel" xml:space="preserve">
+    <value>STATUS</value>
+  </data>
+  <data name="ABRConfigurationView_StimulusDuringPause" xml:space="preserve">
+    <value>Stimulus During Pause</value>
+  </data>
+  <data name="ABRConfigurationView_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="AboutContentView_AboutAccuSync" xml:space="preserve">
+    <value>ABOUT ACCUSYNC</value>
+  </data>
+  <data name="AboutContentView_Copyright" xml:space="preserve">
+    <value>© 2026 Natus Sensory. All rights reserved.</value>
+  </data>
+  <data name="AddNewDialog_ClinicalRecords" xml:space="preserve">
+    <value>Clinical Records</value>
+  </data>
+  <data name="AddNewDialog_Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="AddNewDialog_Patient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="AddNewDialog_Site" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="AddNewDialog_Subtitle" xml:space="preserve">
+    <value>Select an option to continue</value>
+  </data>
+  <data name="AddNewDialog_SystemConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
+  </data>
+  <data name="AddNewDialog_Title" xml:space="preserve">
+    <value>Add New</value>
+  </data>
+  <data name="AddNewDialog_User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="AdditionalInfoTab_Address1" xml:space="preserve">
+    <value>Address 1</value>
+  </data>
+  <data name="AdditionalInfoTab_Address2" xml:space="preserve">
+    <value>Address 2</value>
+  </data>
+  <data name="AdditionalInfoTab_Audiologist" xml:space="preserve">
+    <value>Audiologist</value>
+  </data>
+  <data name="AdditionalInfoTab_AudiologyReferral" xml:space="preserve">
+    <value>Audiology Referral</value>
+  </data>
+  <data name="AdditionalInfoTab_CaregiverInformation" xml:space="preserve">
+    <value>Caregiver Information</value>
+  </data>
+  <data name="AdditionalInfoTab_City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="AdditionalInfoTab_ClearField" xml:space="preserve">
+    <value>Clear field</value>
+  </data>
+  <data name="AdditionalInfoTab_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryCanada" xml:space="preserve">
+    <value>Canada</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryChina" xml:space="preserve">
+    <value>China</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryFrance" xml:space="preserve">
+    <value>France</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryGermany" xml:space="preserve">
+    <value>Germany</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryIndia" xml:space="preserve">
+    <value>India</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryItaly" xml:space="preserve">
+    <value>Italy</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryJapan" xml:space="preserve">
+    <value>Japan</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryMexico" xml:space="preserve">
+    <value>Mexico</value>
+  </data>
+  <data name="AdditionalInfoTab_CountrySouthKorea" xml:space="preserve">
+    <value>South Korea</value>
+  </data>
+  <data name="AdditionalInfoTab_CountrySpain" xml:space="preserve">
+    <value>Spain</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryUnitedKingdom" xml:space="preserve">
+    <value>United Kingdom</value>
+  </data>
+  <data name="AdditionalInfoTab_CountryUnitedStates" xml:space="preserve">
+    <value>United States</value>
+  </data>
+  <data name="AdditionalInfoTab_DateOfBirth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="AdditionalInfoTab_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="AdditionalInfoTab_Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="AdditionalInfoTab_FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="AdditionalInfoTab_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageArabic" xml:space="preserve">
+    <value>Arabic</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageChinese" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageFrench" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageGerman" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageHindi" xml:space="preserve">
+    <value>Hindi</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageItalian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageJapanese" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageKorean" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguagePortuguese" xml:space="preserve">
+    <value>Portuguese</value>
+  </data>
+  <data name="AdditionalInfoTab_LanguageSpanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="AdditionalInfoTab_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="AdditionalInfoTab_MedicalInformation" xml:space="preserve">
+    <value>Medical Information</value>
+  </data>
+  <data name="AdditionalInfoTab_Medication" xml:space="preserve">
+    <value>Medication</value>
+  </data>
+  <data name="AdditionalInfoTab_MobilePhone" xml:space="preserve">
+    <value>Mobile Phone</value>
+  </data>
+  <data name="AdditionalInfoTab_MotherId" xml:space="preserve">
+    <value>Mother ID</value>
+  </data>
+  <data name="AdditionalInfoTab_MotherInformation" xml:space="preserve">
+    <value>Mother Information</value>
+  </data>
+  <data name="AdditionalInfoTab_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="AdditionalInfoTab_Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="AdditionalInfoTab_Physician" xml:space="preserve">
+    <value>Physician</value>
+  </data>
+  <data name="AdditionalInfoTab_ReferralDate" xml:space="preserve">
+    <value>Referral Date</value>
+  </data>
+  <data name="AdditionalInfoTab_ReferralFrom" xml:space="preserve">
+    <value>Referral From</value>
+  </data>
+  <data name="AdditionalInfoTab_ReferralInformation" xml:space="preserve">
+    <value>Referral Information</value>
+  </data>
+  <data name="AdditionalInfoTab_ReferralPhone" xml:space="preserve">
+    <value>Referral Phone</value>
+  </data>
+  <data name="AdditionalInfoTab_ReferralTo" xml:space="preserve">
+    <value>Referral To</value>
+  </data>
+  <data name="AdditionalInfoTab_SSN" xml:space="preserve">
+    <value>SSN</value>
+  </data>
+  <data name="AdditionalInfoTab_SetToTodaysDate" xml:space="preserve">
+    <value>Set to today's date</value>
+  </data>
+  <data name="AdditionalInfoTab_State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="AdditionalInfoTab_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="AdditionalInfoTab_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="AdditionalInfoTab_ZipCode" xml:space="preserve">
+    <value>Zip Code</value>
+  </data>
+  <data name="AdminDashboardWindow_Title" xml:space="preserve">
+    <value>AccuSync - Admin Dashboard</value>
+  </data>
+  <data name="AppDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AppDialog_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="AppDialog_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AppDialog_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="AssignScreeningsDialog_AllPatients" xml:space="preserve">
+    <value>All Patients</value>
+  </data>
+  <data name="AssignScreeningsDialog_AssignPatients" xml:space="preserve">
+    <value>Assign Patients</value>
+  </data>
+  <data name="AssignScreeningsDialog_AssignPlural" xml:space="preserve">
+    <value>Assign {0} Patients</value>
+  </data>
+  <data name="AssignScreeningsDialog_AssignSingular" xml:space="preserve">
+    <value>Assign {0} Patient</value>
+  </data>
+  <data name="AssignScreeningsDialog_AssignmentCompleteCaption" xml:space="preserve">
+    <value>Assignment Complete</value>
+  </data>
+  <data name="AssignScreeningsDialog_BackTooltip" xml:space="preserve">
+    <value>Back to Screener List</value>
+  </data>
+  <data name="AssignScreeningsDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AssignScreeningsDialog_ConfirmAssignmentCaption" xml:space="preserve">
+    <value>Confirm Assignment</value>
+  </data>
+  <data name="AssignScreeningsDialog_DobLabel" xml:space="preserve">
+    <value>DOB:</value>
+  </data>
+  <data name="AssignScreeningsDialog_HighPriority" xml:space="preserve">
+    <value>High Priority</value>
+  </data>
+  <data name="AssignScreeningsDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search unassigned patients...</value>
+  </data>
+  <data name="AssignScreeningsDialog_SelectedFormat" xml:space="preserve">
+    <value>{0} Selected</value>
+  </data>
+  <data name="AssignScreeningsDialog_Subtitle" xml:space="preserve">
+    <value>Select patients to assign to Screener A</value>
+  </data>
+  <data name="AssignScreeningsDialog_SubtitleFormat" xml:space="preserve">
+    <value>Select patients to assign to {0}</value>
+  </data>
+  <data name="AssignScreeningsDialog_Title" xml:space="preserve">
+    <value>Assign Screenings</value>
+  </data>
+  <data name="AssignScreeningsDialog_UnassignedPlural" xml:space="preserve">
+    <value>{0} Unassigned Patients</value>
+  </data>
+  <data name="AssignScreeningsDialog_UnassignedSingular" xml:space="preserve">
+    <value>{0} Unassigned Patient</value>
+  </data>
+  <data name="AssignScreeningsDialog_WaitingLabel" xml:space="preserve">
+    <value> • Waiting:</value>
+  </data>
+  <data name="AssignedPatientsDialog_AssignedToday" xml:space="preserve">
+    <value>Assigned Today</value>
+  </data>
+  <data name="AssignedPatientsDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="AssignedPatientsDialog_CountPlural" xml:space="preserve">
+    <value>{0} patients</value>
+  </data>
+  <data name="AssignedPatientsDialog_CountSingular" xml:space="preserve">
+    <value>{0} patient</value>
+  </data>
+  <data name="AssignedPatientsDialog_NoPatientsAssigned" xml:space="preserve">
+    <value>No patients assigned</value>
+  </data>
+  <data name="AssignedPatientsDialog_NoPatientsLine1" xml:space="preserve">
+    <value>There are no patients assigned to you today.</value>
+  </data>
+  <data name="AssignedPatientsDialog_NoPatientsLine2" xml:space="preserve">
+    <value>Check back later or refresh to see updates.</value>
+  </data>
+  <data name="AssignedPatientsDialog_PatientDetailsCaption" xml:space="preserve">
+    <value>Patient Details</value>
+  </data>
+  <data name="AssignedPatientsDialog_PrintReportTooltip" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="AssignedPatientsDialog_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="AssignedPatientsDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search patients...</value>
+  </data>
+  <data name="AssignedPatientsDialog_Title" xml:space="preserve">
+    <value>Assigned Patients</value>
+  </data>
+  <data name="AssignedPatientsDialog_ViewDetailsTooltip" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="ChangePasswordViewModel_CurrentPasswordIncorrect" xml:space="preserve">
+    <value>Current password is incorrect.</value>
+  </data>
+  <data name="ChangePasswordViewModel_PasswordReused" xml:space="preserve">
+    <value>Password cannot be the same as your last three passwords.</value>
+  </data>
+  <data name="ChangePasswordViewModel_UnexpectedError" xml:space="preserve">
+    <value>An error occurred: {0}</value>
+  </data>
+  <data name="ChangePasswordViewModel_UpdateFailed" xml:space="preserve">
+    <value>Failed to update password. Please try again.</value>
+  </data>
+  <data name="ChangePasswordWindow_ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm New Password</value>
+  </data>
+  <data name="ChangePasswordWindow_CurrentPassword" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="ChangePasswordWindow_Heading" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="ChangePasswordWindow_HidePassword" xml:space="preserve">
+    <value>Hide password</value>
+  </data>
+  <data name="ChangePasswordWindow_NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="ChangePasswordWindow_PasswordRequirements" xml:space="preserve">
+    <value>Password Requirements</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqLowerCase" xml:space="preserve">
+    <value>At least one lowercase letter (a-z)</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqMinLength" xml:space="preserve">
+    <value>At least 8 characters</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqNotSameAsOld" xml:space="preserve">
+    <value>Different from current password</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqNumber" xml:space="preserve">
+    <value>At least one number (0-9)</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqPasswordsMatch" xml:space="preserve">
+    <value>Passwords match</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqSpecialChar" xml:space="preserve">
+    <value>At least one special character (!@#$%^&amp;*)</value>
+  </data>
+  <data name="ChangePasswordWindow_ReqUpperCase" xml:space="preserve">
+    <value>At least one uppercase letter (A-Z)</value>
+  </data>
+  <data name="ChangePasswordWindow_SavePassword" xml:space="preserve">
+    <value>Save Password</value>
+  </data>
+  <data name="ChangePasswordWindow_ShowPassword" xml:space="preserve">
+    <value>Show password</value>
+  </data>
+  <data name="ChangePasswordWindow_Subtitle" xml:space="preserve">
+    <value>Please create a new secure password</value>
+  </data>
+  <data name="ChangePasswordWindow_Title" xml:space="preserve">
+    <value>AccuSync - Change Password</value>
+  </data>
+  <data name="CommentsConfigView_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="CommentsConfigView_CannotDelete" xml:space="preserve">
+    <value>Cannot Delete</value>
+  </data>
+  <data name="CommentsConfigView_CannotDeleteAssigned" xml:space="preserve">
+    <value>This comment has been assigned to patients and cannot be deleted.</value>
+  </data>
+  <data name="CommentsConfigView_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="CommentsConfigView_CommentDetails" xml:space="preserve">
+    <value>COMMENT DETAILS</value>
+  </data>
+  <data name="CommentsConfigView_CommentSaved" xml:space="preserve">
+    <value>Comment saved.</value>
+  </data>
+  <data name="CommentsConfigView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="CommentsConfigView_ConfirmDeleteComment" xml:space="preserve">
+    <value>Are you sure you want to delete comment '{0}'?</value>
+  </data>
+  <data name="CommentsConfigView_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="CommentsConfigView_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="CommentsConfigView_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="CommentsConfigView_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="CommentsConfigView_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="CommentsConfigView_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="CommentsConfigView_NoCommentsAvailable" xml:space="preserve">
+    <value>No comments available</value>
+  </data>
+  <data name="CommentsConfigView_PredefinedCommentLabel" xml:space="preserve">
+    <value>Predefined Comment</value>
+  </data>
+  <data name="CommentsConfigView_PredefinedComments" xml:space="preserve">
+    <value>PREDEFINED COMMENTS</value>
+  </data>
+  <data name="CommentsConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CommentsConfigView_SelectCommentToView" xml:space="preserve">
+    <value>Select a comment to view details</value>
+  </data>
+  <data name="CommentsConfigView_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="CommentsConfigView_Translation" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="CommentsConfigView_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="CompletedScreeningsDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CompletedScreeningsDialog_CompletedToday" xml:space="preserve">
+    <value>Completed Today</value>
+  </data>
+  <data name="CompletedScreeningsDialog_CountPlural" xml:space="preserve">
+    <value>{0} screenings</value>
+  </data>
+  <data name="CompletedScreeningsDialog_CountSingular" xml:space="preserve">
+    <value>{0} screening</value>
+  </data>
+  <data name="CompletedScreeningsDialog_NoCompletedScreenings" xml:space="preserve">
+    <value>No completed screenings</value>
+  </data>
+  <data name="CompletedScreeningsDialog_NoScreeningsToday" xml:space="preserve">
+    <value>You haven't completed any screenings today.</value>
+  </data>
+  <data name="CompletedScreeningsDialog_PrintReport" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="CompletedScreeningsDialog_PrintReportMessage" xml:space="preserve">
+    <value>Print report for {0}
+
+Patient ID: {1}</value>
+  </data>
+  <data name="CompletedScreeningsDialog_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="CompletedScreeningsDialog_ScreeningDetailsCaption" xml:space="preserve">
+    <value>Screening Details</value>
+  </data>
+  <data name="CompletedScreeningsDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search screenings...</value>
+  </data>
+  <data name="CompletedScreeningsDialog_StartScreeningHint" xml:space="preserve">
+    <value>Start screening to see results here.</value>
+  </data>
+  <data name="CompletedScreeningsDialog_Title" xml:space="preserve">
+    <value>Completed Screenings</value>
+  </data>
+  <data name="CompletedScreeningsDialog_ViewDetails" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="DPOAEConfigurationView_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="DPOAEConfigurationView_Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="DPOAEConfigurationView_AutoStop" xml:space="preserve">
+    <value>Auto Stop</value>
+  </data>
+  <data name="DPOAEConfigurationView_Basic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="DPOAEConfigurationView_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="DPOAEConfigurationView_CategoryLabel" xml:space="preserve">
+    <value>CATEGORY</value>
+  </data>
+  <data name="DPOAEConfigurationView_CommonInformation" xml:space="preserve">
+    <value>Common Information</value>
+  </data>
+  <data name="DPOAEConfigurationView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="DPOAEConfigurationView_ConfirmDeleteProtocol" xml:space="preserve">
+    <value>Are you sure you want to delete protocol '{0}'?</value>
+  </data>
+  <data name="DPOAEConfigurationView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DPOAEConfigurationView_DpoaeConfiguration" xml:space="preserve">
+    <value>DPOAE Configuration</value>
+  </data>
+  <data name="DPOAEConfigurationView_DpoaeProtocols" xml:space="preserve">
+    <value>DPOAE PROTOCOLS</value>
+  </data>
+  <data name="DPOAEConfigurationView_Enhanced" xml:space="preserve">
+    <value>Enhanced</value>
+  </data>
+  <data name="DPOAEConfigurationView_Frequencies" xml:space="preserve">
+    <value>Frequencies</value>
+  </data>
+  <data name="DPOAEConfigurationView_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="DPOAEConfigurationView_L1" xml:space="preserve">
+    <value>L1</value>
+  </data>
+  <data name="DPOAEConfigurationView_L2" xml:space="preserve">
+    <value>L2</value>
+  </data>
+  <data name="DPOAEConfigurationView_L2Plus10dB" xml:space="preserve">
+    <value>L2 + 10 dB</value>
+  </data>
+  <data name="DPOAEConfigurationView_L2Plus5dB" xml:space="preserve">
+    <value>L2 + 5 dB</value>
+  </data>
+  <data name="DPOAEConfigurationView_MinLevel" xml:space="preserve">
+    <value>Min Level</value>
+  </data>
+  <data name="DPOAEConfigurationView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DPOAEConfigurationView_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DPOAEConfigurationView_NoProtocolsAvailable" xml:space="preserve">
+    <value>No DPOAE test protocols available</value>
+  </data>
+  <data name="DPOAEConfigurationView_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion" xml:space="preserve">
+    <value>Pass Criterion</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion1Of6" xml:space="preserve">
+    <value>1 frequency of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion2Of6" xml:space="preserve">
+    <value>2 frequencies of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion3Of6" xml:space="preserve">
+    <value>3 frequencies of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion4Of6" xml:space="preserve">
+    <value>4 frequencies of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion5Of6" xml:space="preserve">
+    <value>5 frequencies of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_PassCriterion6Of6" xml:space="preserve">
+    <value>6 frequencies of 6</value>
+  </data>
+  <data name="DPOAEConfigurationView_ProtocolDetails" xml:space="preserve">
+    <value>DPOAE TEST PROTOCOL DETAILS</value>
+  </data>
+  <data name="DPOAEConfigurationView_ProtocolSaved" xml:space="preserve">
+    <value>DPOAE protocol saved.</value>
+  </data>
+  <data name="DPOAEConfigurationView_RetestFrequencies" xml:space="preserve">
+    <value>Retest Frequencies</value>
+  </data>
+  <data name="DPOAEConfigurationView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DPOAEConfigurationView_SelectProtocolToViewDetails" xml:space="preserve">
+    <value>Select a protocol to view details</value>
+  </data>
+  <data name="DPOAEConfigurationView_Snr" xml:space="preserve">
+    <value>SNR</value>
+  </data>
+  <data name="DPOAEConfigurationView_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="DPOAEConfigurationView_StatusLabel" xml:space="preserve">
+    <value>STATUS</value>
+  </data>
+  <data name="DPOAEConfigurationView_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="DashboardContentView_AverageSessionTime" xml:space="preserve">
+    <value>Average session time</value>
+  </data>
+  <data name="DashboardContentView_CaptionReports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="DashboardContentView_CaptionUpload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="DashboardContentView_ColumnPasses" xml:space="preserve">
+    <value>Passes</value>
+  </data>
+  <data name="DashboardContentView_ColumnRefers" xml:space="preserve">
+    <value>Refers</value>
+  </data>
+  <data name="DashboardContentView_ColumnTests" xml:space="preserve">
+    <value>Tests</value>
+  </data>
+  <data name="DashboardContentView_ColumnUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="DashboardContentView_Dashboard" xml:space="preserve">
+    <value>DASHBOARD</value>
+  </data>
+  <data name="DashboardContentView_GreetingAfternoon" xml:space="preserve">
+    <value>Good Afternoon</value>
+  </data>
+  <data name="DashboardContentView_GreetingEvening" xml:space="preserve">
+    <value>Good Evening</value>
+  </data>
+  <data name="DashboardContentView_GreetingMorning" xml:space="preserve">
+    <value>Good Morning</value>
+  </data>
+  <data name="DashboardContentView_Overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="DashboardContentView_QuickActions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="DashboardContentView_ReportsNotImplemented" xml:space="preserve">
+    <value>Reports — not yet implemented.</value>
+  </data>
+  <data name="DashboardContentView_StatisticsWeeklyTrend" xml:space="preserve">
+    <value>Statistics / Weekly Trend</value>
+  </data>
+  <data name="DashboardContentView_StatsPerUser" xml:space="preserve">
+    <value>Stats per user</value>
+  </data>
+  <data name="DashboardContentView_UploadNotImplemented" xml:space="preserve">
+    <value>Device upload — not yet implemented.</value>
+  </data>
+  <data name="DeviceFieldSetupView_Active" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="DeviceFieldSetupView_CustomLabel" xml:space="preserve">
+    <value>CUSTOM LABEL</value>
+  </data>
+  <data name="DeviceFieldSetupView_FieldName" xml:space="preserve">
+    <value>FIELD NAME</value>
+  </data>
+  <data name="DeviceFieldSetupView_FieldSetupSaved" xml:space="preserve">
+    <value>Device field setup saved.</value>
+  </data>
+  <data name="DeviceFieldSetupView_Mandatory" xml:space="preserve">
+    <value>MANDATORY</value>
+  </data>
+  <data name="DeviceFieldSetupView_NhspEngland" xml:space="preserve">
+    <value>NHSP England</value>
+  </data>
+  <data name="DeviceFieldSetupView_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="DeviceFieldSetupView_PatientFieldConfiguration" xml:space="preserve">
+    <value>Patient Field Configuration</value>
+  </data>
+  <data name="DeviceFieldSetupView_PatientIdConfiguration" xml:space="preserve">
+    <value>Patient ID Configuration</value>
+  </data>
+  <data name="DeviceFieldSetupView_PatientIdRule" xml:space="preserve">
+    <value>Patient ID Rule</value>
+  </data>
+  <data name="DeviceFieldSetupView_ResetAllCustomLabelsTitle" xml:space="preserve">
+    <value>Reset all custom labels?</value>
+  </data>
+  <data name="DeviceFieldSetupView_ResetAllLabels" xml:space="preserve">
+    <value>Reset all labels</value>
+  </data>
+  <data name="DeviceFieldSetupView_ResetToDefault" xml:space="preserve">
+    <value>Reset to default</value>
+  </data>
+  <data name="DeviceFieldSetupView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DeviceFieldSetupView_Title" xml:space="preserve">
+    <value>DEVICE FIELD SETUP CONFIGURATION</value>
+  </data>
+  <data name="DevicesContentView_ABRAutostart" xml:space="preserve">
+    <value>ABR Autostart</value>
+  </data>
+  <data name="DevicesContentView_AfterSuccessfulDownload" xml:space="preserve">
+    <value>After Successful Download</value>
+  </data>
+  <data name="DevicesContentView_AutostartOnGreen" xml:space="preserve">
+    <value>Autostart on Green</value>
+  </data>
+  <data name="DevicesContentView_AutostartOnGreenOrYellow" xml:space="preserve">
+    <value>Autostart on Green or Yellow</value>
+  </data>
+  <data name="DevicesContentView_CalibrationPause" xml:space="preserve">
+    <value>Calibration/Pause</value>
+  </data>
+  <data name="DevicesContentView_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="DevicesContentView_CommonConfiguration" xml:space="preserve">
+    <value>Common Configuration</value>
+  </data>
+  <data name="DevicesContentView_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="DevicesContentView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="DevicesContentView_ConfirmDeleteDevice" xml:space="preserve">
+    <value>Are you sure you want to delete device '{0}'?</value>
+  </data>
+  <data name="DevicesContentView_CopyToDevice" xml:space="preserve">
+    <value>COPY TO DEVICE</value>
+  </data>
+  <data name="DevicesContentView_DataDeletion" xml:space="preserve">
+    <value>Data Deletion</value>
+  </data>
+  <data name="DevicesContentView_DeviceDetails" xml:space="preserve">
+    <value>DEVICE DETAILS</value>
+  </data>
+  <data name="DevicesContentView_DeviceSaved" xml:space="preserve">
+    <value>Device saved.</value>
+  </data>
+  <data name="DevicesContentView_Devices" xml:space="preserve">
+    <value>DEVICES</value>
+  </data>
+  <data name="DevicesContentView_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="DevicesContentView_DisplayTimeout" xml:space="preserve">
+    <value>Display Timeout</value>
+  </data>
+  <data name="DevicesContentView_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="DevicesContentView_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="DevicesContentView_Facilities" xml:space="preserve">
+    <value>Facilities</value>
+  </data>
+  <data name="DevicesContentView_Facility" xml:space="preserve">
+    <value>FACILITY</value>
+  </data>
+  <data name="DevicesContentView_FirmwareVersion" xml:space="preserve">
+    <value>Firmware Version</value>
+  </data>
+  <data name="DevicesContentView_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="DevicesContentView_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="DevicesContentView_HardwareVersion" xml:space="preserve">
+    <value>Hardware Version</value>
+  </data>
+  <data name="DevicesContentView_IndividualSetting" xml:space="preserve">
+    <value>Individual Setting</value>
+  </data>
+  <data name="DevicesContentView_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="DevicesContentView_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="DevicesContentView_LastSeen" xml:space="preserve">
+    <value>LAST SEEN</value>
+  </data>
+  <data name="DevicesContentView_LastSeenLabel" xml:space="preserve">
+    <value>Last Seen</value>
+  </data>
+  <data name="DevicesContentView_LastUpdated" xml:space="preserve">
+    <value>Last Updated</value>
+  </data>
+  <data name="DevicesContentView_LoginName" xml:space="preserve">
+    <value>LOGIN NAME</value>
+  </data>
+  <data name="DevicesContentView_Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="DevicesContentView_MinutesFormat" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="DevicesContentView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DevicesContentView_NoAutostart" xml:space="preserve">
+    <value>No Autostart</value>
+  </data>
+  <data name="DevicesContentView_NoDevicesAvailable" xml:space="preserve">
+    <value>No devices available</value>
+  </data>
+  <data name="DevicesContentView_NoFacilitiesAvailable" xml:space="preserve">
+    <value>No facilities available</value>
+  </data>
+  <data name="DevicesContentView_PowerTimeout" xml:space="preserve">
+    <value>Power Timeout</value>
+  </data>
+  <data name="DevicesContentView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DevicesContentView_SelectDeviceToViewDetails" xml:space="preserve">
+    <value>Select a device to view details</value>
+  </data>
+  <data name="DevicesContentView_SelectPlaceholder" xml:space="preserve">
+    <value>— Select —</value>
+  </data>
+  <data name="DevicesContentView_Serial" xml:space="preserve">
+    <value>SERIAL</value>
+  </data>
+  <data name="DevicesContentView_SerialLabel" xml:space="preserve">
+    <value>Serial</value>
+  </data>
+  <data name="DevicesContentView_Site" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="DevicesContentView_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="DevicesContentView_SystemInformation" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="DevicesContentView_TEOAEProbeFitAssistant" xml:space="preserve">
+    <value>TEOAE Probe Fit Assistant</value>
+  </data>
+  <data name="DevicesContentView_TestResultTerms" xml:space="preserve">
+    <value>Test Result Terms</value>
+  </data>
+  <data name="DevicesContentView_UseClearResponseNoClearResponse" xml:space="preserve">
+    <value>Use Clear Response/No Clear Response</value>
+  </data>
+  <data name="DevicesContentView_UsePassRefer" xml:space="preserve">
+    <value>Use Pass/Refer</value>
+  </data>
+  <data name="DevicesContentView_UserAssignment" xml:space="preserve">
+    <value>User Assignment</value>
+  </data>
+  <data name="DevicesUpdateDialog_AllUpToDate" xml:space="preserve">
+    <value>All devices up to date!</value>
+  </data>
+  <data name="DevicesUpdateDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DevicesUpdateDialog_ConfirmUpdateCaption" xml:space="preserve">
+    <value>Confirm Update</value>
+  </data>
+  <data name="DevicesUpdateDialog_ConfirmUpdateMessage" xml:space="preserve">
+    <value>Update {0} from {1} to {2}?
+
+This may take a few minutes.</value>
+  </data>
+  <data name="DevicesUpdateDialog_CurrentLabel" xml:space="preserve">
+    <value>Current:</value>
+  </data>
+  <data name="DevicesUpdateDialog_DeviceCount" xml:space="preserve">
+    <value>0 devices</value>
+  </data>
+  <data name="DevicesUpdateDialog_LatestVersion" xml:space="preserve">
+    <value>Your system is running the latest version.</value>
+  </data>
+  <data name="DevicesUpdateDialog_RequiredLabel" xml:space="preserve">
+    <value>  →  Required:</value>
+  </data>
+  <data name="DevicesUpdateDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search devices...</value>
+  </data>
+  <data name="DevicesUpdateDialog_Title" xml:space="preserve">
+    <value>Devices Update</value>
+  </data>
+  <data name="DevicesUpdateDialog_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="DevicesUpdateDialog_UpdateCompleteCaption" xml:space="preserve">
+    <value>Update Complete</value>
+  </data>
+  <data name="DevicesUpdateDialog_UpdateCompleteMessage" xml:space="preserve">
+    <value>{0} successfully updated to {1}!</value>
+  </data>
+  <data name="DevicesUpdateDialog_UpdatesAvailable" xml:space="preserve">
+    <value>Updates available</value>
+  </data>
+  <data name="ExportConfigView_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="ExportConfigView_ConfigurationsSaved" xml:space="preserve">
+    <value>Export configurations saved.</value>
+  </data>
+  <data name="ExportConfigView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="ExportConfigView_ConfirmDeleteEntry" xml:space="preserve">
+    <value>Are you sure you want to delete "{0}"?</value>
+  </data>
+  <data name="ExportConfigView_DataAllPatients" xml:space="preserve">
+    <value>All Patients</value>
+  </data>
+  <data name="ExportConfigView_DataChangedPatients" xml:space="preserve">
+    <value>Changed Patients</value>
+  </data>
+  <data name="ExportConfigView_DataNewTestsOnly" xml:space="preserve">
+    <value>New tests only</value>
+  </data>
+  <data name="ExportConfigView_DataSelectedPatients" xml:space="preserve">
+    <value>Selected patients</value>
+  </data>
+  <data name="ExportConfigView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ExportConfigView_ExportConfigurationDetails" xml:space="preserve">
+    <value>Export Configuration Details</value>
+  </data>
+  <data name="ExportConfigView_ExportConfigurations" xml:space="preserve">
+    <value>EXPORT CONFIGURATIONS</value>
+  </data>
+  <data name="ExportConfigView_ExportData" xml:space="preserve">
+    <value>Export Data</value>
+  </data>
+  <data name="ExportConfigView_ExportFolder" xml:space="preserve">
+    <value>Export Folder</value>
+  </data>
+  <data name="ExportConfigView_ExportFormat" xml:space="preserve">
+    <value>Export Format</value>
+  </data>
+  <data name="ExportConfigView_FormatAccuSyncJson" xml:space="preserve">
+    <value>AccuSync JSON</value>
+  </data>
+  <data name="ExportConfigView_FormatAccuSyncXml" xml:space="preserve">
+    <value>AccuSync XML</value>
+  </data>
+  <data name="ExportConfigView_FormatAlgo5Xml" xml:space="preserve">
+    <value>ALGO 5 XML</value>
+  </data>
+  <data name="ExportConfigView_FormatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="ExportConfigView_FormatHiTrack" xml:space="preserve">
+    <value>HiTrack</value>
+  </data>
+  <data name="ExportConfigView_FormatOz" xml:space="preserve">
+    <value>OZ</value>
+  </data>
+  <data name="ExportConfigView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ExportConfigView_NoExportConfigurations" xml:space="preserve">
+    <value>No export configurations</value>
+  </data>
+  <data name="ExportConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ExportConfigView_SelectConfigToView" xml:space="preserve">
+    <value>Select a configuration to view details</value>
+  </data>
+  <data name="ExportDialog_AllPatients" xml:space="preserve">
+    <value>All patients</value>
+  </data>
+  <data name="ExportDialog_ByDateRange" xml:space="preserve">
+    <value>By date range</value>
+  </data>
+  <data name="ExportDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ExportDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ExportDialog_DateRangeRequired" xml:space="preserve">
+    <value>Date Range Required</value>
+  </data>
+  <data name="ExportDialog_DeidentifyPatientRecords" xml:space="preserve">
+    <value>De-identify patient records</value>
+  </data>
+  <data name="ExportDialog_ExportFormat" xml:space="preserve">
+    <value>Export Format</value>
+  </data>
+  <data name="ExportDialog_FormatAccuSyncJson" xml:space="preserve">
+    <value>AccuSync JSON</value>
+  </data>
+  <data name="ExportDialog_FormatAccuSyncXml" xml:space="preserve">
+    <value>AccuSync XML</value>
+  </data>
+  <data name="ExportDialog_FormatAlgo5Xml" xml:space="preserve">
+    <value>ALGO 5 XML</value>
+  </data>
+  <data name="ExportDialog_FormatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="ExportDialog_FormatHiTrack" xml:space="preserve">
+    <value>HiTrack</value>
+  </data>
+  <data name="ExportDialog_FormatOz" xml:space="preserve">
+    <value>OZ</value>
+  </data>
+  <data name="ExportDialog_From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="ExportDialog_FromBeforeTo" xml:space="preserve">
+    <value>The From date must be before the To date.</value>
+  </data>
+  <data name="ExportDialog_InvalidDateRange" xml:space="preserve">
+    <value>Invalid Date Range</value>
+  </data>
+  <data name="ExportDialog_Patients" xml:space="preserve">
+    <value>Patients</value>
+  </data>
+  <data name="ExportDialog_PatientsWithNewResults" xml:space="preserve">
+    <value>Patients with new results</value>
+  </data>
+  <data name="ExportDialog_SelectBothDates" xml:space="preserve">
+    <value>Please select both From and To dates.</value>
+  </data>
+  <data name="ExportDialog_SelectedPatients" xml:space="preserve">
+    <value>Selected patients</value>
+  </data>
+  <data name="ExportDialog_Title" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ExportDialog_To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="FacesheetReview_AllNo" xml:space="preserve">
+    <value>All No</value>
+  </data>
+  <data name="FacesheetReview_AllUnknown" xml:space="preserve">
+    <value>All Unknown</value>
+  </data>
+  <data name="FacesheetReview_AllYes" xml:space="preserve">
+    <value>All Yes</value>
+  </data>
+  <data name="FacesheetReview_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="FacesheetReview_BirthLocation" xml:space="preserve">
+    <value>Birth Location</value>
+  </data>
+  <data name="FacesheetReview_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FacesheetReview_DateOfBirth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="FacesheetReview_Dob" xml:space="preserve">
+    <value>DOB</value>
+  </data>
+  <data name="FacesheetReview_FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="FacesheetReview_Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="FacesheetReview_GenderFemale" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="FacesheetReview_GenderMale" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="FacesheetReview_GestationalAge" xml:space="preserve">
+    <value>Gestational Age (weeks)</value>
+  </data>
+  <data name="FacesheetReview_HeaderTitle" xml:space="preserve">
+    <value>IMPORT — REVIEW EXTRACTED DATA</value>
+  </data>
+  <data name="FacesheetReview_HeightLength" xml:space="preserve">
+    <value>Height / Length</value>
+  </data>
+  <data name="FacesheetReview_HospitalId" xml:space="preserve">
+    <value>Hospital ID</value>
+  </data>
+  <data name="FacesheetReview_ImportPatient" xml:space="preserve">
+    <value>Import Patient</value>
+  </data>
+  <data name="FacesheetReview_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="FacesheetReview_MedicalInformation" xml:space="preserve">
+    <value>Medical Information</value>
+  </data>
+  <data name="FacesheetReview_Medication" xml:space="preserve">
+    <value>Medication</value>
+  </data>
+  <data name="FacesheetReview_MotherInformation" xml:space="preserve">
+    <value>Mother Information</value>
+  </data>
+  <data name="FacesheetReview_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="FacesheetReview_NoPreviewAvailable" xml:space="preserve">
+    <value>No preview available</value>
+  </data>
+  <data name="FacesheetReview_OcrConfidence" xml:space="preserve">
+    <value>OCR Confidence: —</value>
+  </data>
+  <data name="FacesheetReview_OcrConfidencePercent" xml:space="preserve">
+    <value>OCR Confidence: {0}%</value>
+  </data>
+  <data name="FacesheetReview_OriginalDocument" xml:space="preserve">
+    <value>Original Document</value>
+  </data>
+  <data name="FacesheetReview_PatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="FacesheetReview_Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="FacesheetReview_Physician" xml:space="preserve">
+    <value>Physician</value>
+  </data>
+  <data name="FacesheetReview_QuickActions" xml:space="preserve">
+    <value>Quick Actions:</value>
+  </data>
+  <data name="FacesheetReview_ReviewAllFields" xml:space="preserve">
+    <value>Review all fields carefully</value>
+  </data>
+  <data name="FacesheetReview_RiskAminoglycosides" xml:space="preserve">
+    <value>Aminoglycosides for &gt;5 Days</value>
+  </data>
+  <data name="FacesheetReview_RiskAsphyxia" xml:space="preserve">
+    <value>Asphyxia- Hypoxic Ischemic Encephalopathy (HIE)</value>
+  </data>
+  <data name="FacesheetReview_RiskBacterialMeningitis" xml:space="preserve">
+    <value>Bacterial Meningitis</value>
+  </data>
+  <data name="FacesheetReview_RiskCaregiverConcern" xml:space="preserve">
+    <value>Caregiver Concern</value>
+  </data>
+  <data name="FacesheetReview_RiskCraniofacial" xml:space="preserve">
+    <value>Craniofacial Anomalies-Microtia/Atresia, Clefting</value>
+  </data>
+  <data name="FacesheetReview_RiskEcmo" xml:space="preserve">
+    <value>ECMO-Extracorporeal Membrane Oxygenation</value>
+  </data>
+  <data name="FacesheetReview_RiskFamilyHistory" xml:space="preserve">
+    <value>Family History of Permanent Childhood Hearing Loss</value>
+  </data>
+  <data name="FacesheetReview_RiskHeadTrauma" xml:space="preserve">
+    <value>Exposure to Head Trauma or Chemotherapy</value>
+  </data>
+  <data name="FacesheetReview_RiskHyperbilirubinemia" xml:space="preserve">
+    <value>Hyperbilirubinemia with Exchange Transfusion</value>
+  </data>
+  <data name="FacesheetReview_RiskInUteroInfections" xml:space="preserve">
+    <value>In Utero Infections such as CMV &amp; Zika</value>
+  </data>
+  <data name="FacesheetReview_RiskLowBirthWeight" xml:space="preserve">
+    <value>Low Birth Weight</value>
+  </data>
+  <data name="FacesheetReview_RiskNicu" xml:space="preserve">
+    <value>NICU &gt;5 Days</value>
+  </data>
+  <data name="FacesheetReview_RiskOtotoxicMedications" xml:space="preserve">
+    <value>Ototoxic Medications</value>
+  </data>
+  <data name="FacesheetReview_RiskPerinatalInfection" xml:space="preserve">
+    <value>Perinatal or Postnatal Infection</value>
+  </data>
+  <data name="FacesheetReview_RiskProlongedVentilation" xml:space="preserve">
+    <value>Prolonged Ventilation</value>
+  </data>
+  <data name="FacesheetReview_RiskSyndromes" xml:space="preserve">
+    <value>Syndromes &amp; Genetic Disorders of Hearing Loss</value>
+  </data>
+  <data name="FacesheetReview_TabAdditional" xml:space="preserve">
+    <value>Additional</value>
+  </data>
+  <data name="FacesheetReview_TabPatient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="FacesheetReview_TabRisks" xml:space="preserve">
+    <value>Risks</value>
+  </data>
+  <data name="FacesheetReview_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="FacesheetReview_Weight" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="FacesheetReview_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="FacilitiesContentView_Code" xml:space="preserve">
+    <value>CODE</value>
+  </data>
+  <data name="FacilitiesContentView_CodeLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="FacilitiesContentView_CodeRequired" xml:space="preserve">
+    <value>Code is required.</value>
+  </data>
+  <data name="FacilitiesContentView_DeleteCaption" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="FacilitiesContentView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete facility "{0}"?</value>
+  </data>
+  <data name="FacilitiesContentView_DeleteFacilityCaption" xml:space="preserve">
+    <value>Delete Facility</value>
+  </data>
+  <data name="FacilitiesContentView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="FacilitiesContentView_Facilities" xml:space="preserve">
+    <value>FACILITIES</value>
+  </data>
+  <data name="FacilitiesContentView_FacilityDetails" xml:space="preserve">
+    <value>Facility Details</value>
+  </data>
+  <data name="FacilitiesContentView_FacilityDetailsHeader" xml:space="preserve">
+    <value>FACILITY DETAILS</value>
+  </data>
+  <data name="FacilitiesContentView_FacilitySaved" xml:space="preserve">
+    <value>Facility saved successfully.</value>
+  </data>
+  <data name="FacilitiesContentView_HomeVisit" xml:space="preserve">
+    <value>Home Visit</value>
+  </data>
+  <data name="FacilitiesContentView_Inpatient" xml:space="preserve">
+    <value>Inpatient</value>
+  </data>
+  <data name="FacilitiesContentView_LocationType" xml:space="preserve">
+    <value>Location Type</value>
+  </data>
+  <data name="FacilitiesContentView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="FacilitiesContentView_NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="FacilitiesContentView_NoFacilitiesAvailable" xml:space="preserve">
+    <value>No facilities available</value>
+  </data>
+  <data name="FacilitiesContentView_NoFacilitySelected" xml:space="preserve">
+    <value>No facility selected.</value>
+  </data>
+  <data name="FacilitiesContentView_Outpatient" xml:space="preserve">
+    <value>Outpatient</value>
+  </data>
+  <data name="FacilitiesContentView_SaveCaption" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="FacilitiesContentView_SelectFacility" xml:space="preserve">
+    <value>Select a facility to view details</value>
+  </data>
+  <data name="FacilitiesContentView_Site" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="FacilitiesContentView_SiteRequired" xml:space="preserve">
+    <value>Site is required.</value>
+  </data>
+  <data name="FacilitiesContentView_ValidationCaption" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="FieldSetupConfigView_ColumnActive" xml:space="preserve">
+    <value>ACTIVE</value>
+  </data>
+  <data name="FieldSetupConfigView_ColumnCustomLabel" xml:space="preserve">
+    <value>CUSTOM LABEL</value>
+  </data>
+  <data name="FieldSetupConfigView_ColumnFieldName" xml:space="preserve">
+    <value>FIELD NAME</value>
+  </data>
+  <data name="FieldSetupConfigView_ColumnIncludeQr" xml:space="preserve">
+    <value>INCLUDE QR</value>
+  </data>
+  <data name="FieldSetupConfigView_ColumnMandatory" xml:space="preserve">
+    <value>MANDATORY</value>
+  </data>
+  <data name="FieldSetupConfigView_ConfigurationSaved" xml:space="preserve">
+    <value>Field setup configuration saved.</value>
+  </data>
+  <data name="FieldSetupConfigView_PatientFieldConfiguration" xml:space="preserve">
+    <value>Patient Field Configuration</value>
+  </data>
+  <data name="FieldSetupConfigView_PatientIdConfiguration" xml:space="preserve">
+    <value>Patient ID Configuration</value>
+  </data>
+  <data name="FieldSetupConfigView_PatientIdRule" xml:space="preserve">
+    <value>Patient ID Rule</value>
+  </data>
+  <data name="FieldSetupConfigView_ResetAllLabels" xml:space="preserve">
+    <value>Reset all labels</value>
+  </data>
+  <data name="FieldSetupConfigView_ResetAllLabelsConfirmTitle" xml:space="preserve">
+    <value>Reset all custom labels?</value>
+  </data>
+  <data name="FieldSetupConfigView_ResetToDefault" xml:space="preserve">
+    <value>Reset to default</value>
+  </data>
+  <data name="FieldSetupConfigView_RuleNhspEngland" xml:space="preserve">
+    <value>NHSP England</value>
+  </data>
+  <data name="FieldSetupConfigView_RuleNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="FieldSetupConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="FieldSetupConfigView_Title" xml:space="preserve">
+    <value>SYSTEM FIELD SETUP CONFIGURATION</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="FirmwareUpdateDialog_ConnectedDevice" xml:space="preserve">
+    <value>Connected Device</value>
+  </data>
+  <data name="FirmwareUpdateDialog_CurrentFirmware" xml:space="preserve">
+    <value>Current Firmware</value>
+  </data>
+  <data name="FirmwareUpdateDialog_EnterFolderPath" xml:space="preserve">
+    <value>Enter the path of the folder containing the firmware file</value>
+  </data>
+  <data name="FirmwareUpdateDialog_FirmwareFileRequired" xml:space="preserve">
+    <value>Firmware File Required</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="FirmwareUpdateDialog_HardwareVersion" xml:space="preserve">
+    <value>Hardware Version</value>
+  </data>
+  <data name="FirmwareUpdateDialog_NoFirmwareFound" xml:space="preserve">
+    <value>No firmware file found in this folder.</value>
+  </data>
+  <data name="FirmwareUpdateDialog_NoFolderSelected" xml:space="preserve">
+    <value>No folder selected...</value>
+  </data>
+  <data name="FirmwareUpdateDialog_SelectFolderDescription" xml:space="preserve">
+    <value>Select the folder containing the firmware file</value>
+  </data>
+  <data name="FirmwareUpdateDialog_SelectFolderMessage" xml:space="preserve">
+    <value>Please select a folder containing a firmware file.</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Title" xml:space="preserve">
+    <value>Firmware Update</value>
+  </data>
+  <data name="FirmwareUpdateDialog_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="ImportConfigView_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="ImportConfigView_ConfigurationsSaved" xml:space="preserve">
+    <value>Import configurations saved.</value>
+  </data>
+  <data name="ImportConfigView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="ImportConfigView_ConfirmDeleteEntry" xml:space="preserve">
+    <value>Are you sure you want to delete "{0}"?</value>
+  </data>
+  <data name="ImportConfigView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ImportConfigView_FormatAccuLinkXml" xml:space="preserve">
+    <value>AccuLink XML</value>
+  </data>
+  <data name="ImportConfigView_FormatAccuSyncJson" xml:space="preserve">
+    <value>AccuSync JSON</value>
+  </data>
+  <data name="ImportConfigView_FormatAccuSyncXml" xml:space="preserve">
+    <value>AccuSync XML</value>
+  </data>
+  <data name="ImportConfigView_FormatAlgo5Xml" xml:space="preserve">
+    <value>ALGO 5 XML</value>
+  </data>
+  <data name="ImportConfigView_FormatAlgoProJson" xml:space="preserve">
+    <value>ALGO Pro JSON</value>
+  </data>
+  <data name="ImportConfigView_ImportConfigurationDetails" xml:space="preserve">
+    <value>Import Configuration Details</value>
+  </data>
+  <data name="ImportConfigView_ImportConfigurations" xml:space="preserve">
+    <value>IMPORT CONFIGURATIONS</value>
+  </data>
+  <data name="ImportConfigView_ImportFolder" xml:space="preserve">
+    <value>Import Folder</value>
+  </data>
+  <data name="ImportConfigView_ImportFormat" xml:space="preserve">
+    <value>Import Format</value>
+  </data>
+  <data name="ImportConfigView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ImportConfigView_NoImportConfigurations" xml:space="preserve">
+    <value>No import configurations</value>
+  </data>
+  <data name="ImportConfigView_PasswordVerification" xml:space="preserve">
+    <value>Password Verification</value>
+  </data>
+  <data name="ImportConfigView_ProfileAdministrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="ImportConfigView_ProfileScreener" xml:space="preserve">
+    <value>Screener</value>
+  </data>
+  <data name="ImportConfigView_ProfileSupervisor" xml:space="preserve">
+    <value>Supervisor</value>
+  </data>
+  <data name="ImportConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ImportConfigView_SelectConfigToView" xml:space="preserve">
+    <value>Select a configuration to view details</value>
+  </data>
+  <data name="ImportConfigView_UserPassword" xml:space="preserve">
+    <value>User Password</value>
+  </data>
+  <data name="ImportConfigView_UserProfile" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
+  <data name="ImportFileDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ImportFileDialog_ClickToBrowse" xml:space="preserve">
+    <value>or click to browse your computer</value>
+  </data>
+  <data name="ImportFileDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ImportFileDialog_DragAndDrop" xml:space="preserve">
+    <value>Drag and drop your file here</value>
+  </data>
+  <data name="ImportFileDialog_FileFormat" xml:space="preserve">
+    <value>File Format</value>
+  </data>
+  <data name="ImportFileDialog_FileMetaFormat" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="ImportFileDialog_FileNoLongerExists" xml:space="preserve">
+    <value>The selected file no longer exists.</value>
+  </data>
+  <data name="ImportFileDialog_FileTypeMismatch" xml:space="preserve">
+    <value>File type does not match the selected format.</value>
+  </data>
+  <data name="ImportFileDialog_FormatAccuLinkXml" xml:space="preserve">
+    <value>AccuLink XML</value>
+  </data>
+  <data name="ImportFileDialog_FormatAccuSyncJson" xml:space="preserve">
+    <value>AccuSync JSON</value>
+  </data>
+  <data name="ImportFileDialog_FormatAccuSyncXml" xml:space="preserve">
+    <value>AccuSync XML</value>
+  </data>
+  <data name="ImportFileDialog_FormatAlgo5Xml" xml:space="preserve">
+    <value>ALGO 5 XML</value>
+  </data>
+  <data name="ImportFileDialog_FormatAlgoProJson" xml:space="preserve">
+    <value>ALGO Pro JSON</value>
+  </data>
+  <data name="ImportFileDialog_LabelDocx" xml:space="preserve">
+    <value>DOCX</value>
+  </data>
+  <data name="ImportFileDialog_LabelFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="ImportFileDialog_LabelImage" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="ImportFileDialog_LabelPdf" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="ImportFileDialog_Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="ImportFileDialog_RemoveFile" xml:space="preserve">
+    <value>Remove file</value>
+  </data>
+  <data name="ImportFileDialog_SelectFileToImport" xml:space="preserve">
+    <value>Please select a file to import.</value>
+  </data>
+  <data name="ImportFileDialog_SelectFormatFirst" xml:space="preserve">
+    <value>Please select a file format first.</value>
+  </data>
+  <data name="ImportFileDialog_Title" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ImportReview_AddTests" xml:space="preserve">
+    <value>Add new test results to existing patient</value>
+  </data>
+  <data name="ImportReview_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="ImportReview_BadgeDuplicate" xml:space="preserve">
+    <value>DUPLICATE</value>
+  </data>
+  <data name="ImportReview_BadgeNew" xml:space="preserve">
+    <value>NEW</value>
+  </data>
+  <data name="ImportReview_BadgeNewRecord" xml:space="preserve">
+    <value>NEW RECORD</value>
+  </data>
+  <data name="ImportReview_BadgeReplaced" xml:space="preserve">
+    <value>REPLACED</value>
+  </data>
+  <data name="ImportReview_BadgeTestsAdded" xml:space="preserve">
+    <value>TESTS ADDED</value>
+  </data>
+  <data name="ImportReview_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ImportReview_CreateNew" xml:space="preserve">
+    <value>Create a new patient record</value>
+  </data>
+  <data name="ImportReview_CreateNewDesc" xml:space="preserve">
+    <value>Import as a separate patient entry</value>
+  </data>
+  <data name="ImportReview_Date" xml:space="preserve">
+    <value>DATE</value>
+  </data>
+  <data name="ImportReview_DateOfBirth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="ImportReview_Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="ImportReview_DuplicateWarning" xml:space="preserve">
+    <value>The patient to import matches one or more existing patients. Please select an option to continue:</value>
+  </data>
+  <data name="ImportReview_Ear" xml:space="preserve">
+    <value>EAR</value>
+  </data>
+  <data name="ImportReview_Errors" xml:space="preserve">
+    <value>Errors</value>
+  </data>
+  <data name="ImportReview_Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="ImportReview_Import" xml:space="preserve">
+    <value>IMPORT</value>
+  </data>
+  <data name="ImportReview_ImportComplete" xml:space="preserve">
+    <value>Import Complete</value>
+  </data>
+  <data name="ImportReview_ImportNRecords" xml:space="preserve">
+    <value>Import {0} Records</value>
+  </data>
+  <data name="ImportReview_ImportOneRecord" xml:space="preserve">
+    <value>Import 1 Record</value>
+  </data>
+  <data name="ImportReview_Imported" xml:space="preserve">
+    <value>Imported</value>
+  </data>
+  <data name="ImportReview_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ImportReview_NewTestRecords" xml:space="preserve">
+    <value>New test records</value>
+  </data>
+  <data name="ImportReview_NoNewTestsDetected" xml:space="preserve">
+    <value>No new tests detected</value>
+  </data>
+  <data name="ImportReview_NoPatientsSelectedTitle" xml:space="preserve">
+    <value>No Patients Selected</value>
+  </data>
+  <data name="ImportReview_PatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="ImportReview_ReplaceExisting" xml:space="preserve">
+    <value>Replace existing patient</value>
+  </data>
+  <data name="ImportReview_ReplaceExistingDesc" xml:space="preserve">
+    <value>Overwrite all patient info and test records</value>
+  </data>
+  <data name="ImportReview_Result" xml:space="preserve">
+    <value>RESULT</value>
+  </data>
+  <data name="ImportReview_ResultSummary" xml:space="preserve">
+    <value>{0} of {1} records imported successfully</value>
+  </data>
+  <data name="ImportReview_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="ImportReview_SelectAtLeastOnePatient" xml:space="preserve">
+    <value>Please select at least one patient to import.</value>
+  </data>
+  <data name="ImportReview_SelectionCount" xml:space="preserve">
+    <value>{0} of {1} selected</value>
+  </data>
+  <data name="ImportReview_SkipPatient" xml:space="preserve">
+    <value>Skip this patient</value>
+  </data>
+  <data name="ImportReview_Skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="ImportReview_TestRecordsPrefix" xml:space="preserve">
+    <value>TEST RECORDS (</value>
+  </data>
+  <data name="ImportReview_Tests" xml:space="preserve">
+    <value>Tests</value>
+  </data>
+  <data name="ImportReview_Time" xml:space="preserve">
+    <value>TIME</value>
+  </data>
+  <data name="ImportReview_Type" xml:space="preserve">
+    <value>TYPE</value>
+  </data>
+  <data name="LocationsContentView_Code" xml:space="preserve">
+    <value>CODE</value>
+  </data>
+  <data name="LocationsContentView_CodeLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="LocationsContentView_CodeRequired" xml:space="preserve">
+    <value>Code is required.</value>
+  </data>
+  <data name="LocationsContentView_DeleteCaption" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="LocationsContentView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete location "{0}"?</value>
+  </data>
+  <data name="LocationsContentView_DeleteLocationCaption" xml:space="preserve">
+    <value>Delete Location</value>
+  </data>
+  <data name="LocationsContentView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="LocationsContentView_LocationDetails" xml:space="preserve">
+    <value>Location Details</value>
+  </data>
+  <data name="LocationsContentView_LocationDetailsHeader" xml:space="preserve">
+    <value>LOCATION DETAILS</value>
+  </data>
+  <data name="LocationsContentView_LocationSaved" xml:space="preserve">
+    <value>Location saved successfully.</value>
+  </data>
+  <data name="LocationsContentView_Locations" xml:space="preserve">
+    <value>LOCATIONS</value>
+  </data>
+  <data name="LocationsContentView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LocationsContentView_NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="LocationsContentView_NoLocationSelected" xml:space="preserve">
+    <value>No location selected.</value>
+  </data>
+  <data name="LocationsContentView_NoLocationsAvailable" xml:space="preserve">
+    <value>No locations available</value>
+  </data>
+  <data name="LocationsContentView_SaveCaption" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LocationsContentView_SelectLocation" xml:space="preserve">
+    <value>Select a location to view details</value>
+  </data>
+  <data name="LocationsContentView_ValidationCaption" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="LoginViewModel_FailedToLoadUsers" xml:space="preserve">
+    <value>Failed to load users: {0}</value>
+  </data>
+  <data name="LoginViewModel_UnexpectedError" xml:space="preserve">
+    <value>An error occurred: {0}</value>
+  </data>
+  <data name="LoginWindow_AppName" xml:space="preserve">
+    <value>AccuSync</value>
+  </data>
+  <data name="LoginWindow_Authenticating" xml:space="preserve">
+    <value>Authenticating...</value>
+  </data>
+  <data name="LoginWindow_HidePassword" xml:space="preserve">
+    <value>Hide password</value>
+  </data>
+  <data name="LoginWindow_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="LoginWindow_ShowPassword" xml:space="preserve">
+    <value>Show password</value>
+  </data>
+  <data name="LoginWindow_SignIn" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="LoginWindow_Subtitle" xml:space="preserve">
+    <value>Data Management</value>
+  </data>
+  <data name="LoginWindow_Title" xml:space="preserve">
+    <value>AccuSync - Login</value>
+  </data>
+  <data name="LoginWindow_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="NotExportedDialog_AllExported" xml:space="preserve">
+    <value>All patients exported!</value>
+  </data>
+  <data name="NotExportedDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="NotExportedDialog_ConfirmExportCaption" xml:space="preserve">
+    <value>Confirm Export</value>
+  </data>
+  <data name="NotExportedDialog_ConfirmExportMessage" xml:space="preserve">
+    <value>Export screening results for {0} {1} (MRN: {2})?</value>
+  </data>
+  <data name="NotExportedDialog_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="NotExportedDialog_ExportCompleteCaption" xml:space="preserve">
+    <value>Export Complete</value>
+  </data>
+  <data name="NotExportedDialog_ExportCompleteMessage" xml:space="preserve">
+    <value>Successfully exported {0} {1}!</value>
+  </data>
+  <data name="NotExportedDialog_NoPendingPatients" xml:space="preserve">
+    <value>There are no patients waiting to be exported.</value>
+  </data>
+  <data name="NotExportedDialog_OwnerLabel" xml:space="preserve">
+    <value>Owner: </value>
+  </data>
+  <data name="NotExportedDialog_PatientCount" xml:space="preserve">
+    <value>0 patients</value>
+  </data>
+  <data name="NotExportedDialog_PendingExport" xml:space="preserve">
+    <value>Pending export</value>
+  </data>
+  <data name="NotExportedDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search patients...</value>
+  </data>
+  <data name="NotExportedDialog_Title" xml:space="preserve">
+    <value>Not Exported</value>
+  </data>
+  <data name="PatientDetailsTab_AddNotesHint" xml:space="preserve">
+    <value>Add notes or comments about this patient</value>
+  </data>
+  <data name="PatientDetailsTab_American" xml:space="preserve">
+    <value>American</value>
+  </data>
+  <data name="PatientDetailsTab_BirthCenter" xml:space="preserve">
+    <value>Birth Center</value>
+  </data>
+  <data name="PatientDetailsTab_BirthLocation" xml:space="preserve">
+    <value>Birth Location</value>
+  </data>
+  <data name="PatientDetailsTab_British" xml:space="preserve">
+    <value>British</value>
+  </data>
+  <data name="PatientDetailsTab_Canadian" xml:space="preserve">
+    <value>Canadian</value>
+  </data>
+  <data name="PatientDetailsTab_CharCounterDefault" xml:space="preserve">
+    <value>0 / 1000 characters</value>
+  </data>
+  <data name="PatientDetailsTab_CharCounterFormat" xml:space="preserve">
+    <value>{0} / {1} characters</value>
+  </data>
+  <data name="PatientDetailsTab_Chinese" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
+  <data name="PatientDetailsTab_ClearField" xml:space="preserve">
+    <value>Clear field</value>
+  </data>
+  <data name="PatientDetailsTab_Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="PatientDetailsTab_ConsentState" xml:space="preserve">
+    <value>Consent State</value>
+  </data>
+  <data name="PatientDetailsTab_CopyToClipboard" xml:space="preserve">
+    <value>Copy to clipboard</value>
+  </data>
+  <data name="PatientDetailsTab_DateOfBirth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="PatientDetailsTab_Deceased" xml:space="preserve">
+    <value>Deceased</value>
+  </data>
+  <data name="PatientDetailsTab_Discharged" xml:space="preserve">
+    <value>Discharged</value>
+  </data>
+  <data name="PatientDetailsTab_ErrorCopying" xml:space="preserve">
+    <value>Error copying: {0}</value>
+  </data>
+  <data name="PatientDetailsTab_Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="PatientDetailsTab_FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="PatientDetailsTab_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="PatientDetailsTab_Full" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="PatientDetailsTab_FullTracking" xml:space="preserve">
+    <value>Full Tracking</value>
+  </data>
+  <data name="PatientDetailsTab_Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="PatientDetailsTab_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="PatientDetailsTab_GestationalAgeWeeks" xml:space="preserve">
+    <value>Gestational Age (weeks)</value>
+  </data>
+  <data name="PatientDetailsTab_HeightCm" xml:space="preserve">
+    <value>Height (cm)</value>
+  </data>
+  <data name="PatientDetailsTab_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="PatientDetailsTab_Hospital" xml:space="preserve">
+    <value>Hospital</value>
+  </data>
+  <data name="PatientDetailsTab_HospitalId" xml:space="preserve">
+    <value>Hospital ID</value>
+  </data>
+  <data name="PatientDetailsTab_Indian" xml:space="preserve">
+    <value>Indian</value>
+  </data>
+  <data name="PatientDetailsTab_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="PatientDetailsTab_Japanese" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="PatientDetailsTab_Korean" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="PatientDetailsTab_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="PatientDetailsTab_Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="PatientDetailsTab_Mexican" xml:space="preserve">
+    <value>Mexican</value>
+  </data>
+  <data name="PatientDetailsTab_NICU" xml:space="preserve">
+    <value>NICU</value>
+  </data>
+  <data name="PatientDetailsTab_Nationality" xml:space="preserve">
+    <value>Nationality</value>
+  </data>
+  <data name="PatientDetailsTab_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="PatientDetailsTab_NoTracking" xml:space="preserve">
+    <value>No tracking</value>
+  </data>
+  <data name="PatientDetailsTab_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="PatientDetailsTab_PatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="PatientDetailsTab_PatientInformation" xml:space="preserve">
+    <value>Patient Information</value>
+  </data>
+  <data name="PatientDetailsTab_Screening" xml:space="preserve">
+    <value>Screening</value>
+  </data>
+  <data name="PatientDetailsTab_ScreeningConsent" xml:space="preserve">
+    <value>Screening Consent</value>
+  </data>
+  <data name="PatientDetailsTab_SetToTodaysDate" xml:space="preserve">
+    <value>Set to today's date</value>
+  </data>
+  <data name="PatientDetailsTab_SimpleTracking" xml:space="preserve">
+    <value>Simple tracking</value>
+  </data>
+  <data name="PatientDetailsTab_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="PatientDetailsTab_Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="PatientDetailsTab_TrackingConsent" xml:space="preserve">
+    <value>Tracking Consent</value>
+  </data>
+  <data name="PatientDetailsTab_WeightGrams" xml:space="preserve">
+    <value>Weight (grams)</value>
+  </data>
+  <data name="PatientDetailsTab_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="PatientInformationView_ActionsLabel" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="PatientInformationView_AdditionalTab" xml:space="preserve">
+    <value>Additional</value>
+  </data>
+  <data name="PatientInformationView_BulletField" xml:space="preserve">
+    <value>• {0}</value>
+  </data>
+  <data name="PatientInformationView_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PatientInformationView_CurrentlyEditing" xml:space="preserve">
+    <value>Currently editing — click to lock</value>
+  </data>
+  <data name="PatientInformationView_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="PatientInformationView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete the patient record for {0} {1}?</value>
+  </data>
+  <data name="PatientInformationView_DeletePatientCaption" xml:space="preserve">
+    <value>Delete Patient</value>
+  </data>
+  <data name="PatientInformationView_DeletePatientTooltip" xml:space="preserve">
+    <value>Delete patient</value>
+  </data>
+  <data name="PatientInformationView_DobLabel" xml:space="preserve">
+    <value>DOB: </value>
+  </data>
+  <data name="PatientInformationView_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="PatientInformationView_EditOverlayMessage" xml:space="preserve">
+    <value>Click Edit to modify patient information</value>
+  </data>
+  <data name="PatientInformationView_EditPatientTooltip" xml:space="preserve">
+    <value>Edit patient</value>
+  </data>
+  <data name="PatientInformationView_GenderLabel" xml:space="preserve">
+    <value>Gender: </value>
+  </data>
+  <data name="PatientInformationView_HeaderTitle" xml:space="preserve">
+    <value>PATIENT INFORMATION</value>
+  </data>
+  <data name="PatientInformationView_HospitalIdLabel" xml:space="preserve">
+    <value>Hospital ID: </value>
+  </data>
+  <data name="PatientInformationView_IdLabel" xml:space="preserve">
+    <value>ID: </value>
+  </data>
+  <data name="PatientInformationView_JumpCaregiver" xml:space="preserve">
+    <value>Caregiver</value>
+  </data>
+  <data name="PatientInformationView_JumpMedical" xml:space="preserve">
+    <value>Medical</value>
+  </data>
+  <data name="PatientInformationView_JumpMother" xml:space="preserve">
+    <value>Mother</value>
+  </data>
+  <data name="PatientInformationView_JumpReferral" xml:space="preserve">
+    <value>Referral</value>
+  </data>
+  <data name="PatientInformationView_JumpTo" xml:space="preserve">
+    <value>Jump To:</value>
+  </data>
+  <data name="PatientInformationView_MissingFieldsTooltip" xml:space="preserve">
+    <value>Click to see missing required fields</value>
+  </data>
+  <data name="PatientInformationView_MissingRequiredFields" xml:space="preserve">
+    <value>Missing Required Fields</value>
+  </data>
+  <data name="PatientInformationView_NewPatient" xml:space="preserve">
+    <value>New Patient</value>
+  </data>
+  <data name="PatientInformationView_NewPatientCreated" xml:space="preserve">
+    <value>New patient created successfully.</value>
+  </data>
+  <data name="PatientInformationView_PatientAddedCaption" xml:space="preserve">
+    <value>Patient Added</value>
+  </data>
+  <data name="PatientInformationView_PatientLabel" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="PatientInformationView_PatientSaved" xml:space="preserve">
+    <value>Patient information saved successfully.</value>
+  </data>
+  <data name="PatientInformationView_RequiredFieldsMissingCaption" xml:space="preserve">
+    <value>Required Fields Missing</value>
+  </data>
+  <data name="PatientInformationView_RequiredFieldsMissingMessage" xml:space="preserve">
+    <value>Please fill in the following required fields:
+
+{0}</value>
+  </data>
+  <data name="PatientInformationView_Revert" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="PatientInformationView_RevertAllChangesTooltip" xml:space="preserve">
+    <value>Revert all changes</value>
+  </data>
+  <data name="PatientInformationView_RevertChangesCaption" xml:space="preserve">
+    <value>Revert Changes</value>
+  </data>
+  <data name="PatientInformationView_RevertConfirm" xml:space="preserve">
+    <value>Are you sure you want to revert all changes?</value>
+  </data>
+  <data name="PatientInformationView_RisksTab" xml:space="preserve">
+    <value>Risks</value>
+  </data>
+  <data name="PatientInformationView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="PatientInformationView_SaveChangesTooltip" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="PatientInformationView_SavedCaption" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="PatientInformationView_ScanForDetails" xml:space="preserve">
+    <value>SCAN FOR DETAILS</value>
+  </data>
+  <data name="PatientInformationView_SelectPatientPrompt" xml:space="preserve">
+    <value>Select a patient to view details</value>
+  </data>
+  <data name="PatientInformationView_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="PatientInformationView_UndoLastChangeTooltip" xml:space="preserve">
+    <value>Undo last change</value>
+  </data>
+  <data name="PatientListDialog_AdjustSearchHint" xml:space="preserve">
+    <value>Try adjusting your search criteria.</value>
+  </data>
+  <data name="PatientListDialog_CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PatientListDialog_CloseToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PatientListDialog_CountPlural" xml:space="preserve">
+    <value>{0} patients</value>
+  </data>
+  <data name="PatientListDialog_CountSingular" xml:space="preserve">
+    <value>{0} patient</value>
+  </data>
+  <data name="PatientListDialog_NoPatientsFound" xml:space="preserve">
+    <value>No patients found</value>
+  </data>
+  <data name="PatientListDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search patients...</value>
+  </data>
+  <data name="PatientListDialog_Subtitle" xml:space="preserve">
+    <value>last 7 days</value>
+  </data>
+  <data name="PatientListDialog_Title" xml:space="preserve">
+    <value>Patient List</value>
+  </data>
+  <data name="PatientListDialog_TitleIncomplete" xml:space="preserve">
+    <value>Incomplete</value>
+  </data>
+  <data name="PatientListDialog_TitlePass" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="PatientListDialog_TitleReferred" xml:space="preserve">
+    <value>Referred</value>
+  </data>
+  <data name="PatientsView_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="PatientsView_BulkDeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete {0} selected patient(s)?</value>
+  </data>
+  <data name="PatientsView_BulkDeleteSuccess" xml:space="preserve">
+    <value>{0} patient(s) deleted successfully.</value>
+  </data>
+  <data name="PatientsView_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PatientsView_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="PatientsView_ClearSearch" xml:space="preserve">
+    <value>Clear search</value>
+  </data>
+  <data name="PatientsView_ClearSelection" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="PatientsView_ConfirmDeletionCaption" xml:space="preserve">
+    <value>Confirm Deletion</value>
+  </data>
+  <data name="PatientsView_CsvBadge" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="PatientsView_CsvFileDescription" xml:space="preserve">
+    <value>Excel compatible spreadsheet</value>
+  </data>
+  <data name="PatientsView_CsvFileTitle" xml:space="preserve">
+    <value>CSV File</value>
+  </data>
+  <data name="PatientsView_DateOfBirthLabel" xml:space="preserve">
+    <value>DATE OF BIRTH</value>
+  </data>
+  <data name="PatientsView_DateOfScreenLabel" xml:space="preserve">
+    <value>DATE OF SCREEN</value>
+  </data>
+  <data name="PatientsView_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="PatientsView_DeleteCompleteCaption" xml:space="preserve">
+    <value>Delete Complete</value>
+  </data>
+  <data name="PatientsView_DeleteSelectedPatients" xml:space="preserve">
+    <value>Delete selected patients</value>
+  </data>
+  <data name="PatientsView_DobLabel" xml:space="preserve">
+    <value>DOB: </value>
+  </data>
+  <data name="PatientsView_ExcelExportMessage" xml:space="preserve">
+    <value>Excel export requires additional libraries (e.g., EPPlus or ClosedXML).
+
+Implement using NuGet packages.</value>
+  </data>
+  <data name="PatientsView_ExcelFileDescription" xml:space="preserve">
+    <value>Microsoft Excel workbook</value>
+  </data>
+  <data name="PatientsView_ExcelFileTitle" xml:space="preserve">
+    <value>Excel File (.xlsx)</value>
+  </data>
+  <data name="PatientsView_ExitSelectionMode" xml:space="preserve">
+    <value>Exit selection mode</value>
+  </data>
+  <data name="PatientsView_ExportCompleteCaption" xml:space="preserve">
+    <value>Export Complete</value>
+  </data>
+  <data name="PatientsView_ExportError" xml:space="preserve">
+    <value>Error exporting data: {0}</value>
+  </data>
+  <data name="PatientsView_ExportErrorCaption" xml:space="preserve">
+    <value>Export Error</value>
+  </data>
+  <data name="PatientsView_ExportPatientList" xml:space="preserve">
+    <value>Export Patient List</value>
+  </data>
+  <data name="PatientsView_ExportSuccess" xml:space="preserve">
+    <value>Patient data exported successfully to:
+{0}</value>
+  </data>
+  <data name="PatientsView_ExportToExcelCaption" xml:space="preserve">
+    <value>Export to Excel</value>
+  </data>
+  <data name="PatientsView_ExportToPdfCaption" xml:space="preserve">
+    <value>Export to PDF</value>
+  </data>
+  <data name="PatientsView_FilterBirthDate" xml:space="preserve">
+    <value>Birth date</value>
+  </data>
+  <data name="PatientsView_FilterFirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="PatientsView_FilterGender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="PatientsView_FilterLastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="PatientsView_FilterOptions" xml:space="preserve">
+    <value>Filter options</value>
+  </data>
+  <data name="PatientsView_FilterPatientId" xml:space="preserve">
+    <value>Patient Id</value>
+  </data>
+  <data name="PatientsView_IdLabel" xml:space="preserve">
+    <value>ID: </value>
+  </data>
+  <data name="PatientsView_ImportCaption" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="PatientsView_ImportErrorCaption" xml:space="preserve">
+    <value>Import Error</value>
+  </data>
+  <data name="PatientsView_NoPatientRecords" xml:space="preserve">
+    <value>No patient records found in file.</value>
+  </data>
+  <data name="PatientsView_PaginationInfo" xml:space="preserve">
+    <value>Showing 1-10 of 10</value>
+  </data>
+  <data name="PatientsView_PaginationInfoFormat" xml:space="preserve">
+    <value>Showing {0}-{1} of {2}</value>
+  </data>
+  <data name="PatientsView_PatientCount" xml:space="preserve">
+    <value>10 Patient(s)</value>
+  </data>
+  <data name="PatientsView_PatientCountFormat" xml:space="preserve">
+    <value>{0} Patient(s)</value>
+  </data>
+  <data name="PatientsView_PatientCountZero" xml:space="preserve">
+    <value>0 Patient(s)</value>
+  </data>
+  <data name="PatientsView_Patients" xml:space="preserve">
+    <value>PATIENTS</value>
+  </data>
+  <data name="PatientsView_PdfBadge" xml:space="preserve">
+    <value>PDF</value>
+  </data>
+  <data name="PatientsView_PdfDocumentDescription" xml:space="preserve">
+    <value>Printable report format</value>
+  </data>
+  <data name="PatientsView_PdfDocumentTitle" xml:space="preserve">
+    <value>PDF Document</value>
+  </data>
+  <data name="PatientsView_PdfExportMessage" xml:space="preserve">
+    <value>PDF export requires additional libraries (e.g., iTextSharp or PdfSharp).
+
+Implement using NuGet packages.</value>
+  </data>
+  <data name="PatientsView_PerPage" xml:space="preserve">
+    <value>Per page:</value>
+  </data>
+  <data name="PatientsView_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="PatientsView_RefreshSuccess" xml:space="preserve">
+    <value>Patient list refreshed!</value>
+  </data>
+  <data name="PatientsView_RemoveFilter" xml:space="preserve">
+    <value>Remove filter</value>
+  </data>
+  <data name="PatientsView_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="PatientsView_SearchPlaceholder" xml:space="preserve">
+    <value>Type here to search</value>
+  </data>
+  <data name="PatientsView_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="PatientsView_SelectFilters" xml:space="preserve">
+    <value>Select Filters</value>
+  </data>
+  <data name="PatientsView_SelectPatients" xml:space="preserve">
+    <value>Select patients</value>
+  </data>
+  <data name="PatientsView_SelectedOfTotal" xml:space="preserve">
+    <value>{0} of {1} selected</value>
+  </data>
+  <data name="PatientsView_SortBirthDateNewest" xml:space="preserve">
+    <value>Date of Birth (Newest)</value>
+  </data>
+  <data name="PatientsView_SortBirthDateOldest" xml:space="preserve">
+    <value>Date of Birth (Oldest)</value>
+  </data>
+  <data name="PatientsView_SortBy" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="PatientsView_SortDateOfScreenRecent" xml:space="preserve">
+    <value>Date of Screen (Recent)</value>
+  </data>
+  <data name="PatientsView_SortFirstNameAsc" xml:space="preserve">
+    <value>First Name (A-Z)</value>
+  </data>
+  <data name="PatientsView_SortLastNameAsc" xml:space="preserve">
+    <value>Last Name (A-Z)</value>
+  </data>
+  <data name="PatientsView_SortPatientId" xml:space="preserve">
+    <value>Patient ID</value>
+  </data>
+  <data name="PatientsView_SwitchToCompactView" xml:space="preserve">
+    <value>Switch to Compact view</value>
+  </data>
+  <data name="PatientsView_SwitchToDetailedView" xml:space="preserve">
+    <value>Switch to Detailed view</value>
+  </data>
+  <data name="PatientsView_XlsBadge" xml:space="preserve">
+    <value>XLS</value>
+  </data>
+  <data name="PendingScreeningsDialog_CaughtUpMessage" xml:space="preserve">
+    <value>You're all caught up! No screenings are pending.</value>
+  </data>
+  <data name="PendingScreeningsDialog_CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PendingScreeningsDialog_CountFormat" xml:space="preserve">
+    <value>{0} pending</value>
+  </data>
+  <data name="PendingScreeningsDialog_CountText" xml:space="preserve">
+    <value>0 pending</value>
+  </data>
+  <data name="PendingScreeningsDialog_GreatJobMessage" xml:space="preserve">
+    <value>Great job staying on top of your work!</value>
+  </data>
+  <data name="PendingScreeningsDialog_NoPendingTitle" xml:space="preserve">
+    <value>No pending screenings</value>
+  </data>
+  <data name="PendingScreeningsDialog_PatientDetailsCaption" xml:space="preserve">
+    <value>Patient Details</value>
+  </data>
+  <data name="PendingScreeningsDialog_PrintReportMessage" xml:space="preserve">
+    <value>Print report for {0}
+
+Patient ID: {1}</value>
+  </data>
+  <data name="PendingScreeningsDialog_PrintReportToolTip" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="PendingScreeningsDialog_RefreshButton" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="PendingScreeningsDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search screenings...</value>
+  </data>
+  <data name="PendingScreeningsDialog_Title" xml:space="preserve">
+    <value>Pending Screenings</value>
+  </data>
+  <data name="PendingScreeningsDialog_ViewDetailsToolTip" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="PrintDialog_BasicReports" xml:space="preserve">
+    <value>BASIC REPORTS</value>
+  </data>
+  <data name="PrintDialog_BestAbrTest" xml:space="preserve">
+    <value>Best ABR test</value>
+  </data>
+  <data name="PrintDialog_BestDpoaeTest" xml:space="preserve">
+    <value>Best DPOAE test</value>
+  </data>
+  <data name="PrintDialog_BestTeoaeTest" xml:space="preserve">
+    <value>Best TEOAE test</value>
+  </data>
+  <data name="PrintDialog_BestTests" xml:space="preserve">
+    <value>Best tests</value>
+  </data>
+  <data name="PrintDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PrintDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="PrintDialog_DetailReports" xml:space="preserve">
+    <value>DETAIL REPORTS</value>
+  </data>
+  <data name="PrintDialog_SelectedTests" xml:space="preserve">
+    <value>Selected tests</value>
+  </data>
+  <data name="PrintDialog_Title" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="ProfilesContentView_Administrator" xml:space="preserve">
+    <value>ADMINISTRATOR</value>
+  </data>
+  <data name="ProfilesContentView_ComponentPrefix" xml:space="preserve">
+    <value>Component: {0}</value>
+  </data>
+  <data name="ProfilesContentView_ComponentsAndPermissions" xml:space="preserve">
+    <value>Components and Permissions</value>
+  </data>
+  <data name="ProfilesContentView_CountBadge" xml:space="preserve">
+    <value> ({0}/{1})</value>
+  </data>
+  <data name="ProfilesContentView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete profile "{0}"?</value>
+  </data>
+  <data name="ProfilesContentView_DeleteProfile" xml:space="preserve">
+    <value>Delete Profile</value>
+  </data>
+  <data name="ProfilesContentView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ProfilesContentView_Grant" xml:space="preserve">
+    <value>GRANT</value>
+  </data>
+  <data name="ProfilesContentView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ProfilesContentView_NameColumn" xml:space="preserve">
+    <value>NAME</value>
+  </data>
+  <data name="ProfilesContentView_NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="ProfilesContentView_ProfileInformation" xml:space="preserve">
+    <value>Profile Information</value>
+  </data>
+  <data name="ProfilesContentView_ProfileSaved" xml:space="preserve">
+    <value>Profile saved successfully.</value>
+  </data>
+  <data name="ProfilesContentView_Profiles" xml:space="preserve">
+    <value>PROFILES</value>
+  </data>
+  <data name="ProfilesContentView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ProfilesContentView_SelectProfilePrompt" xml:space="preserve">
+    <value>Select a profile to view details</value>
+  </data>
+  <data name="ProfilesContentView_Validation" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="Ribbon_ABR" xml:space="preserve">
+    <value>ABR</value>
+  </data>
+  <data name="Ribbon_ABRProtocol" xml:space="preserve">
+    <value>ABR Protocol</value>
+  </data>
+  <data name="Ribbon_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Ribbon_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Ribbon_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Ribbon_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Ribbon_Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="Ribbon_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="Ribbon_CopyInfo" xml:space="preserve">
+    <value>Copy Info</value>
+  </data>
+  <data name="Ribbon_DPOAE" xml:space="preserve">
+    <value>DPOAE</value>
+  </data>
+  <data name="Ribbon_DPOAEProtocol" xml:space="preserve">
+    <value>DPOAE Protocol</value>
+  </data>
+  <data name="Ribbon_DataExchange" xml:space="preserve">
+    <value>Data Exchange</value>
+  </data>
+  <data name="Ribbon_DataManagement" xml:space="preserve">
+    <value>Data Management</value>
+  </data>
+  <data name="Ribbon_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Ribbon_Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="Ribbon_DeviceManagement" xml:space="preserve">
+    <value>Device Management</value>
+  </data>
+  <data name="Ribbon_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Ribbon_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Ribbon_ExportConfig" xml:space="preserve">
+    <value>Export Config</value>
+  </data>
+  <data name="Ribbon_Facilities" xml:space="preserve">
+    <value>Facilities</value>
+  </data>
+  <data name="Ribbon_Facility" xml:space="preserve">
+    <value>Facility</value>
+  </data>
+  <data name="Ribbon_FieldSetup" xml:space="preserve">
+    <value>Field Setup</value>
+  </data>
+  <data name="Ribbon_Firmware" xml:space="preserve">
+    <value>Firmware</value>
+  </data>
+  <data name="Ribbon_Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Ribbon_Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Ribbon_ImportConfig" xml:space="preserve">
+    <value>Import Config</value>
+  </data>
+  <data name="Ribbon_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="Ribbon_Management" xml:space="preserve">
+    <value>Management</value>
+  </data>
+  <data name="Ribbon_Navigation" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="Ribbon_Patient" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="Ribbon_PatientsTests" xml:space="preserve">
+    <value>Patients &amp; Tests</value>
+  </data>
+  <data name="Ribbon_Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Ribbon_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Ribbon_Profiles" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="Ribbon_Receive" xml:space="preserve">
+    <value>Receive</value>
+  </data>
+  <data name="Ribbon_Revert" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="Ribbon_RiskFactor" xml:space="preserve">
+    <value>Risk Factor</value>
+  </data>
+  <data name="Ribbon_RiskFactors" xml:space="preserve">
+    <value>Risk Factors</value>
+  </data>
+  <data name="Ribbon_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Ribbon_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Ribbon_Site" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="Ribbon_SiteFacility" xml:space="preserve">
+    <value>Site &amp; Facility</value>
+  </data>
+  <data name="Ribbon_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Ribbon_Unlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
+  <data name="Ribbon_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Ribbon_User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Ribbon_UserProfile" xml:space="preserve">
+    <value>User &amp; Profile</value>
+  </data>
+  <data name="RiskFactorsConfigView_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="RiskFactorsConfigView_CannotDelete" xml:space="preserve">
+    <value>Cannot Delete</value>
+  </data>
+  <data name="RiskFactorsConfigView_CannotDeleteAssigned" xml:space="preserve">
+    <value>This risk factor has been assigned to patients and cannot be deleted.</value>
+  </data>
+  <data name="RiskFactorsConfigView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="RiskFactorsConfigView_ConfirmDeleteRiskFactor" xml:space="preserve">
+    <value>Are you sure you want to delete risk factor '{0}'?</value>
+  </data>
+  <data name="RiskFactorsConfigView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="RiskFactorsConfigView_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="RiskFactorsConfigView_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="RiskFactorsConfigView_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="RiskFactorsConfigView_InUseInfo" xml:space="preserve">
+    <value>Risk factor has been assigned to patients and therefore you are not allowed to make changes to text.</value>
+  </data>
+  <data name="RiskFactorsConfigView_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="RiskFactorsConfigView_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="RiskFactorsConfigView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="RiskFactorsConfigView_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="RiskFactorsConfigView_NoRiskFactorsAvailable" xml:space="preserve">
+    <value>No risk factors available</value>
+  </data>
+  <data name="RiskFactorsConfigView_NotInUseInfo" xml:space="preserve">
+    <value>This Risk Factor is not in use</value>
+  </data>
+  <data name="RiskFactorsConfigView_RiskFactorDetails" xml:space="preserve">
+    <value>Risk Factor Details</value>
+  </data>
+  <data name="RiskFactorsConfigView_RiskFactorDetailsHeader" xml:space="preserve">
+    <value>RISK FACTOR DETAILS</value>
+  </data>
+  <data name="RiskFactorsConfigView_RiskFactorSaved" xml:space="preserve">
+    <value>Risk factor saved.</value>
+  </data>
+  <data name="RiskFactorsConfigView_RiskFactors" xml:space="preserve">
+    <value>RISK FACTORS</value>
+  </data>
+  <data name="RiskFactorsConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="RiskFactorsConfigView_SelectRiskFactorToViewDetails" xml:space="preserve">
+    <value>Select a risk factor to view details</value>
+  </data>
+  <data name="RiskFactorsConfigView_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="RiskFactorsConfigView_SystemInformation" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="RiskFactorsConfigView_Translation" xml:space="preserve">
+    <value>Translation</value>
+  </data>
+  <data name="RiskFactorsConfigView_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="RiskFactorsTab_AllNo" xml:space="preserve">
+    <value>All No</value>
+  </data>
+  <data name="RiskFactorsTab_AllUnknown" xml:space="preserve">
+    <value>All Unknown</value>
+  </data>
+  <data name="RiskFactorsTab_AllYes" xml:space="preserve">
+    <value>All Yes</value>
+  </data>
+  <data name="RiskFactorsTab_Aminoglycosides" xml:space="preserve">
+    <value>Aminoglycosides for &gt;5 Days</value>
+  </data>
+  <data name="RiskFactorsTab_AnsweredCount" xml:space="preserve">
+    <value>{0}/16 answered</value>
+  </data>
+  <data name="RiskFactorsTab_Asphyxia" xml:space="preserve">
+    <value>Asphyxia- Hypoxic Ischemic Encephalopathy (HIE)</value>
+  </data>
+  <data name="RiskFactorsTab_BacterialMeningitis" xml:space="preserve">
+    <value>Bacterial Meningitis</value>
+  </data>
+  <data name="RiskFactorsTab_CaregiverConcernRisk" xml:space="preserve">
+    <value>Caregiver Concern</value>
+  </data>
+  <data name="RiskFactorsTab_CraniofacialAnomalies" xml:space="preserve">
+    <value>Craniofacial Anomalies-Microtia/Atresia, Clefting</value>
+  </data>
+  <data name="RiskFactorsTab_ECMO" xml:space="preserve">
+    <value>ECMO-Extracorporeal Membrane Oxygenation</value>
+  </data>
+  <data name="RiskFactorsTab_FamilyHistory" xml:space="preserve">
+    <value>Family History of Permanent Childhood Hearing Loss</value>
+  </data>
+  <data name="RiskFactorsTab_HeadTrauma" xml:space="preserve">
+    <value>Exposure to Head Trauma or Chemotherapy</value>
+  </data>
+  <data name="RiskFactorsTab_Hyperbilirubinemia" xml:space="preserve">
+    <value>Hyperbilirubinemia with Exchange Transfusion</value>
+  </data>
+  <data name="RiskFactorsTab_InUteroInfections" xml:space="preserve">
+    <value>In Utero Infections such as CMV &amp; Zika</value>
+  </data>
+  <data name="RiskFactorsTab_LowBirthWeight" xml:space="preserve">
+    <value>Low Birth Weight</value>
+  </data>
+  <data name="RiskFactorsTab_NICUStay" xml:space="preserve">
+    <value>NICU &gt;5 Days</value>
+  </data>
+  <data name="RiskFactorsTab_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="RiskFactorsTab_OtotoxicMedications" xml:space="preserve">
+    <value>Ototoxic Medications</value>
+  </data>
+  <data name="RiskFactorsTab_PerinatalInfection" xml:space="preserve">
+    <value>Perinatal or Postnatal Infection</value>
+  </data>
+  <data name="RiskFactorsTab_ProlongedVentilation" xml:space="preserve">
+    <value>Prolonged Ventilation</value>
+  </data>
+  <data name="RiskFactorsTab_RiskFactors" xml:space="preserve">
+    <value>Risk Factors</value>
+  </data>
+  <data name="RiskFactorsTab_Syndromes" xml:space="preserve">
+    <value>Syndromes &amp; Genetic Disorders of Hearing Loss</value>
+  </data>
+  <data name="RiskFactorsTab_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="RiskFactorsTab_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ActionAddPatient" xml:space="preserve">
+    <value>Add Patient</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ActionExport" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ActionImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ActionMyPatients" xml:space="preserve">
+    <value>My Patients</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ActionReports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="ScreenerDashboardWindow_AppName" xml:space="preserve">
+    <value>AccuSync</value>
+  </data>
+  <data name="ScreenerDashboardWindow_CaptionPass" xml:space="preserve">
+    <value>Pass</value>
+  </data>
+  <data name="ScreenerDashboardWindow_CaptionReferred" xml:space="preserve">
+    <value>Referred</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ConfirmLogoutCaption" xml:space="preserve">
+    <value>Confirm Logout</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ConfirmLogoutMessage" xml:space="preserve">
+    <value>Are you sure you want to logout?</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DayFri" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DayMon" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DaySat" xml:space="preserve">
+    <value>Sat</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DaySun" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DayThu" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DayTue" xml:space="preserve">
+    <value>Tue</value>
+  </data>
+  <data name="ScreenerDashboardWindow_DayWed" xml:space="preserve">
+    <value>Wed</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ExportNotImplemented" xml:space="preserve">
+    <value>Export — not yet implemented.</value>
+  </data>
+  <data name="ScreenerDashboardWindow_GreetingAfternoon" xml:space="preserve">
+    <value>Good Afternoon</value>
+  </data>
+  <data name="ScreenerDashboardWindow_GreetingEvening" xml:space="preserve">
+    <value>Good Evening</value>
+  </data>
+  <data name="ScreenerDashboardWindow_GreetingMorning" xml:space="preserve">
+    <value>Good Morning</value>
+  </data>
+  <data name="ScreenerDashboardWindow_HeaderAboutAccuSync" xml:space="preserve">
+    <value>About AccuSync</value>
+  </data>
+  <data name="ScreenerDashboardWindow_HeaderScreenerDashboard" xml:space="preserve">
+    <value>Screener Dashboard</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ImportNotImplemented" xml:space="preserve">
+    <value>Import — not yet implemented.</value>
+  </data>
+  <data name="ScreenerDashboardWindow_LogoutSuccessMessage" xml:space="preserve">
+    <value>Logout successful. Returning to login...</value>
+  </data>
+  <data name="ScreenerDashboardWindow_NavAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ScreenerDashboardWindow_NavDashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="ScreenerDashboardWindow_NavLogout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="ScreenerDashboardWindow_NavPatients" xml:space="preserve">
+    <value>Patients</value>
+  </data>
+  <data name="ScreenerDashboardWindow_PanelHeader" xml:space="preserve">
+    <value>SCREENER DASHBOARD</value>
+  </data>
+  <data name="ScreenerDashboardWindow_PassNotImplemented" xml:space="preserve">
+    <value>Pass results — not yet implemented.</value>
+  </data>
+  <data name="ScreenerDashboardWindow_QuickActions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ReferredNotImplemented" xml:space="preserve">
+    <value>Referred patients — not yet implemented.</value>
+  </data>
+  <data name="ScreenerDashboardWindow_ReportsNotImplemented" xml:space="preserve">
+    <value>Reports — not yet implemented.</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatAssignedToday" xml:space="preserve">
+    <value>ASSIGNED TODAY</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatCompleted" xml:space="preserve">
+    <value>COMPLETED</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatNotExported" xml:space="preserve">
+    <value>NOT EXPORTED</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatPass7D" xml:space="preserve">
+    <value>PASS (7D)</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatPending" xml:space="preserve">
+    <value>PENDING</value>
+  </data>
+  <data name="ScreenerDashboardWindow_StatReferred7D" xml:space="preserve">
+    <value>REFERRED (7D)</value>
+  </data>
+  <data name="ScreenerDashboardWindow_Title" xml:space="preserve">
+    <value>AccuSync - Screener Dashboard</value>
+  </data>
+  <data name="ScreenerDashboardWindow_TodaysOverview" xml:space="preserve">
+    <value>Today's Overview</value>
+  </data>
+  <data name="ScreenerDetailsDialog_AssignedCountText" xml:space="preserve">
+    <value>5 screenings assigned today</value>
+  </data>
+  <data name="ScreenerDetailsDialog_AssignedPatientsHeader" xml:space="preserve">
+    <value>Assigned Patients</value>
+  </data>
+  <data name="ScreenerDetailsDialog_BackToolTip" xml:space="preserve">
+    <value>Back to Screener List</value>
+  </data>
+  <data name="ScreenerDetailsDialog_CloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ScreenerDetailsDialog_PassCountFormat" xml:space="preserve">
+    <value>{0} Pass</value>
+  </data>
+  <data name="ScreenerDetailsDialog_PassCountText" xml:space="preserve">
+    <value>3 Pass</value>
+  </data>
+  <data name="ScreenerDetailsDialog_ReferCountFormat" xml:space="preserve">
+    <value>{0} Refer</value>
+  </data>
+  <data name="ScreenerDetailsDialog_ReferCountText" xml:space="preserve">
+    <value>2 Refer</value>
+  </data>
+  <data name="ScreenerDetailsDialog_ScreenerName" xml:space="preserve">
+    <value>Screener A</value>
+  </data>
+  <data name="ScreenerDetailsDialog_Title" xml:space="preserve">
+    <value>Screener Details</value>
+  </data>
+  <data name="ScreenerListDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ScreenerListDialog_CountText" xml:space="preserve">
+    <value>0 screeners</value>
+  </data>
+  <data name="ScreenerListDialog_DateSubtitle" xml:space="preserve">
+    <value>Feb 17, 2026</value>
+  </data>
+  <data name="ScreenerListDialog_NoScreenersFound" xml:space="preserve">
+    <value>No screeners found</value>
+  </data>
+  <data name="ScreenerListDialog_ScreeningsToday" xml:space="preserve">
+    <value>Screenings Today</value>
+  </data>
+  <data name="ScreenerListDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search screeners...</value>
+  </data>
+  <data name="ScreenerListDialog_TryAdjustingSearch" xml:space="preserve">
+    <value>Try adjusting your search criteria.</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_AllExported" xml:space="preserve">
+    <value>All screenings exported!</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_CompletedLabel" xml:space="preserve">
+    <value>Completed: </value>
+  </data>
+  <data name="ScreenerNotExportedDialog_ConfirmExportCaption" xml:space="preserve">
+    <value>Confirm Export</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_CountPlural" xml:space="preserve">
+    <value>{0} screenings</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_CountSingular" xml:space="preserve">
+    <value>{0} screening</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_ExportCompleteCaption" xml:space="preserve">
+    <value>Export Complete</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_ExportSuccessMessage" xml:space="preserve">
+    <value>Successfully exported screening for {0}!</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_GreatJob" xml:space="preserve">
+    <value>Great job keeping up with exports!</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_NoScreeningsWaiting" xml:space="preserve">
+    <value>There are no screenings waiting to be exported.</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_NotExportedPending" xml:space="preserve">
+    <value>Not Exported — Pending</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_ResultLabel" xml:space="preserve">
+    <value> • Result: </value>
+  </data>
+  <data name="ScreenerNotExportedDialog_SearchPlaceholder" xml:space="preserve">
+    <value>Search screenings...</value>
+  </data>
+  <data name="ScreenerNotExportedDialog_Title" xml:space="preserve">
+    <value>Not Exported - Screener</value>
+  </data>
+  <data name="SettingsContentView_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="SettingsContentView_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="SettingsContentView_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="SettingsContentView_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="SettingsContentView_HidePassword" xml:space="preserve">
+    <value>Hide password</value>
+  </data>
+  <data name="SettingsContentView_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="SettingsContentView_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SettingsContentView_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SettingsContentView_SaveCaption" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsContentView_Settings" xml:space="preserve">
+    <value>SETTINGS</value>
+  </data>
+  <data name="SettingsContentView_SettingsSaved" xml:space="preserve">
+    <value>Settings saved.</value>
+  </data>
+  <data name="SettingsContentView_ShowPassword" xml:space="preserve">
+    <value>Show password</value>
+  </data>
+  <data name="SettingsContentView_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="SettingsContentView_Verification" xml:space="preserve">
+    <value>Verification</value>
+  </data>
+  <data name="SidebarNavigation_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SidebarNavigation_AddCaption" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="SidebarNavigation_AddNewMessage" xml:space="preserve">
+    <value>Add new {0} — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_AppTitle" xml:space="preserve">
+    <value>AccuSync</value>
+  </data>
+  <data name="SidebarNavigation_ConfirmDeleteCaption" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="SidebarNavigation_ConfirmDeleteMessage" xml:space="preserve">
+    <value>Are you sure you want to delete the selected {0}?</value>
+  </data>
+  <data name="SidebarNavigation_ConfirmLogoutCaption" xml:space="preserve">
+    <value>Confirm Logout</value>
+  </data>
+  <data name="SidebarNavigation_ConfirmLogoutMessage" xml:space="preserve">
+    <value>Are you sure you want to logout?</value>
+  </data>
+  <data name="SidebarNavigation_ContentImplementationPending" xml:space="preserve">
+    <value>Content implementation pending</value>
+  </data>
+  <data name="SidebarNavigation_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="SidebarNavigation_DeleteCaption" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SidebarNavigation_DeleteMessage" xml:space="preserve">
+    <value>Delete — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_DeviceManagement" xml:space="preserve">
+    <value>Device Management</value>
+  </data>
+  <data name="SidebarNavigation_EditCaption" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="SidebarNavigation_EditSelectedMessage" xml:space="preserve">
+    <value>Edit selected {0} — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_ExportCaption" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="SidebarNavigation_FirmwareUpdateCaption" xml:space="preserve">
+    <value>Firmware Update</value>
+  </data>
+  <data name="SidebarNavigation_HelpCaption" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="SidebarNavigation_HelpMessage" xml:space="preserve">
+    <value>Help for {0}.
+
+Documentation not yet available.</value>
+  </data>
+  <data name="SidebarNavigation_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="SidebarNavigation_PatientsAndTests" xml:space="preserve">
+    <value>Patients and Tests</value>
+  </data>
+  <data name="SidebarNavigation_PrintCaption" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="SidebarNavigation_PrintRequestedMessage" xml:space="preserve">
+    <value>Print requested:
+Category: {0}
+Report: {1}</value>
+  </data>
+  <data name="SidebarNavigation_ReceiveFromDeviceCaption" xml:space="preserve">
+    <value>Receive from Device</value>
+  </data>
+  <data name="SidebarNavigation_ReceiveMessage" xml:space="preserve">
+    <value>Receive test data from connected device.
+
+Not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_RevertCaption" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="SidebarNavigation_RevertChangesMessage" xml:space="preserve">
+    <value>Revert {0} changes — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_SaveCaption" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SidebarNavigation_SaveChangesMessage" xml:space="preserve">
+    <value>Save {0} changes — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_SendMessage" xml:space="preserve">
+    <value>Send patient data to connected device.
+
+Not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_SendToDeviceCaption" xml:space="preserve">
+    <value>Send to Device</value>
+  </data>
+  <data name="SidebarNavigation_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SidebarNavigation_SitesAndFacilities" xml:space="preserve">
+    <value>Sites and Facilities</value>
+  </data>
+  <data name="SidebarNavigation_SystemConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
+  </data>
+  <data name="SidebarNavigation_UndoActionMessage" xml:space="preserve">
+    <value>Undo last {0} action — not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_UndoCaption" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="SidebarNavigation_UpdateDeviceCaption" xml:space="preserve">
+    <value>Update Device</value>
+  </data>
+  <data name="SidebarNavigation_UpdateDeviceMessage" xml:space="preserve">
+    <value>Update connected device with current {0} configuration.
+
+Not yet implemented.</value>
+  </data>
+  <data name="SidebarNavigation_UsersAndProfiles" xml:space="preserve">
+    <value>Users and Profiles</value>
+  </data>
+  <data name="SiteFacilityConfigView_ConfigurationSaved" xml:space="preserve">
+    <value>Site and facility configuration saved.</value>
+  </data>
+  <data name="SiteFacilityConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SiteFacilityConfigView_Title" xml:space="preserve">
+    <value>SITE AND FACILITY MANAGEMENT CONFIGURATION</value>
+  </data>
+  <data name="SiteFacilityConfigView_TransferSitesAndFacilitiesToDevice" xml:space="preserve">
+    <value>Transfer Sites and Facilities to device</value>
+  </data>
+  <data name="SitesContentView_Code" xml:space="preserve">
+    <value>CODE</value>
+  </data>
+  <data name="SitesContentView_CodeLabel" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="SitesContentView_CodeRequired" xml:space="preserve">
+    <value>Code is required.</value>
+  </data>
+  <data name="SitesContentView_DeleteCaption" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SitesContentView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete site "{0}"?</value>
+  </data>
+  <data name="SitesContentView_DeleteSiteCaption" xml:space="preserve">
+    <value>Delete Site</value>
+  </data>
+  <data name="SitesContentView_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="SitesContentView_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SitesContentView_NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="SitesContentView_NoSiteSelected" xml:space="preserve">
+    <value>No site selected.</value>
+  </data>
+  <data name="SitesContentView_NoSitesAvailable" xml:space="preserve">
+    <value>No sites available</value>
+  </data>
+  <data name="SitesContentView_SaveCaption" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SitesContentView_SelectSite" xml:space="preserve">
+    <value>Select a site to view details</value>
+  </data>
+  <data name="SitesContentView_SiteDetails" xml:space="preserve">
+    <value>Site Details</value>
+  </data>
+  <data name="SitesContentView_SiteDetailsHeader" xml:space="preserve">
+    <value>SITE DETAILS</value>
+  </data>
+  <data name="SitesContentView_SiteSaved" xml:space="preserve">
+    <value>Site saved successfully.</value>
+  </data>
+  <data name="SitesContentView_Sites" xml:space="preserve">
+    <value>SITES</value>
+  </data>
+  <data name="SitesContentView_ValidationCaption" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="SplashViewModel_Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="SplashViewModel_InitializingDatabase" xml:space="preserve">
+    <value>Initializing database...</value>
+  </data>
+  <data name="SplashViewModel_LoadingApplication" xml:space="preserve">
+    <value>Loading application...</value>
+  </data>
+  <data name="SplashWindow_Title" xml:space="preserve">
+    <value>AccuSync</value>
+  </data>
+  <data name="SystemConfigContentView_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="SystemConfigContentView_ConfigurationSaved" xml:space="preserve">
+    <value>System configuration saved.</value>
+  </data>
+  <data name="SystemConfigContentView_ConfirmDelete" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="SystemConfigContentView_ConfirmationOfSaving" xml:space="preserve">
+    <value>Confirmation of Saving</value>
+  </data>
+  <data name="SystemConfigContentView_DataConfirmation" xml:space="preserve">
+    <value>Data Confirmation</value>
+  </data>
+  <data name="SystemConfigContentView_DataModificationWarning" xml:space="preserve">
+    <value>Data Modification Warning</value>
+  </data>
+  <data name="SystemConfigContentView_DragAndDropOrClickBrowse" xml:space="preserve">
+    <value>Drag and drop or click Browse</value>
+  </data>
+  <data name="SystemConfigContentView_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="SystemConfigContentView_French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="SystemConfigContentView_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="SystemConfigContentView_HospitalLogo" xml:space="preserve">
+    <value>Hospital Logo</value>
+  </data>
+  <data name="SystemConfigContentView_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="SystemConfigContentView_LanguageConfiguration" xml:space="preserve">
+    <value>Language Configuration</value>
+  </data>
+  <data name="SystemConfigContentView_LogoFileInfo" xml:space="preserve">
+    <value>{0}
+{1}
+Drag and drop or click Browse to replace</value>
+  </data>
+  <data name="SystemConfigContentView_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="SystemConfigContentView_NoLogoSelected" xml:space="preserve">
+    <value>No logo selected</value>
+  </data>
+  <data name="SystemConfigContentView_PaperFormat" xml:space="preserve">
+    <value>Paper Format</value>
+  </data>
+  <data name="SystemConfigContentView_PaperFormatA4" xml:space="preserve">
+    <value>A4</value>
+  </data>
+  <data name="SystemConfigContentView_PaperFormatLetter" xml:space="preserve">
+    <value>Letter</value>
+  </data>
+  <data name="SystemConfigContentView_ReportConfiguration" xml:space="preserve">
+    <value>Report Configuration</value>
+  </data>
+  <data name="SystemConfigContentView_RestoreDefault" xml:space="preserve">
+    <value>Restore Default</value>
+  </data>
+  <data name="SystemConfigContentView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SystemConfigContentView_SelectHospitalLogo" xml:space="preserve">
+    <value>Select Hospital Logo</value>
+  </data>
+  <data name="SystemConfigContentView_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="SystemConfigContentView_SystemLanguage" xml:space="preserve">
+    <value>System Language</value>
+  </data>
+  <data name="SystemConfigContentView_Title" xml:space="preserve">
+    <value>SYSTEM CONFIGURATION</value>
+  </data>
+  <data name="SystemConfigContentView_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="TestResultsView_AddComment" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="TestResultsView_AddCommentCaption" xml:space="preserve">
+    <value>Add Comment</value>
+  </data>
+  <data name="TestResultsView_ColumnConfiguration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="TestResultsView_ColumnDateAndTime" xml:space="preserve">
+    <value>Date and Time</value>
+  </data>
+  <data name="TestResultsView_ColumnDuration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="TestResultsView_ColumnExaminer" xml:space="preserve">
+    <value>Examiner</value>
+  </data>
+  <data name="TestResultsView_ColumnLeft" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="TestResultsView_ColumnRight" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="TestResultsView_ColumnType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="TestResultsView_CommentAddedCaption" xml:space="preserve">
+    <value>Comment Added</value>
+  </data>
+  <data name="TestResultsView_CommentAddedMessage" xml:space="preserve">
+    <value>Comment added: "{0}"
+
+(Database persistence not yet implemented.)</value>
+  </data>
+  <data name="TestResultsView_CommentDiagnosticReferrals" xml:space="preserve">
+    <value>Diagnostic referrals</value>
+  </data>
+  <data name="TestResultsView_CommentElectrodeFaulty" xml:space="preserve">
+    <value>Electrode is faulty</value>
+  </data>
+  <data name="TestResultsView_CommentEquipmentError" xml:space="preserve">
+    <value>Equipment error</value>
+  </data>
+  <data name="TestResultsView_CommentImpedanceHigh" xml:space="preserve">
+    <value>Impedance is high</value>
+  </data>
+  <data name="TestResultsView_CommentMedicalReferral" xml:space="preserve">
+    <value>Medical referral</value>
+  </data>
+  <data name="TestResultsView_CommentNoEarCanal" xml:space="preserve">
+    <value>No ear canal</value>
+  </data>
+  <data name="TestResultsView_CommentNoisyConditions" xml:space="preserve">
+    <value>Noisy test conditions</value>
+  </data>
+  <data name="TestResultsView_CommentParentRefusedTest" xml:space="preserve">
+    <value>Parent refused test</value>
+  </data>
+  <data name="TestResultsView_CommentPatientDischarged" xml:space="preserve">
+    <value>Patient discharged</value>
+  </data>
+  <data name="TestResultsView_CommentPatientRestless" xml:space="preserve">
+    <value>Patient restless</value>
+  </data>
+  <data name="TestResultsView_CommentPoorProbeFit" xml:space="preserve">
+    <value>Poor probe fit</value>
+  </data>
+  <data name="TestResultsView_CommentRetestRecommended" xml:space="preserve">
+    <value>Retest recommended</value>
+  </data>
+  <data name="TestResultsView_CommentSelectPrompt" xml:space="preserve">
+    <value>Select a comment...</value>
+  </data>
+  <data name="TestResultsView_CommentUnableToTest" xml:space="preserve">
+    <value>Unable to test</value>
+  </data>
+  <data name="TestResultsView_CommentWaxInEarCanal" xml:space="preserve">
+    <value>Wax in ear canal</value>
+  </data>
+  <data name="TestResultsView_DeviceSerialLabel" xml:space="preserve">
+    <value>Device Serial: </value>
+  </data>
+  <data name="TestResultsView_DpDetailsPlaceholder" xml:space="preserve">
+    <value>DP Details Placeholder</value>
+  </data>
+  <data name="TestResultsView_DurationLabel" xml:space="preserve">
+    <value>Duration:</value>
+  </data>
+  <data name="TestResultsView_EarLabel" xml:space="preserve">
+    <value>Ear:</value>
+  </data>
+  <data name="TestResultsView_Eeg" xml:space="preserve">
+    <value>EEG</value>
+  </data>
+  <data name="TestResultsView_FirmwareBuildLabel" xml:space="preserve">
+    <value>Firmware Build: </value>
+  </data>
+  <data name="TestResultsView_GraphPlaceholderFormat" xml:space="preserve">
+    <value>{0} graph placeholder</value>
+  </data>
+  <data name="TestResultsView_HeaderTitle" xml:space="preserve">
+    <value>TEST RESULTS</value>
+  </data>
+  <data name="TestResultsView_ImpedanceDefault" xml:space="preserve">
+    <value>0 kΩ</value>
+  </data>
+  <data name="TestResultsView_ImpedanceFormat" xml:space="preserve">
+    <value>{0} kΩ</value>
+  </data>
+  <data name="TestResultsView_LocationLabel" xml:space="preserve">
+    <value>Location: </value>
+  </data>
+  <data name="TestResultsView_NoComments" xml:space="preserve">
+    <value>No comments for this test</value>
+  </data>
+  <data name="TestResultsView_NoTestResults" xml:space="preserve">
+    <value>No test results available for this patient</value>
+  </data>
+  <data name="TestResultsView_NotAvailableDash" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="TestResultsView_ProbeCalibrationDateLabel" xml:space="preserve">
+    <value>Probe Calibration Date: </value>
+  </data>
+  <data name="TestResultsView_ProbeError" xml:space="preserve">
+    <value>Probe error. Clean or replace the probe tip.</value>
+  </data>
+  <data name="TestResultsView_ProbeSerialLabel" xml:space="preserve">
+    <value>Probe Serial: </value>
+  </data>
+  <data name="TestResultsView_SelectCommentToAdd" xml:space="preserve">
+    <value>Please select a comment to add.</value>
+  </data>
+  <data name="TestResultsView_SelectPatientPrompt" xml:space="preserve">
+    <value>Select a patient to view test results</value>
+  </data>
+  <data name="TestResultsView_TabDeviceInformation" xml:space="preserve">
+    <value>Device Information</value>
+  </data>
+  <data name="TestResultsView_TabDpDetails" xml:space="preserve">
+    <value>DP Details</value>
+  </data>
+  <data name="TestResultsView_TabTestComments" xml:space="preserve">
+    <value>Test Comments</value>
+  </data>
+  <data name="TestResultsView_TabTestResult" xml:space="preserve">
+    <value>Test Result</value>
+  </data>
+  <data name="TestResultsView_TestFacilityLabel" xml:space="preserve">
+    <value>Test Facility: </value>
+  </data>
+  <data name="TestResultsView_WaveformPlaceholder" xml:space="preserve">
+    <value>Waveform — requires TestDetail deserialization</value>
+  </data>
+  <data name="UserProfileConfigView_AccuSyncLockingTime" xml:space="preserve">
+    <value>AccuSync Locking Time</value>
+  </data>
+  <data name="UserProfileConfigView_Complex" xml:space="preserve">
+    <value>Complex</value>
+  </data>
+  <data name="UserProfileConfigView_ConfigurationSaved" xml:space="preserve">
+    <value>User management configuration saved.</value>
+  </data>
+  <data name="UserProfileConfigView_LockingTimeMinutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="UserProfileConfigView_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="UserProfileConfigView_PasswordDescComplex" xml:space="preserve">
+    <value>Password requires a minimum of 8 characters for a password including
+• min. 1 uppercase (A-Z),
+• 1 lower case (a-z) and
+• one number</value>
+  </data>
+  <data name="UserProfileConfigView_PasswordDescNone" xml:space="preserve">
+    <value>No password rules</value>
+  </data>
+  <data name="UserProfileConfigView_PasswordDescSimple" xml:space="preserve">
+    <value>A user has to enter a minimum of 4 characters/numbers for a password.</value>
+  </data>
+  <data name="UserProfileConfigView_PasswordRuleDescription" xml:space="preserve">
+    <value>Password Rule Description</value>
+  </data>
+  <data name="UserProfileConfigView_PasswordSecurityRule" xml:space="preserve">
+    <value>Password Security Rule</value>
+  </data>
+  <data name="UserProfileConfigView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="UserProfileConfigView_Simple" xml:space="preserve">
+    <value>Simple</value>
+  </data>
+  <data name="UserProfileConfigView_Title" xml:space="preserve">
+    <value>USER MANAGEMENT CONFIGURATION</value>
+  </data>
+  <data name="UsersContentView_Admin" xml:space="preserve">
+    <value>ADMIN</value>
+  </data>
+  <data name="UsersContentView_DeleteConfirm" xml:space="preserve">
+    <value>Are you sure you want to delete user "{0}"?</value>
+  </data>
+  <data name="UsersContentView_DeleteUser" xml:space="preserve">
+    <value>Delete User</value>
+  </data>
+  <data name="UsersContentView_FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="UsersContentView_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="UsersContentView_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="UsersContentView_LanguageFrench" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="UsersContentView_LanguageGerman" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="UsersContentView_LanguageItalian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="UsersContentView_LanguageSpanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="UsersContentView_LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="UsersContentView_LockedColumn" xml:space="preserve">
+    <value>LOCKED</value>
+  </data>
+  <data name="UsersContentView_LockedLabel" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="UsersContentView_LoginName" xml:space="preserve">
+    <value>Login Name</value>
+  </data>
+  <data name="UsersContentView_LoginNameRequired" xml:space="preserve">
+    <value>Login Name is required.</value>
+  </data>
+  <data name="UsersContentView_NotLocked" xml:space="preserve">
+    <value>Not Locked</value>
+  </data>
+  <data name="UsersContentView_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="UsersContentView_PasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="UsersContentView_PasswordsDoNotMatchIndicator" xml:space="preserve">
+    <value>✗ Passwords do not match</value>
+  </data>
+  <data name="UsersContentView_PasswordsMatch" xml:space="preserve">
+    <value>✓ Passwords match</value>
+  </data>
+  <data name="UsersContentView_Profile" xml:space="preserve">
+    <value>PROFILE</value>
+  </data>
+  <data name="UsersContentView_ProfileAdministrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="UsersContentView_ProfileLabel" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="UsersContentView_ProfileRequired" xml:space="preserve">
+    <value>Profile is required.</value>
+  </data>
+  <data name="UsersContentView_ProfileScreener" xml:space="preserve">
+    <value>Screener</value>
+  </data>
+  <data name="UsersContentView_ProfileSupervisor" xml:space="preserve">
+    <value>Supervisor</value>
+  </data>
+  <data name="UsersContentView_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="UsersContentView_SelectUserPrompt" xml:space="preserve">
+    <value>Select a user to view details</value>
+  </data>
+  <data name="UsersContentView_ShowHidePassword" xml:space="preserve">
+    <value>Show/hide password</value>
+  </data>
+  <data name="UsersContentView_ShowHideVerification" xml:space="preserve">
+    <value>Show/hide verification</value>
+  </data>
+  <data name="UsersContentView_StatusActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="UsersContentView_StatusColumn" xml:space="preserve">
+    <value>STATUS</value>
+  </data>
+  <data name="UsersContentView_StatusInactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="UsersContentView_StatusLabel" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="UsersContentView_SystemInformation" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="UsersContentView_Unlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
+  <data name="UsersContentView_UserInformation" xml:space="preserve">
+    <value>User Information</value>
+  </data>
+  <data name="UsersContentView_UserNotLocked" xml:space="preserve">
+    <value>User "{0}" is not locked.</value>
+  </data>
+  <data name="UsersContentView_UserSaved" xml:space="preserve">
+    <value>User saved successfully.</value>
+  </data>
+  <data name="UsersContentView_UserSettings" xml:space="preserve">
+    <value>User Settings</value>
+  </data>
+  <data name="UsersContentView_UserUnlocked" xml:space="preserve">
+    <value>User "{0}" has been unlocked.</value>
+  </data>
+  <data name="UsersContentView_Users" xml:space="preserve">
+    <value>USERS</value>
+  </data>
+  <data name="UsersContentView_Validation" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="UsersContentView_Verification" xml:space="preserve">
+    <value>Verification</value>
+  </data>
+</root>

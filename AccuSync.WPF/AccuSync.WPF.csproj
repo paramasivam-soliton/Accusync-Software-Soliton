@@ -1,15 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <!-- annotations: keep nullable annotations (string?, etc.) meaningful, but suppress
-         the ~800 flow-analysis warnings from code that isn't nullable-annotated yet.
-         Switch back to 'enable' to adopt full nullable reference-type checking. -->
     <Nullable>annotations</Nullable>
-    <AssemblyName>AccuSync</AssemblyName>
-	<RootNamespace>AccuSync</RootNamespace>
+    <AssemblyName>AccuSync.WPF</AssemblyName>
+    <RootNamespace>AccuSync.WPF</RootNamespace>
     <Version>1.0.0</Version>
     <Company>Natus</Company>
     <Product>AccuSync</Product>
@@ -23,27 +20,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Images\company_logo.png" />
-    <None Remove="Resources\Images\splash.png" />
-    <None Remove="Resources\OCR\tessdata\eng.traineddata" />
+    <!-- Not-yet-extracted layers (Models/ViewModels/Services/Helpers) are referenced
+         from AccuSync until each is pulled into its own project in a future PR. -->
+    <ProjectReference Include="..\AccuSync\AccuSync.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\OCR\tessdata\eng.traineddata">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Remove="Resources\Images\company_logo.png" />
+    <None Remove="Resources\Images\splash.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Docnet.Core" Version="2.6.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="PdfPig" Version="0.1.13" />
-    <PackageReference Include="QRCoder" Version="1.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
-    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
-    <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,10 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Databases\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Resources\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -67,9 +52,6 @@
     </Compile>
   </ItemGroup>
 
-  <!-- Localization: strongly-typed string resources. The .resx is auto-included as an
-       EmbeddedResource by the SDK; these entries link the generated Designer class and
-       mark the generator as public so XAML can reference Strings via {x:Static}. -->
   <ItemGroup>
     <EmbeddedResource Update="Resources\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

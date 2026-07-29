@@ -1,0 +1,494 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.WPF.Views.PatientsTests.TestResultsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="clr-namespace:AccuSync.WPF.Resources"
+             Background="Transparent">
+
+    <UserControl.Resources>
+
+        <Style x:Key="DetailTabStyle" TargetType="Button">
+            <Setter Property="Background" Value="#fafbfc"/>
+            <Setter Property="Foreground" Value="#5C5149"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="10,10"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#5C5149"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DetailTabActiveStyle" TargetType="Button" BasedOn="{StaticResource DetailTabStyle}">
+            <Setter Property="Foreground" Value="#5C5149"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#005FBE"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" CornerRadius="15,15,0,0" Padding="20,16">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#3A3A3C" Offset="0"/>
+                    <GradientStop Color="#202124" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <TextBlock Text="{x:Static res:Strings.TestResultsView_HeaderTitle}" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+        </Border>
+
+        <!-- Empty State -->
+        <Border x:Name="EmptyState" Grid.Row="1" Visibility="Visible">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Width="80" Height="80" CornerRadius="20" Background="#D4E9F9"
+                        HorizontalAlignment="Center" Margin="0,0,0,16">
+                    <Path Width="36" Height="36" Stretch="Uniform" Fill="#005FBE"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Data="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </Border>
+                <TextBlock Text="{x:Static res:Strings.TestResultsView_SelectPatientPrompt}"
+                           FontSize="13" Foreground="#9EA2AC" TextWrapping="Wrap"
+                           TextAlignment="Center" MaxWidth="200"/>
+            </StackPanel>
+        </Border>
+
+        <!-- No Tests State -->
+        <Border x:Name="NoTestsState" Grid.Row="1" Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Width="70" Height="70" CornerRadius="18" Background="#D4E9F9"
+                        HorizontalAlignment="Center" Margin="0,0,0,14">
+                    <Path Width="30" Height="30" Stretch="Uniform" Fill="#005FBE"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </Border>
+                <TextBlock Text="{x:Static res:Strings.TestResultsView_NoTestResults}"
+                           FontSize="13" Foreground="#9EA2AC" TextWrapping="Wrap"
+                           TextAlignment="Center" MaxWidth="200"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content: Test List and Detail Tabs -->
+        <Grid x:Name="ContentGrid" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Test Results DataGrid -->
+            <Border Grid.Row="0" BorderBrush="#e5e7eb" BorderThickness="0,0,0,1">
+                <DataGrid x:Name="TestsDataGrid"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#f0f0f0"
+                          BorderThickness="0"
+                          Background="White"
+                          RowBackground="White"
+                          AlternatingRowBackground="White"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserSortColumns="False"
+                          SelectionChanged="TestsDataGrid_SelectionChanged"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#f3f4f6"/>
+                            <Setter Property="Foreground" Value="#5C5149"/>
+                            <Setter Property="FontSize" Value="11"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Padding" Value="8,8"/>
+                            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            <Setter Property="TextBlock.TextDecorations" Value="None"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="8,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="FontSize" Value="13"/>
+                            <Setter Property="Foreground" Value="#5C5149"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#D4E9F9"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="MinHeight" Value="36"/>
+                            <Setter Property="BorderThickness" Value="1.5"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#f0f7ff"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#D4E9F9"/>
+                                    <Setter Property="BorderBrush" Value="#005FBE"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static res:Strings.TestResultsView_ColumnType}" Binding="{Binding TestType}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="{x:Static res:Strings.TestResultsView_ColumnLeft}" Width="30">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding LeftSymbol}" 
+                                               Foreground="{Binding LeftColor}"
+                                               FontSize="13" FontWeight="Bold"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="{x:Static res:Strings.TestResultsView_ColumnRight}" Width="30">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding RightSymbol}" 
+                                               Foreground="{Binding RightColor}"
+                                               FontSize="13" FontWeight="Bold"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="{x:Static res:Strings.TestResultsView_ColumnDateAndTime}" Binding="{Binding TestDateFormatted}" Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="{x:Static res:Strings.TestResultsView_ColumnConfiguration}" Binding="{Binding Configuration}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="{x:Static res:Strings.TestResultsView_ColumnDuration}" Binding="{Binding DurationFormatted}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="{x:Static res:Strings.TestResultsView_ColumnExaminer}" Binding="{Binding Examiner}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Foreground" Value="#5C5149"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- Detail Tabs -->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Tab Bar -->
+                <Border Grid.Row="0" BorderBrush="#e5e7eb" BorderThickness="0,0,0,2" Background="#fafbfc">
+                    <Grid x:Name="TabBarGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <!-- DpDetailsColumn collapses to 0 for non-DPOAE tests -->
+                            <ColumnDefinition x:Name="DpDetailsColumn" Width="0"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="TestResultTab" Grid.Column="0" Content="{x:Static res:Strings.TestResultsView_TabTestResult}"
+                                Style="{StaticResource DetailTabActiveStyle}" Click="TestResultTab_Click"/>
+                        <Button x:Name="DpDetailsTab" Grid.Column="1" Content="{x:Static res:Strings.TestResultsView_TabDpDetails}"
+                                Style="{StaticResource DetailTabStyle}" Click="DpDetailsTab_Click"
+                                Visibility="Collapsed"/>
+                        <Button x:Name="TestCommentsTab" Grid.Column="2" Content="{x:Static res:Strings.TestResultsView_TabTestComments}"
+                                Style="{StaticResource DetailTabStyle}" Click="TestCommentsTab_Click"/>
+                        <Button x:Name="DeviceInfoTab" Grid.Column="3" Content="{x:Static res:Strings.TestResultsView_TabDeviceInformation}"
+                                Style="{StaticResource DetailTabStyle}" Click="DeviceInfoTab_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Tab Content -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
+                        <!-- Tab: Test Result -->
+                        <StackPanel x:Name="TestResultContent" Visibility="Visible">
+
+                            <!-- Waveform placeholder — requires TestDetail binary deserialization -->
+                            <Border Background="#FDFBEB" BorderBrush="#e0dcc0" BorderThickness="1"
+                                    Margin="14,12,14,0" CornerRadius="4" Height="140">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Path Width="32" Height="32" Stretch="Uniform" Fill="#5C5149"
+                                          HorizontalAlignment="Center"
+                                          Data="M2 12L6 12 9 4 13 20 16 12 22 12"/>
+                                    <TextBlock x:Name="WaveformLabel" Text="{x:Static res:Strings.TestResultsView_WaveformPlaceholder}"
+                                               FontSize="11" Foreground="#5C5149" FontWeight="Medium"
+                                               HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- EEG section — visible for ABR tests only -->
+                            <Border x:Name="EegSection" Visibility="Collapsed"
+                                    Margin="14,8,14,0" Padding="10,8" Background="#f8f9fa"
+                                    CornerRadius="6" BorderBrush="#e5e7eb" BorderThickness="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Impedance indicators -->
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <!-- White (open) dot = white electrode -->
+                                        <Ellipse Width="10" Height="10" Stroke="#333333" StrokeThickness="1.5"
+                                                 Fill="White" VerticalAlignment="Center"/>
+                                        <Border Background="#D4E9F9" CornerRadius="3" Padding="6,1" Margin="4,0,12,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock x:Name="ImpWhiteText" Text="{x:Static res:Strings.TestResultsView_ImpedanceDefault}" FontSize="11"
+                                                       FontWeight="SemiBold" Foreground="#5C5149"/>
+                                        </Border>
+
+                                        <!-- Red (filled) dot = red electrode -->
+                                        <Ellipse Width="10" Height="10" Fill="#dc3545" Stroke="#dc3545"
+                                                 StrokeThickness="1.5" VerticalAlignment="Center"/>
+                                        <Border Background="#D4E9F9" CornerRadius="3" Padding="6,1" Margin="4,0,0,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock x:Name="ImpRedText" Text="{x:Static res:Strings.TestResultsView_ImpedanceDefault}" FontSize="11"
+                                                       FontWeight="SemiBold" Foreground="#5C5149"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- EEG noise bar — black portion = noise % -->
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Static res:Strings.TestResultsView_Eeg}" FontSize="12" FontWeight="SemiBold"
+                                                   Foreground="#5C5149" Margin="0,0,0,4"/>
+                                        <Border Width="100" Height="18" CornerRadius="2"
+                                                BorderBrush="#cccccc" BorderThickness="1" ClipToBounds="True">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition x:Name="EegBlackCol" Width="*"/>
+                                                    <ColumnDefinition x:Name="EegLightCol" Width="0"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Background="#1a1a1a"/>
+                                                <Border Grid.Column="1" Background="#bbbbbb"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Result Status -->
+                            <StackPanel Margin="14,10,14,14" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                                    <Path x:Name="ResultIcon" Width="28" Height="28" Stretch="Uniform"
+                                          VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock x:Name="ResultLabel" FontSize="14" FontWeight="Bold" Foreground="#5C5149"/>
+                                        <TextBlock x:Name="ResultSublabel" FontSize="11" Foreground="#5C5149"
+                                                   Visibility="Collapsed" Margin="0,1,0,0"/>
+                                        <TextBlock x:Name="ResultDate" FontSize="11" Foreground="#5C5149" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Grid HorizontalAlignment="Center" Width="280">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="{x:Static res:Strings.TestResultsView_DurationLabel}" FontSize="12" Foreground="#5C5149" FontWeight="Bold" Width="70"/>
+                                        <TextBlock x:Name="StatDuration" FontSize="12" Foreground="#5C5149"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="{x:Static res:Strings.TestResultsView_EarLabel}" FontSize="12" Foreground="#5C5149" FontWeight="Bold" Width="40"/>
+                                        <TextBlock x:Name="StatEar" FontSize="12" Foreground="#5C5149"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Tab: DP Details -->
+                        <Border x:Name="DpDetailsContent" Visibility="Collapsed" Padding="14,16">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_DpDetailsPlaceholder}"
+                                           FontSize="12" Foreground="#5C5149" TextAlignment="Center"
+                                           TextWrapping="Wrap" MaxWidth="280"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Tab: Test Comments -->
+                        <StackPanel x:Name="TestCommentsContent" Visibility="Collapsed" Margin="14,14">
+
+                            <TextBlock x:Name="NoCommentsText" Text="{x:Static res:Strings.TestResultsView_NoComments}"
+                                       FontSize="12" Foreground="#5C5149" HorizontalAlignment="Center"
+                                       Margin="0,20,0,20"/>
+
+                            <Border BorderBrush="#e5e7eb" BorderThickness="0,1,0,0" Padding="0,8,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox x:Name="CommentDropdown" Grid.Column="0"
+                                              FontSize="12" Padding="7,7" Margin="0,0,8,0">
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentSelectPrompt}" IsSelected="True"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentPatientRestless}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentNoisyConditions}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentWaxInEarCanal}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentImpedanceHigh}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentNoEarCanal}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentPatientDischarged}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentParentRefusedTest}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentDiagnosticReferrals}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentMedicalReferral}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentRetestRecommended}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentUnableToTest}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentElectrodeFaulty}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentPoorProbeFit}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.TestResultsView_CommentEquipmentError}"/>
+                                    </ComboBox>
+
+                                    <Button Grid.Column="1" Content="{x:Static res:Strings.TestResultsView_AddComment}" Click="AddComment_Click" Cursor="Hand"
+                                            Padding="14,7" FontSize="12" FontWeight="SemiBold">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#473089"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border x:Name="b" Background="{TemplateBinding Background}"
+                                                                    CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="b" Property="Background" Value="#5A3DA8"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Tab: Device Information -->
+                        <StackPanel x:Name="DeviceInfoContent" Visibility="Collapsed" Margin="16,14">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_DeviceSerialLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="DevSerialText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_FirmwareBuildLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="DevTypeText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_TestFacilityLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="TestFacilityText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_LocationLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="TestLocationText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_ProbeSerialLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="ProbeSerialText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="{x:Static res:Strings.TestResultsView_ProbeCalibrationDateLabel}" FontSize="13" FontWeight="Bold" Foreground="#5C5149"/>
+                                <TextBlock x:Name="ProbeCalText" FontSize="13" Foreground="#5C5149"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

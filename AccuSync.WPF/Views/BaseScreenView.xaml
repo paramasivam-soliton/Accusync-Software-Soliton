@@ -1,0 +1,36 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.WPF.Views.BaseScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AccuSync.WPF.Controls"
+             Background="{StaticResource ContentAreaBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Divider -->
+        <Border Grid.Row="0" Height="2" Background="#B8BCC5"/>
+
+        <!-- Ribbon Toolbar -->
+        <controls:RibbonToolbar x:Name="Ribbon"
+                        Grid.Row="1"/>
+
+        <!-- NOTE: Content area — derived screens populate ScreenContent via code-behind. -->
+        <Border Grid.Row="3" 
+                Background="{StaticResource ContentAreaBackgroundBrush}"
+                Padding="20,10">
+            <ContentPresenter x:Name="ScreenContent"
+                              Content="{Binding}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"/>
+        </Border>
+    </Grid>
+</UserControl>
