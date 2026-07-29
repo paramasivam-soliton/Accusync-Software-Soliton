@@ -1,0 +1,93 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.Views.SystemConfiguration.SiteFacilityConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="clr-namespace:AccuSync.Resources"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <UserControl.Resources>
+
+        <!-- TODO: FilledCheckBoxStyle duplicated across config views — extract to shared resource -->
+        <Style x:Key="FilledCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="box" Width="20" Height="20" CornerRadius="4"
+                                    Background="White" BorderBrush="#D1D5DB" BorderThickness="2"
+                                    VerticalAlignment="Center">
+                                <Path x:Name="check" Visibility="Collapsed"
+                                      Width="10" Height="8" Stretch="Uniform"
+                                      Stroke="White" StrokeThickness="2"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Data="M2,5 L5,8 L10,2"/>
+                            </Border>
+                            <ContentPresenter Margin="12,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="box" Property="Background" Value="#005FBE"/>
+                                <Setter TargetName="box" Property="BorderBrush" Value="#005FBE"/>
+                                <Setter TargetName="check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="box" Property="BorderBrush" Value="#005FBE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Background="#D4E9F9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Background="White" CornerRadius="15" ClipToBounds="True">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" Direction="270"
+                                      ShadowDepth="2" BlurRadius="10" Opacity="0.1"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" CornerRadius="15,15,0,0" Padding="20,14">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#3A3A3C" Offset="0"/>
+                                <GradientStop Color="#202124" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="{x:Static res:Strings.SiteFacilityConfigView_Title}" FontSize="14"
+                                   FontWeight="Bold" Foreground="White"/>
+                    </Border>
+
+                    <StackPanel Grid.Row="1" Margin="24">
+                        <CheckBox x:Name="TransferCheckBox"
+                                  Style="{StaticResource FilledCheckBoxStyle}"
+                                  IsChecked="True"
+                                  Checked="CheckBox_Changed"
+                                  Unchecked="CheckBox_Changed">
+                            <TextBlock Text="{x:Static res:Strings.SiteFacilityConfigView_TransferSitesAndFacilitiesToDevice}"
+                                       FontSize="13" Foreground="#5C5149"/>
+                        </CheckBox>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

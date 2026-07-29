@@ -1,0 +1,114 @@
+<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<Window x:Class="AccuSync.Controls.AppDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AccuSync"
+        Width="460"
+        SizeToContent="Height"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <!-- Solid accent pill (Yes / OK); Background is set per-instance by the dialog kind. -->
+        <Style x:Key="PrimaryPill" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="24,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="{TemplateBinding Background}"
+                                CornerRadius="20" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="b" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Outline pill (No / Cancel) -->
+        <Style x:Key="OutlinePill" TargetType="Button">
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="22,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="{TemplateBinding Background}"
+                                BorderBrush="#CBD5E1" BorderThickness="1.5"
+                                CornerRadius="20" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#F1F5F9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="12" Background="White" BorderBrush="#D1D5DB" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="18" Opacity="0.28"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header (background tint + accent icon), doubles as the drag handle -->
+            <Border x:Name="HeaderBorder" Grid.Row="0" CornerRadius="12,12,0,0"
+                    Padding="22,8" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="IconCircle" Width="30" Height="30" CornerRadius="15" VerticalAlignment="Center">
+                        <Path x:Name="IconPath" Width="17" Height="17" Stretch="Uniform" Fill="White"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock x:Name="TitleText" Grid.Column="1" Margin="12,0,0,0"
+                               VerticalAlignment="Center" FontSize="17" FontWeight="Medium" TextWrapping="Wrap"/>
+                </Grid>
+            </Border>
+
+            <!-- Message -->
+            <TextBlock x:Name="MessageText" Grid.Row="1" Margin="22,20,22,12"
+                       FontSize="14" Foreground="#2C3E50" TextWrapping="Wrap" LineHeight="21"/>
+
+            <!-- Buttons (built in code-behind per MessageBoxButton) -->
+            <StackPanel x:Name="ButtonPanel" Grid.Row="2" Orientation="Horizontal"
+                        HorizontalAlignment="Right" Margin="22,8,22,22"/>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,20 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.Controls.RibbonToolbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="80" d:DesignWidth="900">
+
+    <!-- RibbonContainerStyle is defined in RibbonToolbarStyles.xaml.
+         GroupsPanel is populated by code-behind from a RibbonDefinition. -->
+    <Border Style="{StaticResource RibbonContainerStyle}">
+        <StackPanel x:Name="GroupsPanel"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"/>
+    </Border>
+</UserControl>

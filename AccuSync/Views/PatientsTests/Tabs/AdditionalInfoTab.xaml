@@ -1,0 +1,589 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.Views.PatientsTests.Tabs.AdditionalInfoTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="clr-namespace:AccuSync.Resources">
+
+    <!-- AdditionalInfoTab.xaml
+         Tab 3 of PatientInformationView: Mother, Caregiver, Referral, Medical.
+         Styles from PatientInformationStyles.xaml (merged in App.xaml).
+         Section border x:Names are exposed via code-behind properties for
+         jump-to navigation from the shell. -->
+
+    <!-- TODO: Same form-row duplication as PatientDetailsTab — label + TextBox +
+         clear button is repeated ~35 times across the four sections. A shared
+         FormField UserControl would cut hundreds of lines.
+         The phone-with-dial-code layout (ComboBox + TextBox + clear) is also
+         duplicated five times with an identical DataTemplate each time. -->
+
+    <!-- TODO: Language and Country ComboBox items are duplicated between the
+         Mother and Caregiver sections. Bind to a shared list or define the
+         items in a resource. -->
+
+    <StackPanel>
+
+        <!-- Mother Information -->
+        <Border x:Name="MotherSectionBorder" Style="{StaticResource SectionCard}">
+            <StackPanel>
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,16">
+                    <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_MotherInformation}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Title}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox x:Name="MotherTitleTextBox" Text="{Binding MotherTitle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBox}" TextChanged="NameTextBox_TextChanged" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherTitle_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherTitle, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_SSN}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox x:Name="MotherSSNTextBox" Text="{Binding MotherSSN, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBox}" TextChanged="SSNTextBox_TextChanged" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherSSN_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherSSN, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_MotherId}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherId, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherId_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherId, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_FirstName}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox x:Name="MotherFirstNameTextBox" Text="{Binding MotherFirstName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherFirstName_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherFirstName, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_LastName}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox x:Name="MotherLastNameTextBox" Text="{Binding MotherLastName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBox}" TextChanged="NameTextBox_TextChanged" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherLastName_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherLastName, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_DateOfBirth}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <DatePicker SelectedDate="{Binding MotherDateOfBirth}" BorderBrush="#dddddd" BorderThickness="1" Padding="8,8" FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Language}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <ComboBox SelectedValue="{Binding MotherLanguage}" Style="{StaticResource FieldComboBox}">
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageEnglish}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageSpanish}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageFrench}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageGerman}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageChinese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageJapanese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageKorean}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageItalian}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguagePortuguese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageArabic}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageHindi}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_Other}"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Address1}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherAddress1}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherAddress1_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherAddress1, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Address2}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherAddress2}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherAddress2_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherAddress2, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_City}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherCity}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherCity_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherCity, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_State}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherState}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherState_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherState, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ZipCode}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherZipCode}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherZipCode_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherZipCode, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="6" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Country}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <ComboBox SelectedValue="{Binding MotherCountry}" Style="{StaticResource FieldComboBox}">
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryUnitedStates}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryCanada}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryMexico}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryUnitedKingdom}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryGermany}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryFrance}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryItaly}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountrySpain}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryChina}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryIndia}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryJapan}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountrySouthKorea}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_Other}"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="6" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Phone}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="MotherPhoneDialCodeComboBox" Grid.Column="0"
+                                      SelectedValue="{Binding MotherPhoneDialCode, Mode=TwoWay}"
+                                      SelectedValuePath="DialCode"
+                                      Style="{StaticResource FieldComboBox}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Code}" FontSize="14" MinWidth="28"/>
+                                            <TextBlock Text="{Binding DialCode}" FontSize="14" Foreground="#9EA2AC"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Grid Grid.Column="2">
+                                <TextBox x:Name="MotherPhoneTextBox" Text="{Binding MotherPhoneFormatted, Mode=OneWay}" Style="{StaticResource FieldTextBox}" TextChanged="PhoneTextBox_TextChanged" Padding="8,8,32,8"/>
+                                <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherPhone_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherPhoneNumber, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="7" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_MobilePhone}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="MotherMobilePhoneDialCodeComboBox" Grid.Column="0"
+                                      SelectedValue="{Binding MotherMobilePhoneDialCode, Mode=TwoWay}"
+                                      SelectedValuePath="DialCode"
+                                      Style="{StaticResource FieldComboBox}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Code}" FontSize="14" MinWidth="28"/>
+                                            <TextBlock Text="{Binding DialCode}" FontSize="14" Foreground="#9EA2AC"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Grid Grid.Column="2">
+                                <TextBox x:Name="MotherMobilePhoneTextBox" Text="{Binding MotherMobilePhoneFormatted, Mode=OneWay}" Style="{StaticResource FieldTextBox}" TextChanged="PhoneTextBox_TextChanged" Padding="8,8,32,8"/>
+                                <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherMobilePhone_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherMobilePhoneNumber, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="7" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Fax}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherFax}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherFax_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherFax, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Email}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding MotherEmail}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMotherEmail_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding MotherEmail, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Caregiver Information -->
+        <Border x:Name="CaregiverSectionBorder" Style="{StaticResource SectionCard}">
+            <StackPanel>
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,16">
+                    <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_CaregiverInformation}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Title}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverTitle}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverTitle_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverTitle, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_SSN}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverSSN}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverSSN_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverSSN, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_FirstName}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverFirstName}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverFirstName_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverFirstName, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_LastName}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverLastName}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverLastName_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverLastName, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Language}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <ComboBox SelectedValue="{Binding CaregiverLanguage}" Style="{StaticResource FieldComboBox}">
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageEnglish}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageSpanish}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageFrench}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageGerman}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageChinese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageJapanese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageKorean}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageItalian}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguagePortuguese}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageArabic}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_LanguageHindi}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_Other}"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Address1}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverAddress1}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverAddress1_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverAddress1, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Address2}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverAddress2}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverAddress2_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverAddress2, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_City}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverCity}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverCity_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverCity, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_State}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverState}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverState_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverState, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ZipCode}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverZipCode}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverZipCode_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverZipCode, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Country}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <ComboBox SelectedValue="{Binding CaregiverCountry}" Style="{StaticResource FieldComboBox}">
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryUnitedStates}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryCanada}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryMexico}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryUnitedKingdom}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryGermany}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryFrance}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryItaly}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountrySpain}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryChina}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryIndia}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountryJapan}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_CountrySouthKorea}"/>
+                            <ComboBoxItem Content="{x:Static res:Strings.AdditionalInfoTab_Other}"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="5" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Phone}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CaregiverPhoneDialCodeComboBox" Grid.Column="0"
+                                      SelectedValue="{Binding CaregiverPhoneDialCode, Mode=TwoWay}"
+                                      SelectedValuePath="DialCode"
+                                      Style="{StaticResource FieldComboBox}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Code}" FontSize="14" MinWidth="28"/>
+                                            <TextBlock Text="{Binding DialCode}" FontSize="14" Foreground="#9EA2AC"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Grid Grid.Column="2">
+                                <TextBox x:Name="CaregiverPhoneTextBox" Text="{Binding CaregiverPhoneFormatted, Mode=OneWay}" Style="{StaticResource FieldTextBox}" TextChanged="PhoneTextBox_TextChanged" Padding="8,8,32,8"/>
+                                <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverPhone_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverPhoneNumber, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="6" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_MobilePhone}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CaregiverMobilePhoneDialCodeComboBox" Grid.Column="0"
+                                      SelectedValue="{Binding CaregiverMobilePhoneDialCode, Mode=TwoWay}"
+                                      SelectedValuePath="DialCode"
+                                      Style="{StaticResource FieldComboBox}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Code}" FontSize="14" MinWidth="28"/>
+                                            <TextBlock Text="{Binding DialCode}" FontSize="14" Foreground="#9EA2AC"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Grid Grid.Column="2">
+                                <TextBox x:Name="CaregiverMobilePhoneTextBox" Text="{Binding CaregiverMobilePhoneFormatted, Mode=OneWay}" Style="{StaticResource FieldTextBox}" TextChanged="PhoneTextBox_TextChanged" Padding="8,8,32,8"/>
+                                <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverMobilePhone_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverMobilePhoneNumber, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="6" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Fax}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverFax}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverFax_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverFax, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,0">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Email}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding CaregiverEmail}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearCaregiverEmail_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding CaregiverEmail, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Referral Information -->
+        <Border x:Name="ReferralSectionBorder" Style="{StaticResource SectionCard}">
+            <StackPanel>
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,16">
+                    <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ReferralInformation}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_AudiologyReferral}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding AudiologyReferral}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearAudiologyReferral_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding AudiologyReferral, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ReferralDate}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <DatePicker Grid.Column="0" SelectedDate="{Binding ReferralDate}" BorderBrush="#dddddd" BorderThickness="1" Padding="8,8" FontSize="14"/>
+                            <Button Grid.Column="1" Content="{x:Static res:Strings.AdditionalInfoTab_Today}" Margin="4,0,0,0" Padding="8,6" Background="#f0f0f0" BorderBrush="#ddd" BorderThickness="1" Cursor="Hand" FontSize="12" Click="SetTodayReferralDate_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_SetToTodaysDate}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ReferralTo}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding ReferralTo}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearReferralTo_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding ReferralTo, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ReferralFrom}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding ReferralFrom}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearReferralFrom_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding ReferralFrom, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,0,0">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_ReferralPhone}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ReferralPhoneDialCodeComboBox" Grid.Column="0"
+                                      SelectedValue="{Binding ReferralPhoneDialCode, Mode=TwoWay}"
+                                      SelectedValuePath="DialCode"
+                                      Style="{StaticResource FieldComboBox}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Code}" FontSize="14" MinWidth="28"/>
+                                            <TextBlock Text="{Binding DialCode}" FontSize="14" Foreground="#9EA2AC"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Grid Grid.Column="2">
+                                <TextBox x:Name="ReferralPhoneTextBox" Text="{Binding ReferralPhoneFormatted, Mode=OneWay}" Style="{StaticResource FieldTextBox}" TextChanged="PhoneTextBox_TextChanged" Padding="8,8,32,8"/>
+                                <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearReferralPhone_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding ReferralPhoneNumber, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Medical Information -->
+        <Border x:Name="MedicalSectionBorder" Style="{StaticResource SectionCard}">
+            <StackPanel>
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,8" Margin="0,0,0,16">
+                    <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_MedicalInformation}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}"/>
+                </Border>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Medication}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding Medication}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearMedication_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding Medication, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Physician}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding Physician}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearPhysician_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding Physician, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,0">
+                        <TextBlock Text="{x:Static res:Strings.AdditionalInfoTab_Audiologist}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,6"/>
+                        <Grid>
+                            <TextBox Text="{Binding Audiologist}" Style="{StaticResource FieldTextBox}" Padding="8,8,32,8"/>
+                            <Button Style="{StaticResource InnerClearButton}" HorizontalAlignment="Right" Margin="0,0,4,0" Click="ClearAudiologist_Click" ToolTip="{x:Static res:Strings.AdditionalInfoTab_ClearField}" Visibility="{Binding Audiologist, Converter={StaticResource StringToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

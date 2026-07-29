@@ -1,0 +1,253 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<Window x:Class="AccuSync.Views.PatientsTests.Dialogs.ImportFileDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:res="clr-namespace:AccuSync.Resources"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        KeyDown="Window_KeyDown">
+
+    <Window.Resources>
+        <!-- TODO: Same brush duplication as FirmwareUpdateDialog — merge from
+             a shared dialog resource dictionary. -->
+        <SolidColorBrush x:Key="PurpleBrush" Color="#473089"/>
+        <SolidColorBrush x:Key="PurpleHoverBrush" Color="#5A3DA8"/>
+        <SolidColorBrush x:Key="LightBlueBrush" Color="#D4E9F9"/>
+        <SolidColorBrush x:Key="BrightBlueBrush" Color="#005FBE"/>
+        <SolidColorBrush x:Key="MidnightBrush" Color="#002856"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#5C5149"/>
+        <SolidColorBrush x:Key="GrayBrush" Color="#9EA2AC"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#e5e7eb"/>
+        <SolidColorBrush x:Key="BgLighterBrush" Color="#f3f4f6"/>
+        <SolidColorBrush x:Key="BgFooterBrush" Color="#f9fafb"/>
+        <SolidColorBrush x:Key="ButtonBorderBrush" Color="#d1d5db"/>
+        <SolidColorBrush x:Key="SuccessGreenBrush" Color="#059669"/>
+        <SolidColorBrush x:Key="SuccessLightBrush" Color="#dcfce7"/>
+        <SolidColorBrush x:Key="SuccessBorderBrush" Color="#bbf7d0"/>
+        <SolidColorBrush x:Key="SuccessBgBrush" Color="#f0fdf4"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#dc3545"/>
+        <SolidColorBrush x:Key="DangerLightBrush" Color="#fee2e2"/>
+        <SolidColorBrush x:Key="DropzoneBorderBrush" Color="#d1d5db"/>
+        <SolidColorBrush x:Key="DropzoneHoverBorderBrush" Color="#005FBE"/>
+        <SolidColorBrush x:Key="DropzoneHoverBgBrush" Color="#f5f3ff"/>
+    </Window.Resources>
+
+    <!-- Outer margin provides space for the drop shadow -->
+    <Border Margin="20" CornerRadius="12" Background="White">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" Opacity="0.3" ShadowDepth="0" Color="#000000"/>
+        </Border.Effect>
+
+        <Border CornerRadius="12" ClipToBounds="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header — draggable -->
+                <Grid Grid.Row="0" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,20,24,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Static res:Strings.ImportFileDialog_Title}" FontSize="18" FontWeight="SemiBold"
+                                           Foreground="{StaticResource MidnightBrush}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Button Grid.Column="1" Click="CloseButton_Click"
+                                    Width="32" Height="32" Cursor="Hand"
+                                    VerticalAlignment="Center" ToolTip="{x:Static res:Strings.ImportFileDialog_Close}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="CloseBorder" Background="{StaticResource BgLighterBrush}"
+                                                CornerRadius="6" Width="32" Height="32">
+                                            <Path Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                                  Fill="{StaticResource TextBrush}" Width="18" Height="18"
+                                                  Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="CloseBorder" Property="Background" Value="{StaticResource BorderBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Body -->
+                <StackPanel Grid.Row="1" Margin="24,20,24,24">
+
+                    <!-- Format selector — Tag values must match ImportService.ParseFile switch arms -->
+                    <TextBlock Text="{x:Static res:Strings.ImportFileDialog_FileFormat}" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{StaticResource MidnightBrush}" Margin="0,0,0,6"/>
+                    <ComboBox x:Name="FormatComboBox" Height="40" FontSize="14" Padding="10,0"
+                              FontFamily="Segoe UI" SelectedIndex="-1"
+                              VerticalContentAlignment="Center"
+                              SelectionChanged="FormatComboBox_SelectionChanged">
+                        <ComboBoxItem Content="{x:Static res:Strings.ImportFileDialog_FormatAccuSyncXml}" Tag="accusync-xml"/>
+                        <ComboBoxItem Content="{x:Static res:Strings.ImportFileDialog_FormatAccuSyncJson}" Tag="accusync-json"/>
+                        <ComboBoxItem Content="{x:Static res:Strings.ImportFileDialog_FormatAlgo5Xml}" Tag="algo5-xml"/>
+                        <ComboBoxItem Content="{x:Static res:Strings.ImportFileDialog_FormatAlgoProJson}" Tag="algopro-json"/>
+                        <ComboBoxItem Content="{x:Static res:Strings.ImportFileDialog_FormatAccuLinkXml}" Tag="acculink-xml"/>
+                        <!-- TODO: Re-enable when OCR/facesheet import is ready
+                        <ComboBoxItem Content="Facesheet - Image (PNG, JPG)" Tag="facesheet-image"/>
+                        <ComboBoxItem Content="Facesheet - PDF Document" Tag="facesheet-pdf"/>
+                        <ComboBoxItem Content="Facesheet - Word (DOCX)" Tag="facesheet-docx"/>
+                        -->
+                    </ComboBox>
+
+                    <!-- Dropzone — visible until a file is selected, then swaps
+                         to FileSelectedPanel. Supports both click-to-browse and
+                         drag-and-drop. -->
+                    <Border x:Name="DropZone" Margin="0,20,0,0"
+                            BorderBrush="{StaticResource DropzoneBorderBrush}" BorderThickness="2"
+                            CornerRadius="8" Padding="20,36" Cursor="Hand"
+                            Background="Transparent"
+                            AllowDrop="True"
+                            Drop="DropZone_Drop"
+                            DragEnter="DropZone_DragEnter"
+                            DragLeave="DropZone_DragLeave"
+                            MouseLeftButtonDown="DropZone_Click">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderBrush" Value="{StaticResource DropzoneHoverBorderBrush}"/>
+                                        <Setter Property="Background" Value="{StaticResource DropzoneHoverBgBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <Path Data="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"
+                                  Fill="{StaticResource GrayBrush}" Width="40" Height="40"
+                                  Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                            <TextBlock Text="{x:Static res:Strings.ImportFileDialog_DragAndDrop}"
+                                       FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource MidnightBrush}"
+                                       HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                            <TextBlock Text="{x:Static res:Strings.ImportFileDialog_ClickToBrowse}"
+                                       FontSize="12" Foreground="{StaticResource GrayBrush}"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- File selected indicator — swaps in when a file is chosen -->
+                    <Border x:Name="FileSelectedPanel" Visibility="Collapsed" Margin="0,20,0,0"
+                            Background="{StaticResource SuccessBgBrush}"
+                            BorderBrush="{StaticResource SuccessBorderBrush}" BorderThickness="1"
+                            CornerRadius="8" Padding="14,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Width="40" Height="40" CornerRadius="8"
+                                    Background="{StaticResource SuccessLightBrush}"
+                                    VerticalAlignment="Center" Margin="0,0,12,0">
+                                <Path Data="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+                                      Fill="{StaticResource SuccessGreenBrush}" Width="22" Height="22"
+                                      Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="FileNameText" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{StaticResource MidnightBrush}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="FileMetaText" FontSize="11"
+                                           Foreground="{StaticResource SuccessGreenBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+
+                            <Button Grid.Column="2" Click="RemoveFile_Click" Cursor="Hand"
+                                    VerticalAlignment="Center" ToolTip="{x:Static res:Strings.ImportFileDialog_RemoveFile}" Margin="8,0,0,0">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="RemoveBorder" Background="Transparent"
+                                                CornerRadius="4" Width="28" Height="28">
+                                            <Path Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                                  Fill="{StaticResource GrayBrush}" Width="14" Height="14"
+                                                  Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="RemoveBorder" Property="Background" Value="{StaticResource DangerLightBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock x:Name="ValidationMessage" Visibility="Collapsed"
+                               FontSize="12" Foreground="{StaticResource DangerBrush}"
+                               Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <!-- Footer -->
+                <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+                        Background="{StaticResource BgFooterBrush}" Padding="24,16">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                        <Button Click="CancelButton_Click" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="CancelBorder" Background="White"
+                                            BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1"
+                                            CornerRadius="6" Padding="24,10">
+                                        <TextBlock Text="{x:Static res:Strings.ImportFileDialog_Cancel}" FontSize="14" FontWeight="Medium"
+                                                   Foreground="{StaticResource TextBrush}" FontFamily="Segoe UI"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="CancelBorder" Property="Background"
+                                                    Value="{StaticResource BgLighterBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <Button Click="NextButton_Click" Cursor="Hand" Margin="10,0,0,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="NextBorder" Background="{StaticResource PurpleBrush}"
+                                            CornerRadius="6" Padding="24,10">
+                                        <TextBlock Text="{x:Static res:Strings.ImportFileDialog_Next}" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="White" FontFamily="Segoe UI"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="NextBorder" Property="Background"
+                                                    Value="{StaticResource PurpleHoverBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

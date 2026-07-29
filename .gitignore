@@ -1,0 +1,25 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio local state
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Local runtime data (SQLite databases created at runtime)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# OS files
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store

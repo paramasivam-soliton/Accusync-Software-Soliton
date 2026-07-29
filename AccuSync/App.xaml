@@ -1,0 +1,22 @@
+﻿<Application x:Class="AccuSync.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:AccuSync.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="Resources/Styles/RibbonToolbarStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/PatientInformationStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/CommonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Value Converters -->
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+            <converters:BooleanToCheckIconConverter x:Key="BooleanToCheckIconConverter"/>
+            <converters:BooleanToColorConverter x:Key="BooleanToColorConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

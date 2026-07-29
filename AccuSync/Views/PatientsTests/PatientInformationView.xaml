@@ -1,0 +1,457 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.Views.PatientsTests.PatientInformationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:tabs="clr-namespace:AccuSync.Views.PatientsTests.Tabs"
+             xmlns:res="clr-namespace:AccuSync.Resources"
+             Background="Transparent">
+    <UserControl.Resources>
+
+        <!-- Shell-only styles (tabs, pills, overlay); shared styles in PatientInformationStyles -->
+
+        <Style x:Key="TabButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="20,14"/>
+            <Setter Property="BorderThickness" Value="0,0,0,3"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#f8f9fa"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActiveTabStyle" TargetType="Button" BasedOn="{StaticResource TabButtonStyle}">
+            <Setter Property="Foreground" Value="{StaticResource NavyBrush}"/>
+            <Setter Property="Background" Value="#fafafa"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrightBlueBrush}"/>
+        </Style>
+
+        <Style x:Key="JumpLinkButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource BrightBlueBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Text="{TemplateBinding Content}" 
+                                   Foreground="{TemplateBinding Foreground}"
+                                   TextDecorations="None"
+                                   FontSize="{TemplateBinding FontSize}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock Text="{TemplateBinding Content}" 
+                                           Foreground="{TemplateBinding Foreground}"
+                                           TextDecorations="Underline"
+                                           FontSize="{TemplateBinding FontSize}"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActionPillGroup" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ActionPillLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#6b7280"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="PillButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#4b5563"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="12,9"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="PillBorder" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="PillBorder" Property="Background" Value="#e0e7ff"/>
+                                <Setter Property="Foreground" Value="#404041"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="PillBorder" Property="Background" Value="#d4d8e8"/>
+                                <Setter Property="Foreground" Value="#404041"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PillButtonActiveStyle" TargetType="Button">
+            <Setter Property="Background" Value="#473089"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="12,9"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="PillBorder" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="PillBorder" Property="Background" Value="#5A3DA8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="PillBorder" Property="Background" Value="#3A2070"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Fixed Header -->
+        <Border Grid.Row="0" CornerRadius="15,15,0,0" Padding="20,16">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#3A3A3C" Offset="0"/>
+                    <GradientStop Color="#202124" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <TextBlock Text="{x:Static res:Strings.PatientInformationView_HeaderTitle}" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+        </Border>
+
+        <!-- Empty State -->
+        <Grid x:Name="EmptyState" Grid.Row="1" Visibility="Visible">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Background="#D4E9F9" CornerRadius="20" Width="80" Height="80" HorizontalAlignment="Center" Margin="0,0,0,16">
+                    <Viewbox Width="36" Height="36">
+                        <Canvas Width="24" Height="24">
+                            <Path Fill="#005FBE" Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </Canvas>
+                    </Viewbox>
+                </Border>
+                <TextBlock Text="{x:Static res:Strings.PatientInformationView_SelectPatientPrompt}" FontSize="14" Foreground="#9CA3AF" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Patient Content -->
+        <Grid x:Name="ContentContainer" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- New Patient Banner — visible only in Add mode -->
+            <Border x:Name="NewPatientBanner" Grid.Row="0" Visibility="Collapsed">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#059669" Offset="0"/>
+                        <GradientStop Color="#10B981" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid Margin="16,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White"
+                          VerticalAlignment="Center" Margin="0,0,10,0"
+                          Data="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.PatientInformationView_NewPatient}"
+                               Foreground="White" FontSize="14" FontWeight="Medium"
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="2" Content="{x:Static res:Strings.PatientInformationView_Cancel}" Click="CancelNewPatient_Click" Cursor="Hand" VerticalAlignment="Center">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#33FFFFFF"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#66FFFFFF"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="FontSize" Value="12"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="Padding" Value="14,4"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#4DFFFFFF"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Action Pill Groups -->
+            <Border Grid.Row="1" Background="{StaticResource LightGrayBg}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,10">
+                <StackPanel Orientation="Horizontal">
+
+                    <Border x:Name="PatientPillGroup" Style="{StaticResource ActionPillGroup}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static res:Strings.PatientInformationView_PatientLabel}" Style="{StaticResource ActionPillLabel}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="EditPillButton" Style="{StaticResource PillButtonStyle}" Click="EditPillButton_Click" ToolTip="{x:Static res:Strings.PatientInformationView_EditPatientTooltip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                      Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_Edit}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button x:Name="DeletePillButton" Style="{StaticResource PillButtonStyle}" Click="DeletePillButton_Click" ToolTip="{x:Static res:Strings.PatientInformationView_DeletePatientTooltip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                      Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_Delete}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource ActionPillGroup}">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static res:Strings.PatientInformationView_ActionsLabel}" Style="{StaticResource ActionPillLabel}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="SavePillButton" Style="{StaticResource PillButtonStyle}" Click="SavePillButton_Click" IsEnabled="False" ToolTip="{x:Static res:Strings.PatientInformationView_SaveChangesTooltip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                      Data="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_Save}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button x:Name="RevertPillButton" Style="{StaticResource PillButtonStyle}" Click="RevertPillButton_Click" IsEnabled="False" ToolTip="{x:Static res:Strings.PatientInformationView_RevertAllChangesTooltip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                      Data="M14 12c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2zm-2-9c-4.97 0-9 4.03-9 9H0l4 4 4-4H5c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.51 0-2.91-.49-4.06-1.3l-1.42 1.44C8.04 20.3 9.94 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_Revert}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button x:Name="UndoPillButton" Style="{StaticResource PillButtonStyle}" Click="UndoPillButton_Click" IsEnabled="False" ToolTip="{x:Static res:Strings.PatientInformationView_UndoLastChangeTooltip}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Width="20" Height="20" Margin="0,0,8,0">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                      Data="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_Undo}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Patient Summary with QR Code -->
+            <Border x:Name="PatientSummary" Grid.Row="2" Background="{StaticResource LightGrayBg}" BorderBrush="{StaticResource NavyBrush}" BorderThickness="0,0,0,2" Padding="24,20">
+                <StackPanel Orientation="Horizontal">
+                    <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <StackPanel>
+                            <Image x:Name="PatientQRCode" Source="{Binding QRCodeImage}" Width="100" Height="100" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <TextBlock Text="{x:Static res:Strings.PatientInformationView_ScanForDetails}" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource GrayBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource NavyBrush}" Margin="0,0,0,4">
+                            <Run Text="{Binding FirstName, Mode=OneWay}"/> <Run Text="{Binding LastName, Mode=OneWay}"/>
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                                <TextBlock Text="{x:Static res:Strings.PatientInformationView_DobLabel}" FontSize="13" Foreground="{StaticResource GrayBrush}"/>
+                                <TextBlock Text="{Binding DateOfBirth, StringFormat='MM/dd/yyyy'}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                                <TextBlock Text="{x:Static res:Strings.PatientInformationView_IdLabel}" FontSize="13" Foreground="{StaticResource GrayBrush}"/>
+                                <TextBlock Text="{Binding PatientId}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                                <TextBlock Text="{x:Static res:Strings.PatientInformationView_GenderLabel}" FontSize="13" Foreground="{StaticResource GrayBrush}"/>
+                                <TextBlock Text="{Binding Gender}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Static res:Strings.PatientInformationView_HospitalIdLabel}" FontSize="13" Foreground="{StaticResource GrayBrush}"/>
+                                <TextBlock Text="{Binding HospitalId}" FontSize="13" FontWeight="Medium" Foreground="{StaticResource NavyBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Tab Navigation and Content -->
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Tab Navigation -->
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,2" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="PatientTab" Grid.Column="0" Style="{StaticResource ActiveTabStyle}" Click="PatientTab_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Static res:Strings.PatientInformationView_PatientLabel}" VerticalAlignment="Center"/>
+                                <Button x:Name="WarningBadge" Visibility="Collapsed" Click="WarningBadge_Click" Cursor="Hand"
+                                        ToolTip="{x:Static res:Strings.PatientInformationView_MissingFieldsTooltip}" Margin="6,0,0,0" Padding="6,2"
+                                        Background="#dc3545" BorderThickness="0" Foreground="White" FontSize="10" FontWeight="SemiBold">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                                                <TextBlock x:Name="WarningBadgeText" Text="3" FontSize="{TemplateBinding FontSize}"
+                                                           Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#c82333"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="RiskTab" Grid.Column="1" Content="{x:Static res:Strings.PatientInformationView_RisksTab}" Style="{StaticResource TabButtonStyle}" Click="RiskTab_Click"/>
+                        <Button x:Name="AdditionalTab" Grid.Column="2" Content="{x:Static res:Strings.PatientInformationView_AdditionalTab}" Style="{StaticResource TabButtonStyle}" Click="AdditionalTab_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Jump links — visible on Additional tab only -->
+                <Border x:Name="JumpToSection" Grid.Row="1" Background="{StaticResource LightGrayBg}" BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="0,0,0,1" Padding="24,12" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static res:Strings.PatientInformationView_JumpTo}" FontSize="13" Foreground="{StaticResource GrayBrush}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <Button Content="{x:Static res:Strings.PatientInformationView_JumpMother}" Style="{StaticResource JumpLinkButton}" Click="JumpToMother_Click"/>
+                        <TextBlock Text=" | " FontSize="13" Foreground="{StaticResource GrayBrush}" Margin="4,0" VerticalAlignment="Center"/>
+                        <Button Content="{x:Static res:Strings.PatientInformationView_JumpCaregiver}" Style="{StaticResource JumpLinkButton}" Click="JumpToCaregiver_Click"/>
+                        <TextBlock Text=" | " FontSize="13" Foreground="{StaticResource GrayBrush}" Margin="4,0" VerticalAlignment="Center"/>
+                        <Button Content="{x:Static res:Strings.PatientInformationView_JumpReferral}" Style="{StaticResource JumpLinkButton}" Click="JumpToReferral_Click"/>
+                        <TextBlock Text=" | " FontSize="13" Foreground="{StaticResource GrayBrush}" Margin="4,0" VerticalAlignment="Center"/>
+                        <Button Content="{x:Static res:Strings.PatientInformationView_JumpMedical}" Style="{StaticResource JumpLinkButton}" Click="JumpToMedical_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="24" CanContentScroll="False">
+                    <StackPanel x:Name="TabContentContainer">
+                        <tabs:PatientDetailsTab x:Name="PatientDetailsTab"/>
+                        <tabs:RiskFactorsTab x:Name="RiskFactorsTab" Visibility="Collapsed"/>
+                        <tabs:AdditionalInfoTab x:Name="AdditionalInfoTab" Visibility="Collapsed"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Edit Mode Overlay -->
+                <Border x:Name="EditOverlay" Grid.Row="0" Grid.RowSpan="3" Background="#90B0B5BE" Visibility="Visible" Cursor="Hand">
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Padding="20,14" Opacity="0.95">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" BlurRadius="10" Opacity="0.15"/>
+                        </Border.Effect>
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Width="18" Height="18" Margin="0,0,10,0">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#404041" Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="{x:Static res:Strings.PatientInformationView_EditOverlayMessage}" FontSize="14" FontWeight="Medium" Foreground="#404041"/>
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
