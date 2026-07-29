@@ -28,6 +28,21 @@ namespace AccuSync.Views.Login
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = _viewModel;
+
+            _viewModel.LoginSucceeded += OnLoginSucceeded;
+            _viewModel.FirstLoginPasswordChangeRequired += OnFirstLoginPasswordChangeRequired;
+        }
+
+        private void OnLoginSucceeded(string username, string role)
+        {
+            App.NavigateAfterLogin(this, username, role);
+        }
+
+        private void OnFirstLoginPasswordChangeRequired(ChangePasswordViewModel changePasswordViewModel)
+        {
+            var changePasswordWindow = new ChangePasswordWindow(changePasswordViewModel);
+            changePasswordWindow.Show();
+            Close();
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

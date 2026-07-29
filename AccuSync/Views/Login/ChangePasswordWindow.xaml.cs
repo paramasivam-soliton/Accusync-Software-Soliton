@@ -31,6 +31,24 @@ namespace AccuSync.Views.Login
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = _viewModel;
+
+            _viewModel.PasswordChangeSucceeded += OnPasswordChangeSucceeded;
+        }
+
+        private void OnPasswordChangeSucceeded(string username, string role)
+        {
+            if (string.Equals(role, "Admin", System.StringComparison.OrdinalIgnoreCase))
+            {
+                var adminDashboard = App.GetService<AdminDashboardWindow>();
+                adminDashboard.Show();
+            }
+            else
+            {
+                var screenerDashboard = App.GetService<ScreenerDashboardWindow>();
+                screenerDashboard.Show();
+            }
+
+            Close();
         }
 
         private void OldPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

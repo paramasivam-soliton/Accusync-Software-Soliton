@@ -6,14 +6,11 @@
 
 using AccuSync.Helpers;
 using AccuSync.Services;
-using AccuSync.Views.Login;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using AccuSync.Resources;
 
@@ -22,13 +19,15 @@ namespace AccuSync.ViewModels
     /// <summary>
     /// Drives the login screen. Loads available usernames into a dropdown
     /// and delegates credential verification to <see cref="IAuthenticationService"/>.
-    /// Routes to the change-password screen on first login, or to the
-    /// appropriate dashboard on success.
+    /// Raises <see cref="LoginSucceeded"/> or <see cref="FirstLoginPasswordChangeRequired"/>
+    /// so the hosting View decides how to navigate — this VM has no dependency on any
+    /// concrete Window type, so it works whether the View lives in this project or another.
     /// </summary>
     public class LoginViewModel : INotifyPropertyChanged
     {
         private readonly IDatabaseService _databaseService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEncryptionService _encryptionService;
 
         private string _selectedUsername;
         private string _password = string.Empty;
@@ -92,10 +91,17 @@ namespace AccuSync.ViewModels
 
         public ICommand SignInCommand { get; }
 
-        public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService)
+        /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
+        public event Action<string, string> LoginSucceeded;
+
+        /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
+        public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
+
+        public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService, IEncryptionService encryptionService)
         {
             _databaseService = databaseService;
             _authenticationService = authenticationService;
+            _encryptionService = encryptionService;
 
             Usernames = new ObservableCollection<string>();
             _isPasswordVisible = false;
@@ -141,17 +147,12 @@ namespace AccuSync.ViewModels
                 {
                     if (result.User.FirstLogin == 1)
                     {
-                        // TODO: Same MVVM concern as ChangePasswordViewModel — ViewModel
-                        //       creates and shows a Window directly. Move to a navigation service.
-                        var changePasswordWindow = new ChangePasswordWindow(
-                            new ChangePasswordViewModel(
-                                _databaseService,
-                                App.GetService<IEncryptionService>(),
-                                result.User
-                            )
+                        var changePasswordViewModel = new ChangePasswordViewModel(
+                            _databaseService,
+                            _encryptionService,
+                            result.User
                         );
-                        changePasswordWindow.Show();
-                        CloseLoginWindow();
+                        FirstLoginPasswordChangeRequired?.Invoke(changePasswordViewModel);
                     }
                     else
                     {
@@ -160,14 +161,7 @@ namespace AccuSync.ViewModels
                             ? "Admin"
                             : "Screener";
 
-                        var loginWindow = Application.Current.Windows
-                            .OfType<LoginWindow>()
-                            .FirstOrDefault();
-
-                        if (loginWindow != null)
-                        {
-                            App.NavigateAfterLogin(loginWindow, result.User.AccountName, role);
-                        }
+                        LoginSucceeded?.Invoke(result.User.AccountName, role);
                     }
 
                     Password = string.Empty;
@@ -186,17 +180,6 @@ namespace AccuSync.ViewModels
             {
                 IsLoading = false;
             }
-        }
-
-        private void CloseLoginWindow()
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                var loginWindow = Application.Current.Windows
-                    .OfType<LoginWindow>()
-                    .FirstOrDefault();
-                loginWindow?.Close();
-            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
