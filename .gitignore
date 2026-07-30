@@ -1,6 +1,7 @@
 # Build output
 [Bb]in/
 [Oo]bj/
+/build/
 
 # Visual Studio local state
 .vs/
