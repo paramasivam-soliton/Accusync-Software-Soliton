@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Helpers;
-using AccuSync.Services;
+using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Application.Abstractions.Services;
+using AccuSync.Application.Helpers;
+using AccuSync.Application.Services;
+using AccuSync.Persistence;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views;
 using AccuSync.WPF.Views.Splash;
@@ -10,7 +13,7 @@ using AccuSync.WPF.Views.Login;
 
 namespace AccuSync.WPF
 {
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private ServiceProvider _serviceProvider;
 
@@ -24,7 +27,7 @@ namespace AccuSync.WPF
         private void ConfigureServices(IServiceCollection services)
         {
             // Services
-            services.AddSingleton<IDatabaseService, DatabaseService>();
+            services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 

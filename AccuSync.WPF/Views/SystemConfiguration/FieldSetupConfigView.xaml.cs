@@ -9,8 +9,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
-using AccuSync.Helpers;
+using AccuSync.Application.Models;
+using AccuSync.Application.Helpers;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 

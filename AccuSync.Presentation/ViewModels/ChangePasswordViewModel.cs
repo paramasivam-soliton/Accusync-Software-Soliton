@@ -11,9 +11,10 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AccuSync.Presentation.Helpers;
-using AccuSync.Models;
-using AccuSync.Resources;
-using AccuSync.Services;
+using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Application.Abstractions.Services;
+using AccuSync.Application.Models;
+using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
 {
@@ -26,7 +27,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class ChangePasswordViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IUserRepository _userRepository;
         private readonly IEncryptionService _encryptionService;
         private readonly User _currentUser;
 
@@ -151,9 +152,9 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
-        public ChangePasswordViewModel(IDatabaseService databaseService, IEncryptionService encryptionService, User currentUser)
+        public ChangePasswordViewModel(IUserRepository userRepository, IEncryptionService encryptionService, User currentUser)
         {
-            _databaseService = databaseService;
+            _userRepository = userRepository;
             _encryptionService = encryptionService;
             _currentUser = currentUser;
 
@@ -238,7 +239,7 @@ namespace AccuSync.Presentation.ViewModels
                 _currentUser.FirstLogin = 0;
                 _currentUser.ModificationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-                bool success = await _databaseService.UpdateUserAsync(_currentUser);
+                bool success = await _userRepository.UpdateUserAsync(_currentUser);
 
                 if (success)
                 {

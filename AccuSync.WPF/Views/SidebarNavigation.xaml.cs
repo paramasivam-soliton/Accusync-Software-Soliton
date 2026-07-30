@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Controls;
-using AccuSync.Helpers;
+using AccuSync.Application.Helpers;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views.UsersProfiles;
 using AccuSync.WPF.Views.About;
@@ -24,7 +24,7 @@ using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.WPF.Views.SystemConfiguration;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Resources.Constants;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 
 namespace AccuSync.WPF.Views
 {
@@ -954,7 +954,7 @@ namespace AccuSync.WPF.Views
         {
             if (DevModeConfig.SkipLogin)
             {
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
                 return;
             }
 

@@ -24,8 +24,8 @@ namespace AccuSync.WPF.Converters
     /// </remarks>
     public class BooleanToColorConverter : IValueConverter
     {
-        private static readonly Brush ValidBrush = (Brush)Application.Current.Resources["ValidColorBrush"];
-        private static readonly Brush InvalidBrush = (Brush)Application.Current.Resources["InvalidColorBrush"];
+        private static readonly Brush ValidBrush = (Brush)System.Windows.Application.Current.Resources["ValidColorBrush"];
+        private static readonly Brush InvalidBrush = (Brush)System.Windows.Application.Current.Resources["InvalidColorBrush"];
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -6,7 +6,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:res="clr-namespace:AccuSync.WPF.Resources"
-             xmlns:helpers="clr-namespace:AccuSync.Helpers;assembly=AccuSync">
+             xmlns:helpers="clr-namespace:AccuSync.Application.Helpers;assembly=AccuSync.Application">
 
     <!-- PatientDetailsTab.xaml
          Tab 1 of PatientInformationView: demographics form + comments.

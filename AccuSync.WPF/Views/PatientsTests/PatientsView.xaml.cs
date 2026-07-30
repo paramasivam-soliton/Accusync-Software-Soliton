@@ -19,8 +19,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
-using AccuSync.Models;
-using AccuSync.Services;
+using AccuSync.Application.Models;
+using AccuSync.Application.Services;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.PatientsTests

@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Helpers;
+using AccuSync.Application.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

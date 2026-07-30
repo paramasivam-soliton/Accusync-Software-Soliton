@@ -4,9 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
-using AccuSync.Services;
+using AccuSync.Application.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

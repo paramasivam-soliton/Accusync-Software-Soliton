@@ -61,10 +61,10 @@ namespace AccuSync.WPF.Controls
             var dlg = new AppDialog();
             dlg.Build(messageBoxText, caption, button, icon);
 
-            var owner = Application.Current?.Windows
+            var owner = System.Windows.Application.Current?.Windows
                 .OfType<Window>()
                 .FirstOrDefault(w => w.IsActive && w != dlg)
-                ?? Application.Current?.MainWindow;
+                ?? System.Windows.Application.Current?.MainWindow;
 
             if (owner != null && owner != dlg && owner.IsLoaded)
             {

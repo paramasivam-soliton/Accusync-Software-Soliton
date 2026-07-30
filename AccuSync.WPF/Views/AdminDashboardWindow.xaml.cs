@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Windows;
-using AccuSync.Helpers;
+using AccuSync.Application.Helpers;
 
 namespace AccuSync.WPF.Views
 {

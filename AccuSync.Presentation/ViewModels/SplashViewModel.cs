@@ -9,8 +9,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Resources;
-using AccuSync.Services;
+using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
 {
@@ -21,7 +21,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IUserRepository _userRepository;
         private string _statusMessage;
 
         public string StatusMessage
@@ -34,9 +34,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        public SplashViewModel(IDatabaseService databaseService)
+        public SplashViewModel(IUserRepository userRepository)
         {
-            _databaseService = databaseService;
+            _userRepository = userRepository;
         }
 
         public async Task InitializeAsync()
@@ -46,7 +46,7 @@ namespace AccuSync.Presentation.ViewModels
                 StatusMessage = Strings.SplashViewModel_InitializingDatabase;
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
-                await _databaseService.InitializeDatabaseAsync();
+                await _userRepository.InitializeDatabaseAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);
@@ -57,7 +57,7 @@ namespace AccuSync.Presentation.ViewModels
                 // from a failed database init.
                 StatusMessage = string.Format(Strings.SplashViewModel_Error, ex.Message);
                 await Task.Delay(3000);
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
             }
         }
 
