@@ -1,0 +1,22 @@
+<Project>
+
+  <!-- Applies to every project under this directory tree, including ones added later.
+       Consolidates all build output into one build/ folder at the repo root, split
+       Debug/Release first so each config's full set of outputs sits in its own folder,
+       instead of scattering bin/obj under each project folder. -->
+  <PropertyGroup>
+    <!-- build\bin\<Configuration>\<ProjectName>\<TFM>\ -->
+    <OutputPath>$(MSBuildThisFileDirectory)build\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+
+    <!-- build\obj\<ProjectName>\<Configuration>\<TFM>\ — deliberately NOT putting
+         $(Configuration) directly in BaseIntermediateOutputPath: NuGet restore reads
+         this before Configuration is resolved, so folding it in here can break or
+         duplicate restore. Configuration still nests correctly one level down. -->
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+
+    <!-- No .pdb files in the output folder. .deps.json/.runtimeconfig.json are left
+         alone — those are required for AccuSync.exe to actually launch. -->
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+</Project>
