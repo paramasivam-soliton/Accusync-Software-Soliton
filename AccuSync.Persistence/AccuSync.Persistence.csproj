@@ -13,11 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+    <!-- Provider-agnostic: EF Core + Relational only. No provider package here —
+         that is AccuSync.SQLite's job. This project must compile and run without
+         knowing which database engine is in use. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Needs IUserRepository, IEncryptionService, and the User model. -->
+    <!-- Needs IUserRepository, IUnitOfWork, IClock, IEncryptionService, and the User model. -->
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
   </ItemGroup>
 

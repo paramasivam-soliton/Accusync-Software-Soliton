@@ -6,177 +6,156 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Models;
-using Microsoft.Data.Sqlite;
+using AccuSync.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccuSync.Persistence
 {
     /// <summary>
-    /// SQLite-backed data access for user accounts.
-    /// Database is stored in <c>ProgramData\Natus\AccuSync\SettingsDatabase.db</c>.
-    /// Sensitive fields (names, account names, passwords) are encrypted via
-    /// <see cref="IEncryptionService"/> before storage.
+    /// EF Core-backed data access for user accounts (SettingsDatabase.db). Sensitive fields
+    /// (names, account names, previous passwords) are encrypted via <see cref="IEncryptionService"/>
+    /// before storage and decrypted on read. ProfilePassword travels encrypted end-to-end —
+    /// it is never decrypted back onto a <see cref="User"/> instance.
     /// </summary>
     public class UserRepository : IUserRepository
     {
-        private readonly string _databasePath;
+        private readonly SettingsDbContext _context;
         private readonly IEncryptionService _encryptionService;
-        private readonly string _connectionString;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserRepository(IEncryptionService encryptionService)
+        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService, IUnitOfWork unitOfWork)
         {
+            _context = context;
             _encryptionService = encryptionService;
-
-            string appDataPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                "Natus",
-                "AccuSync"
-            );
-
-            Directory.CreateDirectory(appDataPath);
-            _databasePath = Path.Combine(appDataPath, "SettingsDatabase.db");
-            _connectionString = $"Data Source={_databasePath}";
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
-        /// Creates the Users table if it doesn't exist and seeds default accounts
-        /// on first run. Safe to call on every startup.
+        /// Applies pending migrations — backing up the database file first and restoring it
+        /// if the migration fails — then seeds the two default accounts on first run.
+        /// Safe to call on every startup.
         /// </summary>
         public async Task InitializeDatabaseAsync()
         {
-            bool isNewDatabase = !File.Exists(_databasePath);
+            string databasePath = _context.Database.GetDbConnection().DataSource;
+            bool databaseExisted = File.Exists(databasePath);
+            string backupPath = databasePath + ".bak";
 
-            using (var connection = new SqliteConnection(_connectionString))
+            if (databaseExisted)
             {
-                await connection.OpenAsync();
+                File.Copy(databasePath, backupPath, overwrite: true);
+            }
 
-                string createTableQuery = @"
-                    CREATE TABLE IF NOT EXISTS Users (
-                        Guid TEXT PRIMARY KEY,
-                        AccountName TEXT NOT NULL UNIQUE,
-                        FirstName TEXT,
-                        LastName TEXT,
-                        Status INTEGER DEFAULT 0,
-                        ProfileId TEXT,
-                        ProfilePassword TEXT NOT NULL,
-                        FirstLogin INTEGER DEFAULT 1,
-                        FailedLoginAttemptCount INTEGER DEFAULT 0,
-                        FailedResetAttemptCount INTEGER DEFAULT 0,
-                        FirstFailedLoginTime INTEGER DEFAULT 0,
-                        FirstResetLoginTime INTEGER DEFAULT 0,
-                        CreationDate INTEGER DEFAULT 0,
-                        ModificationDate INTEGER DEFAULT 0,
-                        PasswordModificationDate INTEGER DEFAULT 0,
-                        LastThreePasswords TEXT DEFAULT ''
-                    )";
-
-                using (var command = new SqliteCommand(createTableQuery, connection))
+            try
+            {
+                // EF Core's migration lock (__EFMigrationsLock) exists to stop two
+                // *concurrent* instances from migrating at once. This app is single-instance
+                // desktop software, so any row found here at startup is not a live lock —
+                // it's a leftover from a previous run that was killed mid-migration (crash,
+                // force-quit, debugger stop). Left alone, MigrateAsync polls for that row to
+                // clear roughly once a second, forever, since the process that owned it is
+                // gone — bricking every future launch until someone edits the database file
+                // by hand. Clearing it first is what makes migration recoverable from a
+                // mid-migration interruption instead of a one-way failure.
+                await ClearStaleMigrationsLockAsync();
+                await _context.Database.MigrateAsync();
+            }
+            catch
+            {
+                if (databaseExisted)
                 {
-                    await command.ExecuteNonQueryAsync();
+                    File.Copy(backupPath, databasePath, overwrite: true);
                 }
 
-                if (isNewDatabase)
-                {
-                    await CreateDefaultUsersAsync(connection);
-                }
+                throw;
+            }
+
+            if (!await _context.Users.AnyAsync())
+            {
+                await CreateDefaultUsersAsync();
+            }
+        }
+
+        /// <summary>
+        /// Deletes any row in EF Core's migrations lock table. See the comment at the
+        /// InitializeDatabaseAsync call site for why this is safe and necessary here.
+        /// </summary>
+        private async Task ClearStaleMigrationsLockAsync()
+        {
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
+            }
+            catch (DbException)
+            {
+                // Table doesn't exist yet — this is the very first run, nothing to clear.
             }
         }
 
         // TODO: Default password "12345" is hardcoded. These accounts should
         //       force a password change on first login (FirstLogin = 1 handles
         //       this, but verify the UI enforces it).
-        private async Task CreateDefaultUsersAsync(SqliteConnection connection)
+        private async Task CreateDefaultUsersAsync()
         {
-            var adminUser = new User
+            await InsertUserAsync(new User
             {
                 AccountName = "Admin",
                 FirstName = "Admin",
                 LastName = "User",
                 ProfileId = "Admin",
                 ProfilePassword = _encryptionService.Encrypt("12345")
-            };
+            });
 
-            await InsertUserAsync(connection, adminUser);
-
-            var screenerUser = new User
+            await InsertUserAsync(new User
             {
                 AccountName = "Screener",
                 FirstName = "Screener",
                 LastName = "User",
                 ProfileId = "Screener",
                 ProfilePassword = _encryptionService.Encrypt("12345")
-            };
-
-            await InsertUserAsync(connection, screenerUser);
+            });
         }
 
         // NOTE: Encryption is applied per-field here rather than in the User model.
         //       This means callers must always go through UserRepository — if anyone
-        //       writes raw SQL against the same database, they'll get encrypted values.
-        //       That's intentional, but worth knowing.
-        private async Task InsertUserAsync(SqliteConnection connection, User user)
+        //       queries the database directly, they'll get encrypted values.
+        //       ProfilePassword is assumed already encrypted by the caller.
+        private async Task InsertUserAsync(User user)
         {
-            string insertQuery = @"
-                INSERT INTO Users (
-                    Guid, AccountName, FirstName, LastName, Status, ProfileId,
-                    ProfilePassword, FirstLogin, FailedLoginAttemptCount,
-                    FailedResetAttemptCount, FirstFailedLoginTime, FirstResetLoginTime,
-                    CreationDate, ModificationDate, PasswordModificationDate, LastThreePasswords
-                ) VALUES (
-                    @Guid, @AccountName, @FirstName, @LastName, @Status, @ProfileId,
-                    @ProfilePassword, @FirstLogin, @FailedLoginAttemptCount,
-                    @FailedResetAttemptCount, @FirstFailedLoginTime, @FirstResetLoginTime,
-                    @CreationDate, @ModificationDate, @PasswordModificationDate, @LastThreePasswords
-                )";
-
-            using (var command = new SqliteCommand(insertQuery, connection))
+            var entity = new User
             {
-                command.Parameters.AddWithValue("@Guid", user.Guid);
-                command.Parameters.AddWithValue("@AccountName", _encryptionService.Encrypt(user.AccountName));
-                command.Parameters.AddWithValue("@FirstName", _encryptionService.Encrypt(user.FirstName));
-                command.Parameters.AddWithValue("@LastName", _encryptionService.Encrypt(user.LastName));
-                command.Parameters.AddWithValue("@Status", user.Status);
-                command.Parameters.AddWithValue("@ProfileId", _encryptionService.Encrypt(user.ProfileId));
-                command.Parameters.AddWithValue("@ProfilePassword", user.ProfilePassword);
-                command.Parameters.AddWithValue("@FirstLogin", user.FirstLogin);
-                command.Parameters.AddWithValue("@FailedLoginAttemptCount", user.FailedLoginAttemptCount);
-                command.Parameters.AddWithValue("@FailedResetAttemptCount", user.FailedResetAttemptCount);
-                command.Parameters.AddWithValue("@FirstFailedLoginTime", user.FirstFailedLoginTime);
-                command.Parameters.AddWithValue("@FirstResetLoginTime", user.FirstResetLoginTime);
-                command.Parameters.AddWithValue("@CreationDate", user.CreationDate);
-                command.Parameters.AddWithValue("@ModificationDate", user.ModificationDate);
-                command.Parameters.AddWithValue("@PasswordModificationDate", user.PasswordModificationDate);
-                command.Parameters.AddWithValue("@LastThreePasswords", _encryptionService.Encrypt(user.LastThreePasswords));
+                Guid = user.Guid,
+                AccountName = _encryptionService.Encrypt(user.AccountName),
+                FirstName = _encryptionService.Encrypt(user.FirstName),
+                LastName = _encryptionService.Encrypt(user.LastName),
+                Status = user.Status,
+                ProfileId = _encryptionService.Encrypt(user.ProfileId),
+                ProfilePassword = user.ProfilePassword,
+                FirstLogin = user.FirstLogin,
+                FailedLoginAttemptCount = user.FailedLoginAttemptCount,
+                FailedResetAttemptCount = user.FailedResetAttemptCount,
+                FirstFailedLoginTime = user.FirstFailedLoginTime,
+                FirstResetLoginTime = user.FirstResetLoginTime,
+                PasswordModificationDate = user.PasswordModificationDate,
+                LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords)
+                // CreationDate/ModificationDate are set by TimestampInterceptor on save.
+            };
 
-                await command.ExecuteNonQueryAsync();
-            }
+            _context.Users.Add(entity);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            var users = new List<User>();
-
-            using (var connection = new SqliteConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-
-                string query = "SELECT * FROM Users";
-                using (var command = new SqliteCommand(query, connection))
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        users.Add(MapUser(reader));
-                    }
-                }
-            }
-
-            return users;
+            var stored = await _context.Users.AsNoTracking().ToListAsync();
+            return stored.Select(Decrypt).ToList();
         }
 
         // BUG: Decrypts every user just to find one by name. On top of being
@@ -195,50 +174,25 @@ namespace AccuSync.Persistence
         {
             try
             {
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
+                var tracked = await _context.Users.FindAsync(user.Guid);
+                if (tracked == null) return false;
 
-                    string updateQuery = @"
-                        UPDATE Users SET
-                            AccountName = @AccountName,
-                            FirstName = @FirstName,
-                            LastName = @LastName,
-                            Status = @Status,
-                            ProfileId = @ProfileId,
-                            ProfilePassword = @ProfilePassword,
-                            FirstLogin = @FirstLogin,
-                            FailedLoginAttemptCount = @FailedLoginAttemptCount,
-                            FailedResetAttemptCount = @FailedResetAttemptCount,
-                            FirstFailedLoginTime = @FirstFailedLoginTime,
-                            FirstResetLoginTime = @FirstResetLoginTime,
-                            ModificationDate = @ModificationDate,
-                            PasswordModificationDate = @PasswordModificationDate,
-                            LastThreePasswords = @LastThreePasswords
-                        WHERE Guid = @Guid";
+                tracked.AccountName = _encryptionService.Encrypt(user.AccountName);
+                tracked.FirstName = _encryptionService.Encrypt(user.FirstName);
+                tracked.LastName = _encryptionService.Encrypt(user.LastName);
+                tracked.Status = user.Status;
+                tracked.ProfileId = _encryptionService.Encrypt(user.ProfileId);
+                tracked.ProfilePassword = user.ProfilePassword;
+                tracked.FirstLogin = user.FirstLogin;
+                tracked.FailedLoginAttemptCount = user.FailedLoginAttemptCount;
+                tracked.FailedResetAttemptCount = user.FailedResetAttemptCount;
+                tracked.FirstFailedLoginTime = user.FirstFailedLoginTime;
+                tracked.FirstResetLoginTime = user.FirstResetLoginTime;
+                tracked.PasswordModificationDate = user.PasswordModificationDate;
+                tracked.LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords);
+                // ModificationDate is set by TimestampInterceptor, not here — see class TODO history.
 
-                    using (var command = new SqliteCommand(updateQuery, connection))
-                    {
-                        command.Parameters.AddWithValue("@Guid", user.Guid);
-                        command.Parameters.AddWithValue("@AccountName", _encryptionService.Encrypt(user.AccountName));
-                        command.Parameters.AddWithValue("@FirstName", _encryptionService.Encrypt(user.FirstName));
-                        command.Parameters.AddWithValue("@LastName", _encryptionService.Encrypt(user.LastName));
-                        command.Parameters.AddWithValue("@Status", user.Status);
-                        command.Parameters.AddWithValue("@ProfileId", _encryptionService.Encrypt(user.ProfileId));
-                        command.Parameters.AddWithValue("@ProfilePassword", user.ProfilePassword);
-                        command.Parameters.AddWithValue("@FirstLogin", user.FirstLogin);
-                        command.Parameters.AddWithValue("@FailedLoginAttemptCount", user.FailedLoginAttemptCount);
-                        command.Parameters.AddWithValue("@FailedResetAttemptCount", user.FailedResetAttemptCount);
-                        command.Parameters.AddWithValue("@FirstFailedLoginTime", user.FirstFailedLoginTime);
-                        command.Parameters.AddWithValue("@FirstResetLoginTime", user.FirstResetLoginTime);
-                        // ModificationDate is set here rather than using the caller's value
-                        command.Parameters.AddWithValue("@ModificationDate", DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-                        command.Parameters.AddWithValue("@PasswordModificationDate", user.PasswordModificationDate);
-                        command.Parameters.AddWithValue("@LastThreePasswords", _encryptionService.Encrypt(user.LastThreePasswords));
-
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
+                await _unitOfWork.SaveChangesAsync();
                 return true;
             }
             catch
@@ -249,20 +203,27 @@ namespace AccuSync.Persistence
             }
         }
 
-        // BUG: Mutates user.ProfilePassword in place before inserting.
-        //      The caller's User object now holds the encrypted password,
-        //      which can cause double-encryption if CreateUserAsync is retried
-        //      or the object is reused.
         public async Task<bool> CreateUserAsync(User user)
         {
             try
             {
-                using (var connection = new SqliteConnection(_connectionString))
+                await InsertUserAsync(new User
                 {
-                    await connection.OpenAsync();
-                    user.ProfilePassword = _encryptionService.Encrypt(user.ProfilePassword);
-                    await InsertUserAsync(connection, user);
-                }
+                    Guid = user.Guid,
+                    AccountName = user.AccountName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Status = user.Status,
+                    ProfileId = user.ProfileId,
+                    ProfilePassword = _encryptionService.Encrypt(user.ProfilePassword),
+                    FirstLogin = user.FirstLogin,
+                    FailedLoginAttemptCount = user.FailedLoginAttemptCount,
+                    FailedResetAttemptCount = user.FailedResetAttemptCount,
+                    FirstFailedLoginTime = user.FirstFailedLoginTime,
+                    FirstResetLoginTime = user.FirstResetLoginTime,
+                    PasswordModificationDate = user.PasswordModificationDate,
+                    LastThreePasswords = user.LastThreePasswords
+                });
                 return true;
             }
             catch
@@ -272,29 +233,26 @@ namespace AccuSync.Persistence
             }
         }
 
-        // TODO: MapUser reads columns by ordinal position (0, 1, 2...) which breaks
-        //       silently if the table schema changes. Use reader.GetOrdinal("ColumnName")
-        //       or reader["ColumnName"] for safety.
-        private User MapUser(SqliteDataReader reader)
+        private User Decrypt(User stored)
         {
             return new User
             {
-                Guid = reader.GetString(0),
-                AccountName = _encryptionService.Decrypt(reader.GetString(1)),
-                FirstName = _encryptionService.Decrypt(reader.GetString(2)),
-                LastName = _encryptionService.Decrypt(reader.GetString(3)),
-                Status = reader.GetInt32(4),
-                ProfileId = _encryptionService.Decrypt(reader.GetString(5)),
-                ProfilePassword = reader.GetString(6),
-                FirstLogin = reader.GetInt32(7),
-                FailedLoginAttemptCount = reader.GetInt32(8),
-                FailedResetAttemptCount = reader.GetInt32(9),
-                FirstFailedLoginTime = reader.GetInt64(10),
-                FirstResetLoginTime = reader.GetInt64(11),
-                CreationDate = reader.GetInt64(12),
-                ModificationDate = reader.GetInt64(13),
-                PasswordModificationDate = reader.GetInt64(14),
-                LastThreePasswords = _encryptionService.Decrypt(reader.GetString(15))
+                Guid = stored.Guid,
+                AccountName = _encryptionService.Decrypt(stored.AccountName),
+                FirstName = _encryptionService.Decrypt(stored.FirstName),
+                LastName = _encryptionService.Decrypt(stored.LastName),
+                Status = stored.Status,
+                ProfileId = _encryptionService.Decrypt(stored.ProfileId),
+                ProfilePassword = stored.ProfilePassword,
+                FirstLogin = stored.FirstLogin,
+                FailedLoginAttemptCount = stored.FailedLoginAttemptCount,
+                FailedResetAttemptCount = stored.FailedResetAttemptCount,
+                FirstFailedLoginTime = stored.FirstFailedLoginTime,
+                FirstResetLoginTime = stored.FirstResetLoginTime,
+                CreationDate = stored.CreationDate,
+                ModificationDate = stored.ModificationDate,
+                PasswordModificationDate = stored.PasswordModificationDate,
+                LastThreePasswords = _encryptionService.Decrypt(stored.LastThreePasswords)
             };
         }
     }

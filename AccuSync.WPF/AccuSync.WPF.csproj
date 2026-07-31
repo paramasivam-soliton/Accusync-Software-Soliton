@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
-    <ProjectReference Include="..\AccuSync.Persistence\AccuSync.Persistence.csproj" />
+    <ProjectReference Include="..\AccuSync.SQLite\AccuSync.SQLite.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,8 +31,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Docnet.Core" Version="2.6.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
