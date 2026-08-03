@@ -26,7 +26,7 @@ using AccuSync.WPF.Resources;
 using AccuSync.WPF.Resources.Constants;
 using AccuSync.Application.Models;
 
-namespace AccuSync.WPF.Views
+namespace AccuSync.WPF.Views.Dashboard
 {
     public partial class SidebarNavigation : UserControl
     {

@@ -15,7 +15,7 @@ using AccuSync.WPF.Resources;
 using AccuSync.WPF.Views.Dashboard.Dialogs;
 using AccuSync.WPF.Controls;
 
-namespace AccuSync.WPF.Views
+namespace AccuSync.WPF.Views.Dashboard
 {
     public partial class DashboardContentView : UserControl
     {

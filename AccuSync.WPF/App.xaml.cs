@@ -7,7 +7,7 @@ using AccuSync.Application.Helpers;
 using AccuSync.Application.Services;
 using AccuSync.Persistence;
 using AccuSync.Presentation.ViewModels;
-using AccuSync.WPF.Views;
+using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
 

@@ -3,7 +3,7 @@
 -->
 
 <!-- TODO: All dashboard numbers and the stats table are hardcoded placeholders. Wire to actual queries. -->
-<UserControl x:Class="AccuSync.WPF.Views.DashboardContentView"
+<UserControl x:Class="AccuSync.WPF.Views.Dashboard.DashboardContentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:res="clr-namespace:AccuSync.WPF.Resources"
