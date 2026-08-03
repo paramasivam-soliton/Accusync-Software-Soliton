@@ -8,7 +8,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using AccuSync.WPF.Controls;
-using AccuSync.Application.Models;
 
 namespace AccuSync.WPF.Views.Dashboard
 {

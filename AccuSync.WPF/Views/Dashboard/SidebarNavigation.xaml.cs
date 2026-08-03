@@ -24,7 +24,6 @@ using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.WPF.Views.SystemConfiguration;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Resources.Constants;
-using AccuSync.Application.Models;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
