@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-AccuSync is structured as seven projects — one executable and six class libraries — organized around a single application core (`AccuSync.Application`) that holds the domain model and business logic. Presentation, persistence, file-format exchange, and device communication are each isolated into their own project and depend inward on the application core. The database provider is isolated behind a dedicated adapter project, allowing additional providers to be added without modifying existing code.
+AccuSync is structured as seven projects — one executable and six class libraries — organized around a domain core (`AccuSync.Core`) that holds the domain model and every abstraction (repository, service, parsing, device, and system interfaces) the rest of the solution depends on. `AccuSync.Application` implements use-case orchestration against those abstractions. Presentation, EF Core persistence, file-format exchange, and device communication are each isolated into their own project and depend inward on `AccuSync.Core`. Persistence is a single EF Core project — SQLite is the only database engine AccuSync targets, so the `DbContext`, provider registration, and migrations live together rather than behind a separate swap-in provider adapter.
 
 ---
 
@@ -10,13 +10,13 @@ AccuSync is structured as seven projects — one executable and six class librar
 
 | # | Project | Type | TFM | Responsibility |
 |---|---|---|---|---|
-| 1 | `AccuSync` | WPF Executable | `net10.0-windows` | Composition root and presentation shell. Hosts `App.xaml`, the .NET Generic Host bootstrap, dependency-injection wiring, and `appsettings.json`. Contains all XAML Views. **Selects the active database provider** — see §3, "Provider selection". The only project that references every other project in the solution. |
-| 2 | `AccuSync.Presentation` | Class Library | `net10.0` | View-Models bound to the Views hosted in `AccuSync`. **Owns the DTOs and the conversion handlers** that map entities returned by `AccuSync.Application` into UI-bindable shapes — see §3, "DTO boundary". Contains the navigation and dialog contracts the View-Models depend on. Deliberately carries **no WPF reference**, so a View-Model cannot call `MessageBox.Show`, reach a control by name, or construct a `Window`. |
-| 3 | `AccuSync.Application` | Class Library | `net10.0` | The application core. Contains domain entities, value objects, enums, validators and policies; `IService`, `IRepository` and adapter interface contracts; the service classes implementing use-case orchestration; and internal helper utilities. Zero dependencies on any other AccuSync project. |
-| 4 | `AccuSync.Persistence` | Class Library | `net10.0` | Entity Framework Core data-access layer, **provider-agnostic**. Contains both `DbContext` classes, entity Fluent API configurations, every repository implementation, the unit of work, and the `SaveChanges` interceptors. References EF Core Relational only — no provider package. |
-| 5 | `AccuSync.SQLite` | Class Library | `net10.0` | Concrete database-provider adapter for SQLite: provider registration, connection configuration, EF Core migrations, and design-time tooling support. Additional providers (SQL Server, PostgreSQL, …) are added as sibling projects following the same shape. **Migrations cannot be shared between providers** — the generated SQL is engine-specific — which is why each provider owns its own project. |
-| 6 | `AccuSync.DataParser` | Class Library | `net10.0-windows` | File-format exchange. Import parsers for AccuLink XML, ALGO 5 XML, ALGO Pro JSON, and OCR/PDF/DOCX facesheet formats; export writers for CSV/XML/JSON/HiTrack/OZ formats; QR code generation; and printable report rendering. Windows-bound because OCR requires `System.Drawing.Common`. |
-| 7 | `AccuSync.DeviceCommunication` | Class Library | `net10.0-windows` | Device I/O. Serial-port transport to AccuScreen / ALGO hardware, device discovery, the wire protocol, configuration and user/facility push-to-device, and firmware update transfer. Separate from `AccuSync.DataParser` because **parsing a file and talking to a device are different concerns with different failure modes** — a parser is a pure transformation over a stream, whereas device I/O is stateful, timing-sensitive, and can fail mid-conversation. |
+| 1 | `AccuSync` | WPF Executable | `net10.0-windows` | Composition root and presentation shell. Hosts `App.xaml`, the .NET Generic Host bootstrap, dependency-injection wiring, and `appsettings.json`. Contains all XAML Views. The only project that references every other project in the solution. |
+| 2 | `AccuSync.Presentation` | Class Library | `net10.0` | View-Models bound to the Views hosted in `AccuSync`. **Owns the DTOs and the conversion handlers** that map entities returned through `AccuSync.Core`'s service interfaces into UI-bindable shapes — see §3, "DTO boundary". Contains the navigation and dialog contracts the View-Models depend on. Deliberately carries **no WPF reference**, so a View-Model cannot call `MessageBox.Show`, reach a control by name, or construct a `Window`. |
+| 3 | `AccuSync.Core` | Class Library | `net10.0` | The domain core. Contains domain entities, value objects, enums, validators and policies; and **every abstraction the rest of the solution depends on** — `IService` and `IRepository` interfaces, `IUnitOfWork`, and the adapter contracts (`IDataParser`, `IDeviceChannel`, `IClock`, ...). Zero dependencies on any other AccuSync project, and zero dependency on EF Core, WPF, or any technology package. |
+| 4 | `AccuSync.Application` | Class Library | `net10.0` | Use-case orchestration. Contains the concrete `IService` implementations (`PatientService`, `UserService`, ...) that coordinate repositories, validators, and policies declared in `AccuSync.Core` to satisfy a use case. References `AccuSync.Core` only — never EF Core, SQLite, or any adapter package directly. |
+| 5 | `AccuSync.EF` | Class Library | `net10.0` | Entity Framework Core data-access layer. SQLite is AccuSync's only provider, so the `DbContext` classes, entity Fluent API configurations, every repository implementation, the unit of work, `SaveChanges` interceptors, EF Core migrations, SQLite provider registration, and the design-time factory all live in **one** project rather than split behind a swappable adapter. References `AccuSync.Core` only. |
+| 6 | `AccuSync.Adapters.DataParser` | Class Library | `net10.0-windows` | File-format exchange. Import parsers for AccuLink XML, ALGO 5 XML, ALGO Pro JSON, and OCR/PDF/DOCX facesheet formats; export writers for CSV/XML/JSON/HiTrack/OZ formats; QR code generation; and printable report rendering. Windows-bound because OCR requires `System.Drawing.Common`. |
+| 7 | `AccuSync.Adapters.DeviceCommunication` | Class Library | `net10.0-windows` | Device I/O. Serial-port transport to AccuScreen / ALGO hardware, device discovery, the wire protocol, configuration and user/facility push-to-device, and firmware update transfer. Separate from `AccuSync.Adapters.DataParser` because **parsing a file and talking to a device are different concerns with different failure modes** — a parser is a pure transformation over a stream, whereas device I/O is stateful, timing-sensitive, and can fail mid-conversation. |
 
 ---
 
@@ -24,23 +24,23 @@ AccuSync is structured as seven projects — one executable and six class librar
 
 | Project | References |
 |---|---|
-| `AccuSync.Application` | *(none)* |
-| `AccuSync.Persistence` | `AccuSync.Application` |
-| `AccuSync.SQLite` | `AccuSync.Persistence` |
-| `AccuSync.DataParser` | `AccuSync.Application` |
-| `AccuSync.DeviceCommunication` | `AccuSync.Application` |
-| `AccuSync.Presentation` | `AccuSync.Application` |
-| `AccuSync` (exe) | `AccuSync.Presentation`, `AccuSync.Application`, `AccuSync.Persistence`, `AccuSync.SQLite`, `AccuSync.DataParser`, `AccuSync.DeviceCommunication` |
+| `AccuSync.Core` | *(none)* |
+| `AccuSync.Application` | `AccuSync.Core` |
+| `AccuSync.EF` | `AccuSync.Core` |
+| `AccuSync.Adapters.DataParser` | `AccuSync.Core` |
+| `AccuSync.Adapters.DeviceCommunication` | `AccuSync.Core` |
+| `AccuSync.Presentation` | `AccuSync.Core` |
+| `AccuSync` (exe) | `AccuSync.Presentation`, `AccuSync.Core`, `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, `AccuSync.Adapters.DeviceCommunication` |
 
-All dependencies point inward, toward `AccuSync.Application`. `AccuSync.Persistence`, `AccuSync.DataParser` and `AccuSync.DeviceCommunication` do not reference each other. `AccuSync.SQLite` references only `AccuSync.Persistence`, which it extends with provider-specific configuration.
+All dependencies point inward, toward `AccuSync.Core`. `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` reference only `AccuSync.Core` and do not reference each other. `AccuSync.Presentation` references `AccuSync.Core` directly, not `AccuSync.Application` — since the interfaces a View-Model calls (`IPatientService`, `IUserService`) now live in `Core` rather than bundled together with their implementations, Presentation never needs to see a concrete service implementation, only the exe's composition root does.
 
-**Technology isolation.** `AccuSync.Application` carries no reference — direct or transitive — to Entity Framework Core or any other ORM/database package. It defines only the `IRepository` abstractions, using plain domain types and collections in every method signature (never `IQueryable<T>`, `DbSet<T>`, or any other EF Core–specific type). Every EF Core–specific type — `DbContext`, `DbSet<T>`, `IEntityTypeConfiguration<T>` — is confined to `AccuSync.Persistence` and its provider adapters. `AccuSync.Application` compiles and runs with no knowledge of which persistence technology, or which database provider, is in use.
+**Technology isolation.** `AccuSync.Core` carries no reference — direct or transitive — to Entity Framework Core, WPF, or any other ORM/UI/I-O package. It defines only the `IRepository`/`IService`/adapter abstractions, using plain domain types and collections in every method signature (never `IQueryable<T>`, `DbSet<T>`, or any other EF Core–specific type). `AccuSync.Application` inherits the same restriction — it orchestrates purely through `AccuSync.Core`'s interfaces and never references EF Core or SQLite directly. Every EF Core–specific type — `DbContext`, `DbSet<T>`, `IEntityTypeConfiguration<T>` — is confined to `AccuSync.EF`. `AccuSync.Core` and `AccuSync.Application` compile and run with no knowledge of which persistence technology is in use.
 
-**Interface ownership.** Every interface is owned by the layer that is *inner* to it, never by the layer that implements it. `AccuSync.Application` therefore declares both what it requires from the outside (`IRepository`, `IDataParser`, `IDeviceChannel`, `IClock`) and what it offers to the outside (`IService`). `AccuSync.Persistence`, `AccuSync.DataParser` and `AccuSync.DeviceCommunication` adapt to those contracts. The practical test: delete every project except `AccuSync.Application` and it must still compile.
+**Interface ownership.** Every interface is owned by the innermost layer. `AccuSync.Core` declares both what it requires from the outside (`IRepository`, `IDataParser`, `IDeviceChannel`, `IClock`) and what it offers to the outside (`IService`). `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` all adapt to contracts declared in `AccuSync.Core` — none of them declare public interfaces that other projects depend on. The practical test: delete every project except `AccuSync.Core` and it must still compile.
 
-**Provider selection.** Choosing between `AccuSync.SQLite` and any future provider happens in the executable's DI registration, because that is the only project that references the provider adapters. `AccuSync.Persistence` must not perform the selection — it does not, and must not, reference its own providers.
+**Persistence technology.** `AccuSync.EF` is SQLite-only by design — the connection string, the `UseSqlite(...)` call, and migrations all live together in one project rather than behind a separate swap-in adapter, since AccuSync only ever targets one database engine and EF Core's own provider abstraction already makes swapping a one-line, one-package change. If a second provider is ever genuinely required, `AccuSync.EF`'s provider-specific pieces (the `UseSqlite` call, the `Migrations/` folder, the provider package reference) are the only things that would need to change or split back out — `AccuSync.Core` and `AccuSync.Application` are unaffected either way, since neither references EF Core.
 
-**DTO boundary.** `AccuSync.Application` returns **entities**; `AccuSync.Presentation` owns the DTOs and converts. That is structurally safe — Presentation already references Application — but entities are mutable and carry behaviour, so one rule comes with it:
+**DTO boundary.** `AccuSync.Core`'s `IService` interfaces return **entities**; `AccuSync.Presentation` owns the DTOs and converts. That is structurally safe — Presentation already references Core — but entities are mutable and carry behaviour, so one rule comes with it:
 
 > An entity may be **passed into** a conversion handler, but must never be stored on a View-Model property or bound to a View. Converters consume entities and return DTOs; the entity reference is discarded when the method returns. Every property the XAML binds to is a DTO or a primitive.
 
@@ -54,42 +54,42 @@ Without that rule a View-Model holding an entity could call its mutating methods
 
 ```mermaid
 flowchart TD
-    Exe["AccuSync (exe)<br/>─────────────<br/>App.xaml<br/>Generic Host bootstrap<br/>DI wiring + provider selection<br/>appsettings.json<br/>Views (XAML)"]
+    Exe["AccuSync (exe)<br/>─────────────<br/>App.xaml<br/>Generic Host bootstrap<br/>DI wiring<br/>appsettings.json<br/>Views (XAML)"]
 
     Presentation["AccuSync.Presentation<br/>─────────────<br/>ViewModels<br/>DTOs<br/>Conversion Handlers<br/>Navigation / Dialog contracts<br/>No WPF reference"]
 
-    Application["AccuSync.Application<br/>─────────────<br/>Entities / Value Objects / Enums<br/>Validators / Policies<br/>IService interfaces<br/>IRepository + adapter interfaces<br/>Service implementations<br/>Helper utilities"]
+    Core["AccuSync.Core<br/>─────────────<br/>Entities / Value Objects / Enums<br/>Validators / Policies<br/>IService interfaces<br/>IRepository + adapter interfaces"]
 
-    Persistence["AccuSync.Persistence<br/>─────────────<br/>DbContexts<br/>Fluent API Configurations<br/>Repository implementations<br/>Unit of work + interceptors"]
+    Application["AccuSync.Application<br/>─────────────<br/>IService implementations<br/>Use-case orchestration"]
 
-    Sqlite["AccuSync.SQLite<br/>─────────────<br/>Provider registration (UseSqlite)<br/>EF Core Migrations<br/>Design-time factory"]
+    EF["AccuSync.EF<br/>─────────────<br/>DbContexts<br/>Fluent API Configurations<br/>Repository implementations<br/>Unit of work + interceptors<br/>SQLite provider + Migrations"]
 
-    DataParser["AccuSync.DataParser<br/>─────────────<br/>AccuLink / ALGO 5 / ALGO Pro parsers<br/>OCR / PDF / DOCX facesheet parsers<br/>Export writers (CSV/XML/JSON/HiTrack/OZ)<br/>QR generation<br/>Report rendering"]
+    DataParser["AccuSync.Adapters.DataParser<br/>─────────────<br/>AccuLink / ALGO 5 / ALGO Pro parsers<br/>OCR / PDF / DOCX facesheet parsers<br/>Export writers (CSV/XML/JSON/HiTrack/OZ)<br/>QR generation<br/>Report rendering"]
 
-    DeviceComm["AccuSync.DeviceCommunication<br/>─────────────<br/>Serial transport<br/>Device discovery<br/>Wire protocol<br/>Config / user push to device<br/>Firmware transfer"]
+    DeviceComm["AccuSync.Adapters.DeviceCommunication<br/>─────────────<br/>Serial transport<br/>Device discovery<br/>Wire protocol<br/>Config / user push to device<br/>Firmware transfer"]
 
     Exe --> Presentation
+    Exe --> Core
     Exe --> Application
-    Exe --> Persistence
-    Exe --> Sqlite
+    Exe --> EF
     Exe --> DataParser
     Exe --> DeviceComm
 
-    Presentation --> Application
-    Persistence --> Application
-    DataParser --> Application
-    DeviceComm --> Application
-    Sqlite --> Persistence
+    Presentation --> Core
+    Application --> Core
+    EF --> Core
+    DataParser --> Core
+    DeviceComm --> Core
 
     classDef root fill:#8A5A16,color:#fff,stroke:#8A5A16;
     classDef pres fill:#38434F,color:#fff,stroke:#98A3AF;
-    classDef app fill:#106B68,color:#fff,stroke:#106B68;
+    classDef core fill:#106B68,color:#fff,stroke:#106B68;
     classDef infra fill:#2A3440,color:#fff,stroke:#98A3AF;
 
     class Exe root;
     class Presentation pres;
-    class Application app;
-    class Persistence,Sqlite,DataParser,DeviceComm infra;
+    class Core core;
+    class Application,EF,DataParser,DeviceComm infra;
 ```
 
 ### 4.2 Operation Flow (left to right)
@@ -100,15 +100,15 @@ flowchart LR
 
     VM["AccuSync.Presentation<br/>ViewModel<br/>─────────<br/>Binds the View<br/>Screen state only"] --> Svc
 
-    Svc["AccuSync.Application<br/>Service<br/>─────────<br/>IService / IRepository<br/>Validators · Policies<br/>Returns Result&lt;Entity&gt;"] --> Repo
+    Svc["AccuSync.Application<br/>Service<br/>─────────<br/>Implements Core's IService<br/>Validators · Policies (from Core)<br/>Returns Result&lt;Entity&gt;"] --> Repo
 
-    Repo["AccuSync.Persistence<br/>Repository<br/>─────────<br/>DbContext · Unit of work<br/>Entity persistence"] --> DB
+    Repo["AccuSync.EF<br/>Repository<br/>─────────<br/>DbContext · Unit of work<br/>Entity persistence"] --> DB
 
-    DB[("AccuSync.SQLite<br/>Database<br/>─────────<br/>Provider-specific storage")]
+    DB[("SQLite<br/>Database<br/>─────────<br/>SettingsDatabase.db / PatientDatabase.db")]
 
-    Svc -. Import / Export / QR / Report .-> Parser["AccuSync.DataParser<br/>─────────<br/>Parsers · Export Writers<br/>QR · Reports"]
+    Svc -. Import / Export / QR / Report .-> Parser["AccuSync.Adapters.DataParser<br/>─────────<br/>Parsers · Export Writers<br/>QR · Reports"]
 
-    Svc -. Sync / Firmware / Discovery .-> DevComm["AccuSync.DeviceCommunication<br/>─────────<br/>Serial transport<br/>Wire protocol"]
+    Svc -. Sync / Firmware / Discovery .-> DevComm["AccuSync.Adapters.DeviceCommunication<br/>─────────<br/>Serial transport<br/>Wire protocol"]
 
     classDef step fill:#1C2C38,color:#fff,stroke:#7FB4D9;
     classDef db fill:#8A5A16,color:#fff,stroke:#8A5A16;
@@ -145,8 +145,7 @@ AccuSync/
 │   ├── WpfDialogService.cs
 │   └── WpfFilePickerService.cs
 └── DependencyInjection/
-    ├── ServiceRegistration.cs
-    └── PersistenceProviderSelection.cs    reads Persistence:Provider, registers one adapter
+    └── ServiceRegistration.cs             wires Core/Application/EF/Adapters in one place
 ```
 
 ### `AccuSync.Presentation`
@@ -176,9 +175,9 @@ AccuSync.Presentation/
     └── AsyncRelayCommand.cs               ICommand, async, re-entrancy guard
 ```
 
-### `AccuSync.Application`
+### `AccuSync.Core`
 ```
-AccuSync.Application/
+AccuSync.Core/
 ├── Entities/
 │   ├── Patient.cs
 │   ├── User.cs
@@ -211,12 +210,12 @@ AccuSync.Application/
 │   │   ├── IUserRepository.cs
 │   │   └── IUnitOfWork.cs
 │   ├── Parsing/
-│   │   ├── IDataParser.cs                 implemented by AccuSync.DataParser
+│   │   ├── IDataParser.cs                 implemented by AccuSync.Adapters.DataParser
 │   │   ├── IExportWriter.cs
 │   │   ├── IQrCodeGenerator.cs
 │   │   └── IReportRenderer.cs
 │   ├── Devices/
-│   │   ├── IDeviceChannel.cs              implemented by AccuSync.DeviceCommunication
+│   │   ├── IDeviceChannel.cs              implemented by AccuSync.Adapters.DeviceCommunication
 │   │   ├── IDeviceDiscovery.cs
 │   │   └── IFirmwareUpdater.cs
 │   └── System/
@@ -224,19 +223,24 @@ AccuSync.Application/
 │       ├── IPasswordHasher.cs
 │       ├── IFileSystem.cs
 │       └── IAuditLogger.cs
+└── Helpers/
+    ├── Result.cs
+    └── NameFormatter.cs
+```
+
+### `AccuSync.Application`
+```
+AccuSync.Application/
 ├── Services/
-│   ├── PatientService.cs
+│   ├── PatientService.cs                  implements Core.Abstractions.Services.IPatientService
 │   └── UserService.cs
-├── Helpers/
-│   ├── Result.cs
-│   └── NameFormatter.cs
 └── DependencyInjection/
     └── ApplicationServiceCollectionExtensions.cs
 ```
 
-### `AccuSync.Persistence`
+### `AccuSync.EF`
 ```
-AccuSync.Persistence/
+AccuSync.EF/
 ├── Contexts/
 │   ├── PatientDbContext.cs
 │   └── SettingsDbContext.cs
@@ -248,24 +252,17 @@ AccuSync.Persistence/
 │   └── UserRepository.cs
 ├── Interceptors/
 │   └── TimestampInterceptor.cs            sets CreatedAt/ModifiedAt from IClock (§8)
-├── UnitOfWork.cs
-└── DependencyInjection/
-    └── PersistenceServiceCollectionExtensions.cs   AddPersistenceCore() — engine-neutral only
-```
-
-### `AccuSync.SQLite`
-```
-AccuSync.SQLite/
 ├── Migrations/
 │   └── 20260101_InitialCreate.cs
 ├── SqliteDesignTimeDbContextFactory.cs
+├── UnitOfWork.cs
 └── DependencyInjection/
-    └── SqliteServiceCollectionExtensions.cs        AddSqlitePersistence()
+    └── EfServiceCollectionExtensions.cs   AddEfPersistence() — UseSqlite, repositories, interceptors in one call
 ```
 
-### `AccuSync.DataParser`
+### `AccuSync.Adapters.DataParser`
 ```
-AccuSync.DataParser/
+AccuSync.Adapters.DataParser/
 ├── Import/
 │   ├── AccuLinkXmlParser.cs
 │   ├── Algo5XmlParser.cs
@@ -284,9 +281,9 @@ AccuSync.DataParser/
     └── DataParserServiceCollectionExtensions.cs
 ```
 
-### `AccuSync.DeviceCommunication`
+### `AccuSync.Adapters.DeviceCommunication`
 ```
-AccuSync.DeviceCommunication/
+AccuSync.Adapters.DeviceCommunication/
 ├── Transport/
 │   ├── SerialPortDeviceChannel.cs         wraps System.IO.Ports
 │   └── SerialPortDiscovery.cs
@@ -307,7 +304,7 @@ AccuSync.DeviceCommunication/
 
 ## 6. Extensibility
 
-Additional database providers are added as new sibling class libraries following the pattern established by `AccuSync.SQLite`, referencing only `AccuSync.Persistence`, and registered by one additional branch in the executable's provider selection. Additional file formats are added as new `IDataParser` / `IExportWriter` implementations inside `AccuSync.DataParser`; because the format is resolved from a registry rather than a `switch`, no existing file is modified. Additional device families are added as new `IDeviceChannel` implementations inside `AccuSync.DeviceCommunication`.
+Additional file formats are added as new `IDataParser` / `IExportWriter` implementations inside `AccuSync.Adapters.DataParser`; because the format is resolved from a registry rather than a `switch`, no existing file is modified. Additional device families are added as new `IDeviceChannel` implementations inside `AccuSync.Adapters.DeviceCommunication`. A second database provider, if ever genuinely required, is added inside `AccuSync.EF` itself (a new `UseXxx(...)` branch and its own `Migrations/` subfolder) — `AccuSync.Core` and `AccuSync.Application` need no changes either way, since neither references EF Core.
 
 ---
 
@@ -316,14 +313,14 @@ Additional database providers are added as new sibling class libraries following
 | Item | Value |
 |---|---|
 | Class libraries | `net10.0` |
-| Executable, `AccuSync.DataParser`, `AccuSync.DeviceCommunication` | `net10.0-windows` |
+| Executable, `AccuSync.Adapters.DataParser`, `AccuSync.Adapters.DeviceCommunication` | `net10.0-windows` |
 | Language version | C# 14 |
 | EF Core | 10.0.x (`Microsoft.EntityFrameworkCore`, `.Relational`, `.Sqlite`, `.Design`) |
 | Hosting / DI | `Microsoft.Extensions.*` 10.0.x |
 | MVVM | **No package.** Hand-written `ObservableObject`, `RelayCommand`, `AsyncRelayCommand` in `AccuSync.Presentation/Common/` (§5) |
 | Support | .NET 10 is the current LTS release |
 
-**Why three projects are `-windows`:** the executable uses WPF; `AccuSync.DataParser` needs `System.Drawing.Common` for OCR image handling, which has been Windows-only since .NET 7; `AccuSync.DeviceCommunication` uses `System.IO.Ports` against Windows COM ports. Everything else stays platform-neutral `net10.0`, which keeps `AccuSync.Application` and `AccuSync.Persistence` buildable and verifiable on any agent.
+**Why three projects are `-windows`:** the executable uses WPF; `AccuSync.Adapters.DataParser` needs `System.Drawing.Common` for OCR image handling, which has been Windows-only since .NET 7; `AccuSync.Adapters.DeviceCommunication` uses `System.IO.Ports` against Windows COM ports. Everything else stays platform-neutral `net10.0`, which keeps `AccuSync.Core`, `AccuSync.Application`, and `AccuSync.EF` buildable and verifiable on any agent.
 
 ---
 
