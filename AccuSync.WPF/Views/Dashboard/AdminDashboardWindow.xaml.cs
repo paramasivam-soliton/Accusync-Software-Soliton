@@ -7,7 +7,7 @@
 using System.Windows;
 using AccuSync.Helpers;
 
-namespace AccuSync.WPF.Views
+namespace AccuSync.WPF.Views.Dashboard
 {
     public partial class AdminDashboardWindow : Window
     {
