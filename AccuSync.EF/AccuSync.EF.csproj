@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>annotations</Nullable>
-    <AssemblyName>AccuSync.SQLite</AssemblyName>
-    <RootNamespace>AccuSync.SQLite</RootNamespace>
+    <AssemblyName>AccuSync.EF</AssemblyName>
+    <RootNamespace>AccuSync.EF</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -13,7 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- The only project in the solution allowed to know SQLite exists. -->
+    <!-- EF Core is provider-agnostic on its own, but this project owns the actual
+         SQLite provider package and migrations directly — there is no separate
+         adapter project to isolate it in. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -22,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AccuSync.Persistence\AccuSync.Persistence.csproj" />
+    <!-- Needs IUserRepository, IEncryptionService, and the User model. -->
+    <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
   </ItemGroup>
 
 </Project>

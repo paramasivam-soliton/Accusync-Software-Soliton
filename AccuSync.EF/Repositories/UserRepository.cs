@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Models;
-using AccuSync.Persistence.Contexts;
+using AccuSync.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccuSync.Persistence
+namespace AccuSync.EF
 {
     /// <summary>
     /// EF Core-backed data access for user accounts (SettingsDatabase.db). Sensitive fields
@@ -28,13 +28,11 @@ namespace AccuSync.Persistence
     {
         private readonly SettingsDbContext _context;
         private readonly IEncryptionService _encryptionService;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService, IUnitOfWork unitOfWork)
+        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService)
         {
             _context = context;
             _encryptionService = encryptionService;
-            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -149,7 +147,7 @@ namespace AccuSync.Persistence
             };
 
             _context.Users.Add(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<User>> GetAllUsersAsync()
@@ -192,7 +190,7 @@ namespace AccuSync.Persistence
                 tracked.LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords);
                 // ModificationDate is set by TimestampInterceptor, not here — see class TODO history.
 
-                await _unitOfWork.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch

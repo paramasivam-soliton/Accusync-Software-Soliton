@@ -4,14 +4,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AccuSync.Application.Abstractions.SystemAbstractions;
 using AccuSync.Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace AccuSync.Persistence.Interceptors
+namespace AccuSync.EF.Interceptors
 {
     /// <summary>
     /// Sets CreationDate/ModificationDate on tracked <see cref="User"/> entities before
@@ -20,13 +20,6 @@ namespace AccuSync.Persistence.Interceptors
     /// </summary>
     public class TimestampInterceptor : SaveChangesInterceptor
     {
-        private readonly IClock _clock;
-
-        public TimestampInterceptor(IClock clock)
-        {
-            _clock = clock;
-        }
-
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             ApplyTimestamps(eventData.Context);
@@ -46,7 +39,7 @@ namespace AccuSync.Persistence.Interceptors
         {
             if (context == null) return;
 
-            long now = _clock.UtcNow.ToUnixTimeSeconds();
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             foreach (var entry in context.ChangeTracker.Entries<User>())
             {

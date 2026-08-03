@@ -4,11 +4,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Persistence.Contexts;
+using AccuSync.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace AccuSync.SQLite
+namespace AccuSync.EF
 {
     /// <summary>
     /// Lets `dotnet ef migrations add`/`dotnet ef database update` construct a
@@ -22,7 +22,7 @@ namespace AccuSync.SQLite
         public SettingsDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<SettingsDbContext>();
-            optionsBuilder.UseSqlite("Data Source=design-time.db", b => b.MigrationsAssembly("AccuSync.SQLite"));
+            optionsBuilder.UseSqlite("Data Source=design-time.db", b => b.MigrationsAssembly("AccuSync.EF"));
             return new SettingsDbContext(optionsBuilder.Options);
         }
     }

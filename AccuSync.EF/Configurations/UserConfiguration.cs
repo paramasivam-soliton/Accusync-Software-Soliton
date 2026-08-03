@@ -8,7 +8,7 @@ using AccuSync.Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AccuSync.Persistence.Configurations
+namespace AccuSync.EF.Configurations
 {
     /// <summary>
     /// Maps <see cref="User"/> to the Users table. Matches the shape of the

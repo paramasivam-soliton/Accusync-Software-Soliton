@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Presentation", "Ac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Application", "AccuSync.Application\AccuSync.Application.csproj", "{C6354342-89B6-422B-9E3F-D1415F8C7D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Persistence", "AccuSync.Persistence\AccuSync.Persistence.csproj", "{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.SQLite", "AccuSync.SQLite\AccuSync.SQLite.csproj", "{BAC9663A-DD59-4A1A-8A74-F528B9429F93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.EF", "AccuSync.EF\AccuSync.EF.csproj", "{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,18 +69,6 @@ Global
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x64.Build.0 = Release|Any CPU
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x86.ActiveCfg = Release|Any CPU
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x86.Build.0 = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|x64.Build.0 = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Debug|x86.Build.0 = Debug|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|x64.ActiveCfg = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|x64.Build.0 = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|x86.ActiveCfg = Release|Any CPU
-		{BAC9663A-DD59-4A1A-8A74-F528B9429F93}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

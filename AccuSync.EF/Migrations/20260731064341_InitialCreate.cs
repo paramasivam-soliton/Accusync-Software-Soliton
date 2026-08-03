@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AccuSync.SQLite.Migrations
+namespace AccuSync.EF.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
