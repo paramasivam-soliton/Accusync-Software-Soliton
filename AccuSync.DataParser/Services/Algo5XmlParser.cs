@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.DataParser.Services
 {
     /// <summary>
     /// Parses ALGO 5 XML export files into <see cref="ImportPatientData"/>

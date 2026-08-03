@@ -23,6 +23,7 @@
     <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
     <ProjectReference Include="..\AccuSync.SQLite\AccuSync.SQLite.csproj" />
+    <ProjectReference Include="..\AccuSync.DataParser\AccuSync.DataParser.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Helpers;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,13 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isDirty = false;
         private Dictionary<string, string> _validationErrors = new Dictionary<string, string>();
         private BitmapImage _qrCodeImage;
+
+        private readonly IQrCodeGenerator _qrCodeGenerator;
+
+        public PatientViewModel(IQrCodeGenerator qrCodeGenerator)
+        {
+            _qrCodeGenerator = qrCodeGenerator;
+        }
 
         public bool IsDirty
         {
@@ -168,7 +176,7 @@ namespace AccuSync.Presentation.ViewModels
 
         public void GenerateQRCode()
         {
-            string qrContent = QRCodeHelper.FormatPatientData(
+            string qrContent = _qrCodeGenerator.FormatPatientData(
                 FirstName,
                 LastName,
                 PatientId,
@@ -177,7 +185,7 @@ namespace AccuSync.Presentation.ViewModels
                 HospitalId
             );
 
-            QRCodeImage = QRCodeHelper.GenerateQRCode(qrContent, pixelsPerModule: 3);
+            QRCodeImage = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
         }
 
         #region Phone Properties with Dial Codes

@@ -1,9 +1,10 @@
-﻿// --------------------------------------------------------------------------------
-// <copyright file="QRCodeHelper.cs" company="Natus Sensory">
+// --------------------------------------------------------------------------------
+// <copyright file="QrCodeGenerator.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using QRCoder;
 using System;
 using System.Drawing;
@@ -11,13 +12,13 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace AccuSync.Application.Helpers
+namespace AccuSync.DataParser.Services
 {
     /// <summary>
     /// Generates QR codes for patient data.
     /// Uses the QRCoder library and converts the output to WPF-compatible images.
     /// </summary>
-    public static class QRCodeHelper
+    public class QrCodeGenerator : IQrCodeGenerator
     {
         /// <summary>
         /// Generates a QR code as a WPF <see cref="BitmapImage"/>.
@@ -25,7 +26,7 @@ namespace AccuSync.Application.Helpers
         /// </summary>
         /// <param name="content">The text to encode (typically from <see cref="FormatPatientData"/>).</param>
         /// <param name="pixelsPerModule">Size of each QR module in pixels. Higher values produce a larger image.</param>
-        public static BitmapImage GenerateQRCode(string content, int pixelsPerModule = 8)
+        public BitmapImage GenerateQRCode(string content, int pixelsPerModule = 8)
         {
             if (string.IsNullOrWhiteSpace(content))
                 return null;
@@ -88,7 +89,7 @@ namespace AccuSync.Application.Helpers
         /// </summary>
         // TODO: Define this format in a shared spec or constant so producers and
         //       consumers (scanners, importers) stay in sync.
-        public static string FormatPatientData(
+        public string FormatPatientData(
             string firstName,
             string lastName,
             string patientId,
@@ -115,7 +116,7 @@ namespace AccuSync.Application.Helpers
         /// </summary>
         // TODO: Decide on one encoding format (KEY:VALUE vs JSON) and remove the other,
         //       or make the choice configurable. Having both risks inconsistency.
-        public static string FormatPatientDataAsJson(
+        public string FormatPatientDataAsJson(
             string firstName,
             string lastName,
             string patientId,

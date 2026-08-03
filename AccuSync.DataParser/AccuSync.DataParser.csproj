@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- UseWPF is needed: IQrCodeGenerator returns a WPF BitmapImage. Same
+         trade-off AccuSync.Application already made for its WPF-typed Models. -->
+    <UseWPF>true</UseWPF>
+    <Nullable>annotations</Nullable>
+    <AssemblyName>AccuSync.DataParser</AssemblyName>
+    <RootNamespace>AccuSync.DataParser</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\OCR\tessdata\eng.traineddata" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\OCR\tessdata\eng.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The only project in the solution allowed to know about these
+         file-format/OCR/QR libraries. -->
+    <PackageReference Include="Docnet.Core" Version="2.6.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
+    <PackageReference Include="PdfPig" Version="0.1.13" />
+    <PackageReference Include="QRCoder" Version="1.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
+  </ItemGroup>
+
+</Project>

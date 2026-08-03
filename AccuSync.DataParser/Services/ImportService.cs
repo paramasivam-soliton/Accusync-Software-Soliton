@@ -4,48 +4,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-
-namespace AccuSync.Application.Services
+namespace AccuSync.DataParser.Services
 {
-    /// <summary>
-    /// Result of parsing a file — patients with optional test previews and any
-    /// parse-level errors. Errors are returned rather than thrown so the caller
-    /// can display them in the import UI without catching exceptions.
-    /// </summary>
-    public class ParseResult
-    {
-        public List<ImportPatientData> Patients { get; set; } = new();
-        public List<string> ParseErrors { get; set; } = new();
-
-        /// <summary>
-        /// File-level metadata extracted from the import file header.
-        /// Used to populate the <c>ImportBatches</c> table when persisting.
-        /// </summary>
-        public ImportFileMetadata Metadata { get; set; }
-    }
-
-    /// <summary>
-    /// Header-level metadata from the import file, stored in the
-    /// <c>ImportBatches</c> database row for audit/traceability.
-    /// </summary>
-    public class ImportFileMetadata
-    {
-        public string SourceSystem { get; set; }    // ALGO 5, AccuLink, AccuSync, or ALGO Pro
-        public string SourceVersion { get; set; }
-        public string ExportTimestamp { get; set; }
-        public string BaseLanguage { get; set; }
-    }
-
     /// <summary>
     /// Orchestrates file parsing and import execution. Routes to format-specific
     /// parsers based on the format tag from <c>ImportFileDialog</c>.
     /// </summary>
-    public class ImportService
+    public class ImportService : IImportService
     {
         // File parsing
 
@@ -237,7 +208,7 @@ namespace AccuSync.Application.Services
         /// Returns <c>true</c> if the format requires a facesheet review step
         /// before import (so the user can verify extracted data).
         /// </summary>
-        public static bool IsFacesheetFormat(string format)
+        public bool IsFacesheetFormat(string format)
         {
             return format is "facesheet-image" or "facesheet-pdf" or "facesheet-docx";
         }
@@ -246,7 +217,7 @@ namespace AccuSync.Application.Services
         /// Returns raw extracted text for the facesheet preview panel.
         /// Returns <c>null</c> for images (the UI shows the image directly instead).
         /// </summary>
-        public static string GetFacesheetPreviewText(string filePath, string format)
+        public string GetFacesheetPreviewText(string filePath, string format)
         {
             return format switch
             {

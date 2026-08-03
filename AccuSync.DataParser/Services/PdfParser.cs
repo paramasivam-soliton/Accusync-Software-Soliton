@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.DataParser.Services
 {
     /// <summary>
     /// Extracts patient data from hospital facesheet PDFs using PdfPig (Apache 2.0)

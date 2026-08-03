@@ -126,4 +126,33 @@ namespace AccuSync.Application.Models
         public string Badge { get; set; }                      // null, "TESTS ADDED", "REPLACED", "NEW RECORD"
         public PatientData Patient { get; set; }
     }
+
+    /// <summary>
+    /// Result of parsing a file — patients with optional test previews and any
+    /// parse-level errors. Errors are returned rather than thrown so the caller
+    /// can display them in the import UI without catching exceptions.
+    /// </summary>
+    public class ParseResult
+    {
+        public List<ImportPatientData> Patients { get; set; } = new();
+        public List<string> ParseErrors { get; set; } = new();
+
+        /// <summary>
+        /// File-level metadata extracted from the import file header.
+        /// Used to populate the <c>ImportBatches</c> table when persisting.
+        /// </summary>
+        public ImportFileMetadata Metadata { get; set; }
+    }
+
+    /// <summary>
+    /// Header-level metadata from the import file, stored in the
+    /// <c>ImportBatches</c> database row for audit/traceability.
+    /// </summary>
+    public class ImportFileMetadata
+    {
+        public string SourceSystem { get; set; }    // ALGO 5, AccuLink, AccuSync, or ALGO Pro
+        public string SourceVersion { get; set; }
+        public string ExportTimestamp { get; set; }
+        public string BaseLanguage { get; set; }
+    }
 }

@@ -11,7 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.DataParser.Services
 {
     /// <summary>
     /// Parses ALGO Pro JSON export files into <see cref="ImportPatientData"/>

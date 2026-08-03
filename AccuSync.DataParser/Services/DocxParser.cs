@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.DataParser.Services
 {
     /// <summary>
     /// Extracts patient data from Word (.docx) facesheet documents using

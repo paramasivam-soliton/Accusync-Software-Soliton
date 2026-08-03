@@ -4,9 +4,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
-using AccuSync.Application.Services;
+using AccuSync.DataParser.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,6 +37,8 @@ namespace AccuSync.WPF.Views.PatientsTests
         private string _format;
         private string _filePath;
 
+        private readonly IImportService _importService = App.GetService<IImportService>();
+
         // Tracks the selected tri-state value per risk key (the row's Tag). This is the
         // source of truth for CollectRiskFactors — selection is no longer inferred from
         // button colors, which broke silently if the active style changed.
@@ -59,7 +62,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         /// <summary>
         /// Loads parsed patient data into the review form and sets up the
         /// document preview. Called by the parent after
-        /// <see cref="ImportService.ParseFile"/> returns a facesheet result.
+        /// <see cref="IImportService.ParseFile"/> returns a facesheet result.
         /// </summary>
         public void LoadReview(PatientData patient, string filePath, string format)
         {
@@ -193,7 +196,7 @@ namespace AccuSync.WPF.Views.PatientsTests
                 else
                 {
                     // DOCX — no image rendering, show extracted text
-                    string previewText = ImportService.GetFacesheetPreviewText(_filePath, _format);
+                    string previewText = _importService.GetFacesheetPreviewText(_filePath, _format);
                     if (!string.IsNullOrWhiteSpace(previewText))
                     {
                         DocumentText.Text = previewText;
