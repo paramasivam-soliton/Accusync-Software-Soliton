@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Win32;
 using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
@@ -196,15 +197,14 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 
         private void BrowseFolder_Click(object sender, RoutedEventArgs e)
         {
-            using var dialog = new System.Windows.Forms.FolderBrowserDialog
+            var dialog = new OpenFolderDialog
             {
-                Description = "Select Export Folder",
-                ShowNewFolderButton = true
+                Title = "Select Export Folder"
             };
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (dialog.ShowDialog() == true)
             {
                 PushUndo();
-                ExportFolderBox.Text = dialog.SelectedPath;
+                ExportFolderBox.Text = dialog.FolderName;
             }
         }
 

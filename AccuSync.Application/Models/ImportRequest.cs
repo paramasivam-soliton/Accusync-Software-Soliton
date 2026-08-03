@@ -1,0 +1,17 @@
+// --------------------------------------------------------------------------------
+// <copyright file="ImportRequest.cs" company="Natus Sensory">
+//     Copyright (c) 2026 Natus Sensory. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------
+
+namespace AccuSync.Application.Models
+{
+    /// <summary>
+    /// Sent to the ImportFunction delegate per selected patient.
+    /// </summary>
+    public class ImportRequest
+    {
+        public PatientData Patient { get; set; }
+        public ImportAction Action { get; set; }
+    }
+}

@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Models;
 using System;
 
 namespace AccuSync.WPF.Controls
