@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using AccuSync.WPF.Controls;
 using AccuSync.Models;
 
-namespace AccuSync.WPF.Views
+namespace AccuSync.WPF.Views.Dashboard
 {
     public partial class BaseScreenView : UserControl
     {

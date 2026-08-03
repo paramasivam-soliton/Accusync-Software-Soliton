@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AccuSync.WPF.Resources;
+using AccuSync.WPF.Views.Dashboard;
 using AccuSync.ViewModels;
 
 namespace AccuSync.WPF.Views.Login
