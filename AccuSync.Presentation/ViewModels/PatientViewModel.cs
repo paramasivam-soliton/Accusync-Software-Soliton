@@ -9,6 +9,7 @@ using AccuSync.Application.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
@@ -185,7 +186,31 @@ namespace AccuSync.Presentation.ViewModels
                 HospitalId
             );
 
-            QRCodeImage = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
+            byte[] pngBytes = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
+            QRCodeImage = pngBytes == null ? null : BytesToBitmapImage(pngBytes);
+        }
+
+        /// <summary>
+        /// Bridges the PNG bytes <see cref="IQrCodeGenerator.GenerateQRCode"/> returns to a
+        /// WPF-bindable <see cref="BitmapImage"/>. This is the one place in the ViewModel
+        /// that touches a WPF-specific type, matching the existing trade-off already made
+        /// for <see cref="QRCodeImage"/> itself (see this project's csproj comment).
+        /// </summary>
+        private static BitmapImage BytesToBitmapImage(byte[] pngBytes)
+        {
+            using (var memory = new MemoryStream(pngBytes))
+            {
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                // OnLoad reads everything into memory before the stream is disposed.
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                // Freeze makes the image immutable so it can be used from any thread.
+                bitmapImage.Freeze();
+
+                return bitmapImage;
+            }
         }
 
         #region Phone Properties with Dial Codes

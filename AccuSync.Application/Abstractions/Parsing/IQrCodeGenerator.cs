@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Windows.Media.Imaging;
 
 namespace AccuSync.Application.Abstractions.Parsing
 {
@@ -15,12 +14,13 @@ namespace AccuSync.Application.Abstractions.Parsing
     public interface IQrCodeGenerator
     {
         /// <summary>
-        /// Generates a QR code as a WPF <see cref="BitmapImage"/>.
+        /// Generates a QR code and returns it as PNG-encoded bytes — the caller (View layer)
+        /// is responsible for turning that into whatever image type it can display.
         /// Returns <c>null</c> if <paramref name="content"/> is empty or generation fails.
         /// </summary>
         /// <param name="content">The text to encode (typically from <see cref="FormatPatientData"/>).</param>
         /// <param name="pixelsPerModule">Size of each QR module in pixels. Higher values produce a larger image.</param>
-        BitmapImage GenerateQRCode(string content, int pixelsPerModule = 8);
+        byte[] GenerateQRCode(string content, int pixelsPerModule = 8);
 
         /// <summary>
         /// Builds a newline-delimited string of patient fields for QR encoding.

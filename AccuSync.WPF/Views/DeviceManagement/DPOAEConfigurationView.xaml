@@ -160,7 +160,7 @@
                                             <TextBlock Text="{x:Static res:Strings.DPOAEConfigurationView_StatusLabel}" FontSize="10" Foreground="#888"
                                                        FontWeight="SemiBold" Margin="0,0,0,3"/>
                                             <TextBlock Text="{Binding Status}" FontSize="12"
-                                                       Foreground="{Binding StatusColor}" FontWeight="Medium"/>
+                                                       Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" FontWeight="Medium"/>
                                         </StackPanel>
                                     </Grid>
                                 </StackPanel>

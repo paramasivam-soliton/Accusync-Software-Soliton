@@ -11,7 +11,6 @@
     <Company>Natus</Company>
     <Product>AccuSync</Product>
     <Description>Device Management System for Patient and Device Configurations</Description>
-    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,8 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
-    <ProjectReference Include="..\AccuSync.SQLite\AccuSync.SQLite.csproj" />
+    <ProjectReference Include="..\AccuSync.EF\AccuSync.EF.csproj" />
     <ProjectReference Include="..\AccuSync.DataParser\AccuSync.DataParser.csproj" />
   </ItemGroup>
 

@@ -21,6 +21,7 @@ using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.PatientsTests

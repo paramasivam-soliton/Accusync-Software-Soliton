@@ -161,35 +161,35 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     Name = "Screener A",
                     ScreeningCount = 5,
                     LastActivity = "Last screening 25 min ago",
-                    AvatarColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#428FEC"))   // sky
+                    AvatarColor = "#428FEC"   // sky
                 },
                 new ScreenerInfo
                 {
                     Name = "Screener B",
                     ScreeningCount = 3,
                     LastActivity = "Last screening 1 hr ago",
-                    AvatarColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#005FBE"))   // bright-blue
+                    AvatarColor = "#005FBE"   // bright-blue
                 },
                 new ScreenerInfo
                 {
                     Name = "Screener C",
                     ScreeningCount = 4,
                     LastActivity = "Last screening 45 min ago",
-                    AvatarColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00AAA7"))   // teal
+                    AvatarColor = "#00AAA7"   // teal
                 },
                 new ScreenerInfo
                 {
                     Name = "Screener D",
                     ScreeningCount = 2,
                     LastActivity = "Last screening 2 hrs ago",
-                    AvatarColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#008B96"))   // dark-teal
+                    AvatarColor = "#008B96"   // dark-teal
                 },
                 new ScreenerInfo
                 {
                     Name = "Screener E",
                     ScreeningCount = 6,
                     LastActivity = "Last screening 10 min ago",
-                    AvatarColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#473089"))   // purple
+                    AvatarColor = "#473089"   // purple
                 }
             };
         }

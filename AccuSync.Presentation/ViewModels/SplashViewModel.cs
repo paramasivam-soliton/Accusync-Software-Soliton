@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels

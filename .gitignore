@@ -20,10 +20,6 @@
 *.db-wal
 *.sqlite
 
-# *.sqlite above also matches the AccuSync.SQLite project folder name
-# (case-insensitive) — explicitly un-ignore it.
-!AccuSync.SQLite/
-
 # OS files
 Thumbs.db
 [Dd]esktop.ini

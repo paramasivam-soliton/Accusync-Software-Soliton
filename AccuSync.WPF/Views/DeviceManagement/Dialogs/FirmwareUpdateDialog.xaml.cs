@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using WinForms = System.Windows.Forms;
+using Microsoft.Win32;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
@@ -64,25 +64,23 @@ namespace AccuSync.WPF.Views.DeviceManagement.Dialogs
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            // WPF has no built-in folder picker, so we use WinForms interop.
-            using (var dialog = new WinForms.FolderBrowserDialog())
+            var dialog = new OpenFolderDialog
             {
-                dialog.Description = Strings.FirmwareUpdateDialog_SelectFolderDescription;
-                dialog.ShowNewFolderButton = false;
+                Title = Strings.FirmwareUpdateDialog_SelectFolderDescription
+            };
 
-                if (dialog.ShowDialog() == WinForms.DialogResult.OK)
-                {
-                    SelectedFolderPath = dialog.SelectedPath;
-                    FolderPathTextBox.Text = SelectedFolderPath;
-                    FolderPlaceholder.Visibility = Visibility.Collapsed;
+            if (dialog.ShowDialog() == true)
+            {
+                SelectedFolderPath = dialog.FolderName;
+                FolderPathTextBox.Text = SelectedFolderPath;
+                FolderPlaceholder.Visibility = Visibility.Collapsed;
 
-                    FolderPathTextBox.BorderBrush =
-                        (System.Windows.Media.SolidColorBrush)FindResource("FilledBorderBrush");
+                FolderPathTextBox.BorderBrush =
+                    (System.Windows.Media.SolidColorBrush)FindResource("FilledBorderBrush");
 
-                    // DetectFirmwareFile drives UpdateButton.IsEnabled — the button stays
-                    // disabled if the chosen folder has no recognizable firmware file.
-                    DetectFirmwareFile(SelectedFolderPath);
-                }
+                // DetectFirmwareFile drives UpdateButton.IsEnabled — the button stays
+                // disabled if the chosen folder has no recognizable firmware file.
+                DetectFirmwareFile(SelectedFolderPath);
             }
         }
 

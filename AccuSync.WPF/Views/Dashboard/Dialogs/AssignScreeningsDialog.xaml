@@ -242,7 +242,7 @@
                         <DataTemplate>
                             <Border Background="{Binding CardBackground}" 
                                     BorderBrush="{Binding CardBorder}"
-                                    BorderThickness="{Binding CardBorderThickness}"
+                                    BorderThickness="{Binding IsSelected, Converter={StaticResource BoolToThicknessConverter}}"
                                     CornerRadius="10" 
                                     Padding="20,15"
                                     Margin="0,0,0,10"
@@ -274,7 +274,7 @@
                                               StrokeThickness="2"
                                               StrokeStartLineCap="Round"
                                               StrokeEndLineCap="Round"
-                                              Visibility="{Binding CheckmarkVisibility}"
+                                              Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
                                               Data="M20 6L9 17l-5-5"/>
                                     </Border>
 
@@ -299,7 +299,7 @@
                                             CornerRadius="11"
                                             Padding="10,4"
                                             VerticalAlignment="Center"
-                                            Visibility="{Binding PriorityVisibility}">
+                                            Visibility="{Binding IsHighPriority, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <TextBlock Text="{Binding PriorityText}"
                                                    FontSize="10"
                                                    FontWeight="SemiBold"

@@ -5,8 +5,8 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
-using AccuSync.Application.Abstractions.Repositories;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

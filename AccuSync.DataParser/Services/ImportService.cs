@@ -6,6 +6,8 @@
 
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
+using AccuSync.Application.Services;
+using AccuSync.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;

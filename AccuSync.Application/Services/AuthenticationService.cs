@@ -6,25 +6,12 @@
 
 using System;
 using System.Threading.Tasks;
-using AccuSync.Application.Abstractions.Repositories;
-using AccuSync.Application.Abstractions.Services;
-using AccuSync.Application.Models;
+using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Services
 {
-    /// <summary>
-    /// Result of an authentication attempt. On failure, includes the reason
-    /// and lockout details so the UI can display an appropriate message.
-    /// </summary>
-    public class AuthenticationResult
-    {
-        public bool Success { get; set; }
-        public string ErrorMessage { get; set; }
-        public User User { get; set; }
-        public bool IsLocked { get; set; }
-        public TimeSpan RemainingLockTime { get; set; }
-    }
-
     /// <summary>
     /// Handles user authentication with lockout protection (10 failed attempts,
     /// 15-minute cooldown) and 90-day password expiration.

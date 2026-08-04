@@ -1,0 +1,226 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.WPF.Views.Dashboard.SidebarNavigation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AccuSync.WPF.Views.Dashboard"
+             xmlns:res="clr-namespace:AccuSync.WPF.Resources">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#F5F5F5">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="10" Opacity="0.1"/>
+            </Border.Effect>
+            <Border>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#473089" Offset="0"/>
+                        <GradientStop Color="#6B4BA8" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- App title -->
+                    <StackPanel Grid.Row="0" Margin="20,20,20,30" HorizontalAlignment="Center">
+                        <TextBlock Text="{x:Static res:Strings.SidebarNavigation_AppTitle}"
+                                   FontSize="24" FontWeight="Bold" Foreground="White"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Nav items (scrollable if window is short) -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel>
+
+                            <!-- Dashboard is hidden by default — visible for Admin role only (set in code-behind) -->
+                            <Border x:Name="NavDashboard"
+                            Background="#40FFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavDashboard_Click"
+                            Visibility="Collapsed">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_Dashboard}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavPatients"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavPatients_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_PatientsAndTests}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavUsers"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavUsers_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_UsersAndProfiles}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavSites"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavSites_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_SitesAndFacilities}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavDevices"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavDevices_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_DeviceManagement}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavSystemConfig"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavSystemConfig_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M4 18v-.65c0-.34.16-.65.41-.81C6.1 15.53 8.03 15 10 15c.03 0 .05 0 .08.01.1-.7.3-1.37.59-1.98-.22-.02-.44-.03-.67-.03-2.42 0-4.68.67-6.61 1.82C2.51 15.34 2 16.32 2 17.35V20h9.26c-.42-.6-.75-1.28-.97-2H4zM10 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm10.75 6c-.02-.17-.04-.33-.06-.5l1.14-1-.9-1.55-1.41.54c-.29-.28-.62-.51-.99-.68L18.25 7h-1.5l-.28 1.31c-.37.17-.7.4-.99.68l-1.41-.54-.9 1.55 1.14 1c-.02.17-.04.33-.06.5s.02.33.06.5l-1.14 1 .9 1.55 1.41-.54c.29.28.62.51.99.68l.28 1.31h1.5l.28-1.31c.37-.17.7-.4.99-.68l1.41.54.9-1.55-1.14-1c.04-.17.06-.33.06-.5zM17.5 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_SystemConfiguration}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavSettings"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavSettings_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_Settings}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="NavAbout"
+                            Background="#1AFFFFFF"
+                            Margin="15,0,15,10" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="NavAbout_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_About}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Height="20"/>
+
+                            <Border Background="#26FFFFFF"
+                            Margin="15,0,15,20" Padding="12,12" CornerRadius="10" Cursor="Hand"
+                            MouseEnter="NavItem_MouseEnter" MouseLeave="NavItem_MouseLeave"
+                            MouseLeftButtonDown="Logout_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Width="20" Height="20" Stretch="Uniform" Fill="White" Margin="0,0,12,0"
+                                  Data="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Static res:Strings.SidebarNavigation_Logout}" FontSize="14" FontWeight="Medium" Foreground="White" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Company logo pinned to bottom -->
+                    <Border Grid.Row="2" Margin="20,10,20,20"
+                            HorizontalAlignment="Center">
+                        <Image Source="/Resources/Images/company_logo.png"
+                               MaxHeight="90"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               Opacity="0.85"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Border>
+
+        <!-- Content Area -->
+        <Border Grid.Column="1" x:Name="ContentContainer">
+            <Grid>
+                <local:DashboardContentView x:Name="DashboardView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="PatientsBaseView" Visibility="Visible"/>
+                <local:BaseScreenView x:Name="UsersView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="SitesView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="DevicesView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="SystemConfigView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="SettingsView" Visibility="Collapsed"/>
+                <local:BaseScreenView x:Name="AboutView" Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

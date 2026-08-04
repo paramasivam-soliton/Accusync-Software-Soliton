@@ -193,7 +193,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
 
         private List<PatientInfo> GetReferredPatients()
         {
-            var accent = new SolidColorBrush(_referredColor);
+            const string accent = "#428FEC";
             return new List<PatientInfo>
             {
                 new PatientInfo
@@ -242,7 +242,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
 
         private List<PatientInfo> GetPassPatients()
         {
-            var accent = new SolidColorBrush(_passColor);
+            const string accent = "#00AAA7";
             return new List<PatientInfo>
             {
                 new PatientInfo
@@ -274,7 +274,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
 
         private List<PatientInfo> GetIncompletePatients()
         {
-            var accent = new SolidColorBrush(_incompleteColor);
+            const string accent = "#005FBE";
             return new List<PatientInfo>
             {
                 new PatientInfo

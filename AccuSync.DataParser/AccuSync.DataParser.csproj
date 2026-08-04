@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- -windows (not UseWPF) is needed: OCR/QR parsing depends on
+         System.Drawing.Common. No type here references WPF/PresentationFramework —
+         IQrCodeGenerator returns raw PNG bytes; the View layer converts to BitmapImage. -->
     <TargetFramework>net10.0-windows</TargetFramework>
-    <!-- UseWPF is needed: IQrCodeGenerator returns a WPF BitmapImage. Same
-         trade-off AccuSync.Application already made for its WPF-typed Models. -->
-    <UseWPF>true</UseWPF>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.DataParser</AssemblyName>
     <RootNamespace>AccuSync.DataParser</RootNamespace>

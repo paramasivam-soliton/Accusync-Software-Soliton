@@ -6,6 +6,7 @@
 
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 using AccuSync.DataParser.Services;
 using System;

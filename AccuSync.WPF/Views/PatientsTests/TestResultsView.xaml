@@ -193,8 +193,8 @@
                         <DataGridTemplateColumn Header="{x:Static res:Strings.TestResultsView_ColumnLeft}" Width="30">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding LeftSymbol}" 
-                                               Foreground="{Binding LeftColor}"
+                                    <TextBlock Text="{Binding LeftSymbol}"
+                                               Foreground="{Binding LeftResult, Converter={StaticResource TestResultToBrushConverter}}"
                                                FontSize="13" FontWeight="Bold"
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </DataTemplate>
@@ -204,8 +204,8 @@
                         <DataGridTemplateColumn Header="{x:Static res:Strings.TestResultsView_ColumnRight}" Width="30">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding RightSymbol}" 
-                                               Foreground="{Binding RightColor}"
+                                    <TextBlock Text="{Binding RightSymbol}"
+                                               Foreground="{Binding RightResult, Converter={StaticResource TestResultToBrushConverter}}"
                                                FontSize="13" FontWeight="Bold"
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </DataTemplate>

@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows;
-
 namespace AccuSync.Application.Models
 {
     /// <summary>
@@ -20,6 +18,7 @@ namespace AccuSync.Application.Models
         public string IconData { get; set; }
         public string Label { get; set; }
         public string Value { get; set; }
-        public Thickness CardMargin { get; set; }
+        // "left,top,right,bottom" — parsed into a Thickness by the View (StringToThicknessConverter).
+        public string CardMargin { get; set; }
     }
 }
