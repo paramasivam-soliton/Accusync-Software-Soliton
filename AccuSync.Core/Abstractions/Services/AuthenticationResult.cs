@@ -5,9 +5,9 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Core.Abstractions.Services
 {
     /// <summary>
     /// Result of an authentication attempt. On failure, includes the reason

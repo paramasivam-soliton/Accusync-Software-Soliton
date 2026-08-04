@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 using AccuSync.EF.Configurations;
 using Microsoft.EntityFrameworkCore;
 

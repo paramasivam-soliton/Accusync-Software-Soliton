@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Services;
 using AccuSync.Presentation.ViewModels;

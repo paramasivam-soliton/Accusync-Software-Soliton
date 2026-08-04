@@ -19,7 +19,7 @@ namespace AccuSync.EF.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
-            modelBuilder.Entity("AccuSync.Application.Models.User", b =>
+            modelBuilder.Entity("AccuSync.Core.Entities.User", b =>
                 {
                     b.Property<string>("Guid")
                         .HasColumnType("TEXT");

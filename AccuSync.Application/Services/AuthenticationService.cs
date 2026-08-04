@@ -6,9 +6,9 @@
 
 using System;
 using System.Threading.Tasks;
-using AccuSync.Application.Abstractions.Repositories;
-using AccuSync.Application.Abstractions.Services;
-using AccuSync.Application.Models;
+using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Services
 {

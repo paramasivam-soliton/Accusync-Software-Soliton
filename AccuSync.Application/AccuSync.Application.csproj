@@ -16,6 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Needs User/PatientData/TestRecord and the repository/service abstractions. -->
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\OCR\tessdata\eng.traineddata" />
   </ItemGroup>
 

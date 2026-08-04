@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.EF;
 using AccuSync.EF.Contexts;
 using AccuSync.EF.Interceptors;

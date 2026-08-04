@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Collections.Generic;

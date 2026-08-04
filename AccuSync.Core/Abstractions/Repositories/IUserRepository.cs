@@ -6,9 +6,9 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Abstractions.Repositories
+namespace AccuSync.Core.Abstractions.Repositories
 {
     /// <summary>
     /// Persistence contract for user accounts. Implemented by AccuSync.EF

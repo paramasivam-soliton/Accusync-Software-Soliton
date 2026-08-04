@@ -13,7 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Application: still needed for QRCodeHelper and other non-abstraction helpers.
+         Core: User entity + IUserRepository/IAuthenticationService/IEncryptionService. -->
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
   </ItemGroup>
 
 </Project>

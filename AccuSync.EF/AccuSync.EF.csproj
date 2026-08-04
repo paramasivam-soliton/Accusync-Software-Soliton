@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Needs IUserRepository, IEncryptionService, and the User model. -->
-    <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
+    <!-- Needs IUserRepository, IEncryptionService, and the User entity. -->
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Application", "Acc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.EF", "AccuSync.EF\AccuSync.EF.csproj", "{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Core", "AccuSync.Core\AccuSync.Core.csproj", "{E01CF6EC-210F-4FB5-8933-09C22505CBEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x64.Build.0 = Release|Any CPU
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x86.ActiveCfg = Release|Any CPU
 		{97E13BD9-087D-4B14-A2B8-59B70D61BAB2}.Release|x86.Build.0 = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|x64.Build.0 = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E01CF6EC-210F-4FB5-8933-09C22505CBEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

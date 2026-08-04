@@ -5,9 +5,8 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using AccuSync.Application.Services;
 
-namespace AccuSync.Application.Abstractions.Services
+namespace AccuSync.Core.Abstractions.Services
 {
     public interface IAuthenticationService
     {

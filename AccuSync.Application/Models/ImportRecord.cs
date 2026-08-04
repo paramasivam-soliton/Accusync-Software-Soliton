@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Models
 {

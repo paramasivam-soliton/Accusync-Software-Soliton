@@ -11,9 +11,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AccuSync.Presentation.Helpers;
-using AccuSync.Application.Abstractions.Repositories;
-using AccuSync.Application.Abstractions.Services;
-using AccuSync.Application.Models;
+using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
+using AccuSync.Core.Entities;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
