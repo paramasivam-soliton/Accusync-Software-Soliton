@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -14,7 +13,7 @@ namespace AccuSync.Application.Models
         public string Name { get; set; }
         public int ScreeningCount { get; set; }
         public string LastActivity { get; set; }
-        public SolidColorBrush AvatarColor { get; set; }
+        public string AvatarColor { get; set; }
 
         public string Initials
         {

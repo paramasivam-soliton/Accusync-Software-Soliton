@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows.Media;
-
 namespace AccuSync.Application.Models
 {
     /// <summary>
@@ -28,23 +26,17 @@ namespace AccuSync.Application.Models
         public string Examiner => Source.Examiner;
 
         public string LeftSymbol => Source.IsLeftEar ? GetSymbol(Source.TestResult) : "";
-        public Brush LeftColor => Source.IsLeftEar ? GetBrush(Source.TestResult) : Brushes.Transparent;
+        // Null when the ear wasn't tested — the View maps that to a transparent color.
+        public string LeftResult => Source.IsLeftEar ? Source.TestResult : null;
 
         public string RightSymbol => Source.IsRightEar ? GetSymbol(Source.TestResult) : "";
-        public Brush RightColor => Source.IsRightEar ? GetBrush(Source.TestResult) : Brushes.Transparent;
+        public string RightResult => Source.IsRightEar ? Source.TestResult : null;
 
         private static string GetSymbol(string result) => result switch
         {
             "Pass" => "✓",
             "Refer" => "✗",
             _ => "?"
-        };
-
-        private static Brush GetBrush(string result) => result switch
-        {
-            "Pass" => new SolidColorBrush(Color.FromRgb(0x42, 0x9C, 0x10)),
-            "Refer" => new SolidColorBrush(Color.FromRgb(0xdc, 0x35, 0x45)),
-            _ => new SolidColorBrush(Color.FromRgb(0x9E, 0xA2, 0xAC))
         };
     }
 }

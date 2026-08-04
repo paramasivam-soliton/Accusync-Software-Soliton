@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -18,7 +17,7 @@ namespace AccuSync.Application.Models
         public string ResultText { get; set; }  // "Pass", "Refer", "Incomplete"
         public string ResultBackground { get; set; }
         public string ResultForeground { get; set; }
-        public SolidColorBrush AccentColor { get; set; }  // Left border color
+        public string AccentColor { get; set; }  // Left border color, hex
         public string CompletionTime { get; set; }
     }
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -17,7 +16,7 @@ namespace AccuSync.Application.Models
         public string LastName { get; set; }
         public DateTime DOB { get; set; }
         public DateTime LastScreenDate { get; set; }
-        public SolidColorBrush AccentColor { get; set; }
+        public string AccentColor { get; set; }
         public List<RiskFactor> RiskFactors { get; set; }
     }
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -20,7 +19,7 @@ namespace AccuSync.Application.Models
         public DateTime? LastScreenDate { get; set; }
         public bool IsScreened { get; set; }
         public string ScreeningResult { get; set; } = string.Empty;
-        public SolidColorBrush AccentColor { get; set; }
+        public string AccentColor { get; set; }
         public List<Badge> Badges { get; set; } = new List<Badge>();
 
         public string DateStatusLabel

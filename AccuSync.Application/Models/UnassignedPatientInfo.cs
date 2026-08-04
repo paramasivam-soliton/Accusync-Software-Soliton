@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Windows;
 
 namespace AccuSync.Application.Models
 {
@@ -33,23 +32,18 @@ namespace AccuSync.Application.Models
                     OnPropertyChanged(nameof(IsSelected));
                     OnPropertyChanged(nameof(CardBackground));
                     OnPropertyChanged(nameof(CardBorder));
-                    OnPropertyChanged(nameof(CardBorderThickness));
                     OnPropertyChanged(nameof(CheckboxBackground));
                     OnPropertyChanged(nameof(CheckboxBorder));
-                    OnPropertyChanged(nameof(CheckmarkVisibility));
                 }
             }
         }
 
         public string CardBackground => IsSelected ? "#EFF6FF" : "White";
         public string CardBorder => IsSelected ? "#3B82F6" : "#E5E7EB";
-        public Thickness CardBorderThickness => IsSelected ? new Thickness(2) : new Thickness(1);
         public string CheckboxBackground => IsSelected ? "#3B82F6" : "White";
         public string CheckboxBorder => IsSelected ? "#3B82F6" : "#D1D5DB";
-        public Visibility CheckmarkVisibility => IsSelected ? Visibility.Visible : Visibility.Collapsed;
 
         // Priority badge — shown only for high-priority patients (matches PriorityText).
-        public Visibility PriorityVisibility => IsHighPriority ? Visibility.Visible : Visibility.Collapsed;
         public string PriorityBackground => "#FEE2E2";
         public string PriorityForeground => "#DC2626";
 
