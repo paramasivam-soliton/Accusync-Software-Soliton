@@ -23,7 +23,7 @@
     <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
     <ProjectReference Include="..\AccuSync.EF\AccuSync.EF.csproj" />
-    <ProjectReference Include="..\AccuSync.DataParser\AccuSync.DataParser.csproj" />
+    <ProjectReference Include="..\AccuSync.Adapters.DataParser\AccuSync.Adapters.DataParser.csproj" />
   </ItemGroup>
 
   <ItemGroup>

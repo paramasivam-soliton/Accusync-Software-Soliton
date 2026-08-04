@@ -8,7 +8,7 @@ using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Services;
 using AccuSync.Presentation.ViewModels;
-using AccuSync.DataParser.DependencyInjection;
+using AccuSync.Adapters.DataParser.DependencyInjection;
 using AccuSync.EF.DependencyInjection;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;

@@ -9,7 +9,7 @@ using System;
 namespace AccuSync.Application.Abstractions.Parsing
 {
     /// <summary>
-    /// Generates QR codes for patient data. Implemented by <c>AccuSync.DataParser</c>.
+    /// Generates QR codes for patient data. Implemented by <c>AccuSync.Adapters.DataParser</c>.
     /// </summary>
     public interface IQrCodeGenerator
     {

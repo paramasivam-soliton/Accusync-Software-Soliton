@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------
 // <copyright file="QrCodeGenerator.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
@@ -11,11 +11,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace AccuSync.DataParser.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Generates QR codes for patient data.
-    /// Uses the QRCoder library and returns raw PNG bytes — the caller (View layer)
+    /// Uses the QRCoder library and returns raw PNG bytes â€” the caller (View layer)
     /// is responsible for turning that into whatever image type it can display.
     /// </summary>
     public class QrCodeGenerator : IQrCodeGenerator

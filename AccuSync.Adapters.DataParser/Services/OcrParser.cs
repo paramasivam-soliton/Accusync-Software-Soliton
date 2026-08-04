@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Tesseract;
 
-namespace AccuSync.DataParser.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Extracts patient data from scanned image facesheets using Tesseract OCR.

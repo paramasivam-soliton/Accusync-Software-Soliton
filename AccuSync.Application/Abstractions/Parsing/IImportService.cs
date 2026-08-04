@@ -14,7 +14,7 @@ namespace AccuSync.Application.Abstractions.Parsing
 {
     /// <summary>
     /// Orchestrates file parsing and import execution. Implemented by
-    /// <c>AccuSync.DataParser</c>, which routes to format-specific parsers.
+    /// <c>AccuSync.Adapters.DataParser</c>, which routes to format-specific parsers.
     /// </summary>
     public interface IImportService
     {

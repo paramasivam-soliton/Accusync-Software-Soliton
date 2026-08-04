@@ -6,8 +6,8 @@
          IQrCodeGenerator returns raw PNG bytes; the View layer converts to BitmapImage. -->
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>annotations</Nullable>
-    <AssemblyName>AccuSync.DataParser</AssemblyName>
-    <RootNamespace>AccuSync.DataParser</RootNamespace>
+    <AssemblyName>AccuSync.Adapters.DataParser</AssemblyName>
+    <RootNamespace>AccuSync.Adapters.DataParser</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

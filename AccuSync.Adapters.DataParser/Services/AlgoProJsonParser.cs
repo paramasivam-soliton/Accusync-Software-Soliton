@@ -12,7 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 
-namespace AccuSync.DataParser.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Parses ALGO Pro JSON export files into <see cref="ImportPatientData"/>

@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace AccuSync.DataParser.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Orchestrates file parsing and import execution. Routes to format-specific

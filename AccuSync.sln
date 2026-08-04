@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.EF", "AccuSync.EF\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Core", "AccuSync.Core\AccuSync.Core.csproj", "{E01CF6EC-210F-4FB5-8933-09C22505CBEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.DataParser", "AccuSync.DataParser\AccuSync.DataParser.csproj", "{06866E32-4604-497B-967D-A27AA7C6B346}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuSync.Adapters.DataParser", "AccuSync.Adapters.DataParser\AccuSync.Adapters.DataParser.csproj", "{06866E32-4604-497B-967D-A27AA7C6B346}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

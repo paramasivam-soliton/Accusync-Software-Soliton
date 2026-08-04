@@ -1,14 +1,14 @@
-// --------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------
 // <copyright file="DataParserServiceCollectionExtensions.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Abstractions.Parsing;
-using AccuSync.DataParser.Services;
+using AccuSync.Adapters.DataParser.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccuSync.DataParser.DependencyInjection
+namespace AccuSync.Adapters.DataParser.DependencyInjection
 {
     /// <summary>
     /// Wires up the file-format-exchange services (import parsing, QR generation).
