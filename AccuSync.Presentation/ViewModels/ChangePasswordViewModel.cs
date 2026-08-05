@@ -29,6 +29,7 @@ namespace AccuSync.Presentation.ViewModels
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ICurrentUserContext _currentUserContext;
         private readonly User _currentUser;
 
         private string _oldPassword = string.Empty;
@@ -152,10 +153,11 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
-        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, User currentUser)
+        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext, User currentUser)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _currentUserContext = currentUserContext;
             _currentUser = currentUser;
 
             SaveCommand = new RelayCommand(async () => await SavePasswordAsync(), () => !IsLoading);
@@ -242,12 +244,7 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (success)
                 {
-                    // TODO: Use an actual Role field from the User model.
-                    string role = string.Equals(_currentUser.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
-                        ? "Admin"
-                        : "Screener";
-
-                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, role);
+                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, _currentUserContext.Role.ToString());
                 }
                 else
                 {

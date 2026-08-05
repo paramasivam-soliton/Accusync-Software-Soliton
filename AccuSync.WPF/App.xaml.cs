@@ -51,6 +51,7 @@ namespace AccuSync.WPF
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<ICurrentUserContext, CurrentUserContext>();
 
             // ViewModels
             services.AddTransient<SplashViewModel>();
@@ -182,6 +183,7 @@ namespace AccuSync.WPF
             {
                 var dashboard = GetService<AdminDashboardWindow>();
                 dashboard.SetCurrentUser(username);
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
                 dashboard.Show();
             }
             else
@@ -201,6 +203,7 @@ namespace AccuSync.WPF
             if (role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase))
             {
                 dashboard = GetService<AdminDashboardWindow>();
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
             }
             else
             {

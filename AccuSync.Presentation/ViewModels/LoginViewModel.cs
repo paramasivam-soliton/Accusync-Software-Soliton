@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
+using AccuSync.Application.Helpers;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using System;
@@ -29,6 +30,7 @@ namespace AccuSync.Presentation.ViewModels
         private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ICurrentUserContext _currentUserContext;
 
         private string _selectedUsername;
         private string _password = string.Empty;
@@ -98,11 +100,12 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
-        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher)
+        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
             _passwordHasher = passwordHasher;
+            _currentUserContext = currentUserContext;
 
             Usernames = new ObservableCollection<string>();
             _isPasswordVisible = false;
@@ -146,23 +149,22 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (result.Success)
                 {
+                    var role = UserRoleParser.Parse(result.User.ProfileId);
+                    _currentUserContext.SignIn(result.User, role);
+
                     if (result.User.FirstLogin == 1)
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
                             _userRepository,
                             _passwordHasher,
+                            _currentUserContext,
                             result.User
                         );
                         FirstLoginPasswordChangeRequired?.Invoke(changePasswordViewModel);
                     }
                     else
                     {
-                        // TODO: Use an actual Role field from the User model.
-                        string role = string.Equals(result.User.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
-                            ? "Admin"
-                            : "Screener";
-
-                        LoginSucceeded?.Invoke(result.User.AccountName, role);
+                        LoginSucceeded?.Invoke(result.User.AccountName, role.ToString());
                     }
 
                     Password = string.Empty;

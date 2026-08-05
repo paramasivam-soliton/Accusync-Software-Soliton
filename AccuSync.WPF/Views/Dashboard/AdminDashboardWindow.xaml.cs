@@ -6,6 +6,7 @@
 
 using System.Windows;
 using AccuSync.Application.Helpers;
+using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
@@ -22,6 +23,15 @@ namespace AccuSync.WPF.Views.Dashboard
         public void SetCurrentUser(string username)
         {
             Shell.SetCurrentUser(username);
+        }
+
+        /// <summary>
+        /// Shows/hides sidebar nav items per the logged-in user's role. Call once,
+        /// right after <see cref="SetCurrentUser"/> and before <c>Show()</c>.
+        /// </summary>
+        public void SetPermissions(UserPermissionsViewModel permissions)
+        {
+            Shell.SetPermissions(permissions);
         }
 
         public void NavigateToView(string screenName)
