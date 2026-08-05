@@ -197,7 +197,7 @@ namespace AccuSync.Presentation.ViewModels
             try
             {
                 // Verify old password against the database
-                if (!_passwordHasher.Verify(OldPassword, _currentUser.PasswordHash))
+                if (!_passwordHasher.Verify(OldPassword, _currentUser.ProfilePassword))
                 {
                     ErrorMessage = Strings.ChangePasswordViewModel_CurrentPasswordIncorrect;
                     IsLoading = false;
@@ -227,12 +227,12 @@ namespace AccuSync.Presentation.ViewModels
                     ? new string[0]
                     : _currentUser.LastThreePasswords.Split('|');
 
-                var updatedPasswordList = new[] { _currentUser.PasswordHash }
+                var updatedPasswordList = new[] { _currentUser.ProfilePassword }
                     .Concat(passwordList)
                     .Take(3)
                     .ToArray();
 
-                _currentUser.PasswordHash = newPasswordHash;
+                _currentUser.ProfilePassword = newPasswordHash;
                 _currentUser.LastThreePasswords = string.Join("|", updatedPasswordList);
                 _currentUser.PasswordModificationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 _currentUser.FirstLogin = 0;

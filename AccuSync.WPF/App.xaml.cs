@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Core.Abstractions.Services;
@@ -29,14 +30,22 @@ namespace AccuSync.WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
+            string databasePath = ResolveDatabasePath();
+
             // Persistence — provider selection happens right here: swapping database
             // engines later means calling a different sibling adapter project's
             // equivalent method instead of AddSqlitePersistence.
-            services.AddSqlitePersistence(ResolveDatabasePath());
+            services.AddSqlitePersistence(databasePath);
 
             // File-format exchange — import parsing, QR generation. Same "provider
             // selection happens here" pattern as AddSqlitePersistence above.
             services.AddDataParserServices();
+
+            // Data Protection key ring lives alongside the database so it travels with
+            // it if the DB file is ever backed up/restored onto another machine — see
+            // LOGIN_EPIC_SPEC.md §2.2. Standalone use only; no web server/hosting involved.
+            string keysPath = Path.Combine(Path.GetDirectoryName(databasePath), "DataProtectionKeys");
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 
             // Services
             services.AddSingleton<IEncryptionService, EncryptionService>();

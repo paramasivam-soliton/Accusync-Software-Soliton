@@ -6,10 +6,14 @@
 
 namespace AccuSync.Core.Abstractions.Services
 {
+    /// <summary>
+    /// Reversible encryption for data that must be recoverable in plaintext later
+    /// (e.g., usernames, which the login dropdown needs to display). Passwords never
+    /// go through this — see <see cref="IPasswordHasher"/> for one-way hashing.
+    /// </summary>
     public interface IEncryptionService
     {
         string Encrypt(string plainText);
         string Decrypt(string cipherText);
-        bool IsReleaseMode { get; }
     }
 }

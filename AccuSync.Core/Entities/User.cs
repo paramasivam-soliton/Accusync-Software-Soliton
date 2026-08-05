@@ -16,7 +16,8 @@ namespace AccuSync.Core.Entities
         public string LastName { get; set; }
         public int Status { get; set; }
         public string ProfileId { get; set; }
-        public string PasswordHash { get; set; }
+        public string UsernameHash { get; set; }
+        public string ProfilePassword { get; set; }
         public int FirstLogin { get; set; }                 // 0 = false, 1 = true
         public int FailedLoginAttemptCount { get; set; }
         public int FailedResetAttemptCount { get; set; }
@@ -39,7 +40,8 @@ namespace AccuSync.Core.Entities
             LastName = string.Empty;
             Status = 0;
             ProfileId = string.Empty;
-            PasswordHash = string.Empty;
+            UsernameHash = string.Empty;
+            ProfilePassword = string.Empty;
             FirstLogin = 1; // New users haven't logged in yet
             FailedLoginAttemptCount = 0;
             FailedResetAttemptCount = 0;

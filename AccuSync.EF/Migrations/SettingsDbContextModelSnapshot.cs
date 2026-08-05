@@ -74,10 +74,6 @@ namespace AccuSync.EF.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0L);
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("PasswordModificationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
@@ -87,14 +83,22 @@ namespace AccuSync.EF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ProfilePassword")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("UsernameHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Guid");
 
-                    b.HasIndex("AccountName")
+                    b.HasIndex("UsernameHash")
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);

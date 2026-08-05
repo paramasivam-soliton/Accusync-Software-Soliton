@@ -78,7 +78,7 @@ namespace AccuSync.Application.Services
             }
 
             // Password verification — hash-to-hash only, never decrypt/compare plaintext.
-            if (!_passwordHasher.Verify(password, user.PasswordHash))
+            if (!_passwordHasher.Verify(password, user.ProfilePassword))
             {
                 // Track the timestamp of the first failure in a streak so the
                 // lockout window is measured from when failures started.
