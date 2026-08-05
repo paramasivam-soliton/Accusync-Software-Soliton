@@ -25,7 +25,6 @@ want to go deeper on any row — this sheet is just for a fast pass.
 | Topic | Plan | Why | Status |
 |---|---|---|---|
 | Password hashing algo | PBKDF2-HMACSHA256, built into .NET, 210k iterations, per-user salt | No new dependency; FIPS-validated (healthcare-adjacent product) | ✅ |
-| Password hashing algo — alt | Could use BCrypt instead if FIPS doesn't matter to you | Simpler code, but adds a package | ❓ *(only if you want to override PBKDF2)* |
 | Username storage | Stays reversibly encrypted (AES + DPAPI), not hashed | Login dropdown must show plaintext usernames — can't reverse a hash | ✅ |
 | Username encryption key | Windows DPAPI (`ProtectedData`, machine-scoped) instead of today's hardcoded machine-name key | Removes the hardcoded key; zero custom key-management code | ✅ |
 | Username encryption — tradeoff | DPAPI ties data to one PC — DB can't be moved to a different machine and still decrypt | Fine for a per-clinic desktop app (matches how the DB file already lives locally) | ❓ *(confirm this deployment model is correct)* |

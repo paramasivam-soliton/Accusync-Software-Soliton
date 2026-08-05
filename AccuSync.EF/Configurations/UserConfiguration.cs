@@ -25,7 +25,7 @@ namespace AccuSync.EF.Configurations
             builder.Property(u => u.AccountName).IsRequired();
             builder.HasIndex(u => u.AccountName).IsUnique();
 
-            builder.Property(u => u.ProfilePassword).IsRequired();
+            builder.Property(u => u.PasswordHash).IsRequired();
 
             builder.Property(u => u.Status).HasDefaultValue(0);
             builder.Property(u => u.FirstLogin).HasDefaultValue(1);

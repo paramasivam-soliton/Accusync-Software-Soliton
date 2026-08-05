@@ -40,6 +40,7 @@ namespace AccuSync.WPF
 
             // Services
             services.AddSingleton<IEncryptionService, EncryptionService>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
             // ViewModels

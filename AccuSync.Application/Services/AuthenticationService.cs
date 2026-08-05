@@ -16,22 +16,17 @@ namespace AccuSync.Application.Services
     /// Handles user authentication with lockout protection (10 failed attempts,
     /// 15-minute cooldown) and 90-day password expiration.
     /// </summary>
-    // TODO: Passwords are compared by decrypting the stored value and checking
-    //       equality in plaintext. This means passwords are reversibly encrypted,
-    //       not hashed. Industry standard is to store a salted hash (e.g., bcrypt)
-    //       and compare hashes — reversible encryption means anyone with the key
-    //       can read all passwords.
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
         private const int MaxFailedAttempts = 10;
         private const int LockoutDurationMinutes = 15;
 
-        public AuthenticationService(IUserRepository userRepository, IEncryptionService encryptionService)
+        public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
-            _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<AuthenticationResult> AuthenticateAsync(string accountName, string password)
@@ -82,9 +77,8 @@ namespace AccuSync.Application.Services
                 }
             }
 
-            // Password verification — see class-level TODO about hashing vs encryption
-            string decryptedPassword = _encryptionService.Decrypt(user.ProfilePassword);
-            if (password != decryptedPassword)
+            // Password verification — hash-to-hash only, never decrypt/compare plaintext.
+            if (!_passwordHasher.Verify(password, user.PasswordHash))
             {
                 // Track the timestamp of the first failure in a streak so the
                 // lockout window is measured from when failures started.

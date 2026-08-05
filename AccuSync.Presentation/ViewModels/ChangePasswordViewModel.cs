@@ -28,7 +28,7 @@ namespace AccuSync.Presentation.ViewModels
     public class ChangePasswordViewModel : INotifyPropertyChanged
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly User _currentUser;
 
         private string _oldPassword = string.Empty;
@@ -152,10 +152,10 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
-        public ChangePasswordViewModel(IUserRepository userRepository, IEncryptionService encryptionService, User currentUser)
+        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, User currentUser)
         {
             _userRepository = userRepository;
-            _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
             _currentUser = currentUser;
 
             SaveCommand = new RelayCommand(async () => await SavePasswordAsync(), () => !IsLoading);
@@ -197,22 +197,21 @@ namespace AccuSync.Presentation.ViewModels
             try
             {
                 // Verify old password against the database
-                string decryptedPassword = _encryptionService.Decrypt(_currentUser.ProfilePassword);
-                if (OldPassword != decryptedPassword)
+                if (!_passwordHasher.Verify(OldPassword, _currentUser.PasswordHash))
                 {
                     ErrorMessage = Strings.ChangePasswordViewModel_CurrentPasswordIncorrect;
                     IsLoading = false;
                     return;
                 }
 
-                // LastThreePasswords is a pipe-delimited string of encrypted passwords.
+                // LastThreePasswords is a pipe-delimited string of password hashes.
                 // See User.cs TODO about documenting this format.
                 if (!string.IsNullOrEmpty(_currentUser.LastThreePasswords))
                 {
                     var lastPasswords = _currentUser.LastThreePasswords.Split('|');
-                    foreach (var oldPass in lastPasswords)
+                    foreach (var oldHash in lastPasswords)
                     {
-                        if (!string.IsNullOrEmpty(oldPass) && _encryptionService.Decrypt(oldPass) == NewPassword)
+                        if (!string.IsNullOrEmpty(oldHash) && _passwordHasher.Verify(NewPassword, oldHash))
                         {
                             ErrorMessage = Strings.ChangePasswordViewModel_PasswordReused;
                             IsLoading = false;
@@ -221,19 +220,19 @@ namespace AccuSync.Presentation.ViewModels
                     }
                 }
 
-                string encryptedNewPassword = _encryptionService.Encrypt(NewPassword);
+                string newPasswordHash = _passwordHasher.Hash(NewPassword);
 
                 // Prepend the current password to the history and keep only three.
                 var passwordList = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
                     ? new string[0]
                     : _currentUser.LastThreePasswords.Split('|');
 
-                var updatedPasswordList = new[] { _currentUser.ProfilePassword }
+                var updatedPasswordList = new[] { _currentUser.PasswordHash }
                     .Concat(passwordList)
                     .Take(3)
                     .ToArray();
 
-                _currentUser.ProfilePassword = encryptedNewPassword;
+                _currentUser.PasswordHash = newPasswordHash;
                 _currentUser.LastThreePasswords = string.Join("|", updatedPasswordList);
                 _currentUser.PasswordModificationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 _currentUser.FirstLogin = 0;

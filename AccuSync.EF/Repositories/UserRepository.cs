@@ -19,20 +19,22 @@ using Microsoft.EntityFrameworkCore;
 namespace AccuSync.EF
 {
     /// <summary>
-    /// EF Core-backed data access for user accounts (SettingsDatabase.db). Sensitive fields
-    /// (names, account names, previous passwords) are encrypted via <see cref="IEncryptionService"/>
-    /// before storage and decrypted on read. ProfilePassword travels encrypted end-to-end —
-    /// it is never decrypted back onto a <see cref="User"/> instance.
+    /// EF Core-backed data access for user accounts (SettingsDatabase.db). Names/account
+    /// names are encrypted via <see cref="IEncryptionService"/> before storage and decrypted
+    /// on read. Passwords are one-way hashed via <see cref="IPasswordHasher"/> — PasswordHash
+    /// and LastThreePasswords travel as hashes end-to-end and are never reversed.
     /// </summary>
     public class UserRepository : IUserRepository
     {
         private readonly SettingsDbContext _context;
         private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService)
+        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService, IPasswordHasher passwordHasher)
         {
             _context = context;
             _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
         }
 
         /// <summary>
@@ -97,9 +99,9 @@ namespace AccuSync.EF
             }
         }
 
-        // TODO: Default password "12345" is hardcoded. These accounts should
-        //       force a password change on first login (FirstLogin = 1 handles
-        //       this, but verify the UI enforces it).
+        // FirstLogin = 1 forces a password change on first login (see
+        // ChangePasswordViewModel), so the seeded "12345" is only ever a
+        // one-time credential.
         private async Task CreateDefaultUsersAsync()
         {
             await InsertUserAsync(new User
@@ -108,7 +110,7 @@ namespace AccuSync.EF
                 FirstName = "Admin",
                 LastName = "User",
                 ProfileId = "Admin",
-                ProfilePassword = _encryptionService.Encrypt("12345")
+                PasswordHash = _passwordHasher.Hash("12345")
             });
 
             await InsertUserAsync(new User
@@ -117,14 +119,14 @@ namespace AccuSync.EF
                 FirstName = "Screener",
                 LastName = "User",
                 ProfileId = "Screener",
-                ProfilePassword = _encryptionService.Encrypt("12345")
+                PasswordHash = _passwordHasher.Hash("12345")
             });
         }
 
         // NOTE: Encryption is applied per-field here rather than in the User model.
         //       This means callers must always go through UserRepository — if anyone
         //       queries the database directly, they'll get encrypted values.
-        //       ProfilePassword is assumed already encrypted by the caller.
+        //       PasswordHash/LastThreePasswords are assumed already hashed by the caller.
         private async Task InsertUserAsync(User user)
         {
             var entity = new User
@@ -135,14 +137,14 @@ namespace AccuSync.EF
                 LastName = _encryptionService.Encrypt(user.LastName),
                 Status = user.Status,
                 ProfileId = _encryptionService.Encrypt(user.ProfileId),
-                ProfilePassword = user.ProfilePassword,
+                PasswordHash = user.PasswordHash,
                 FirstLogin = user.FirstLogin,
                 FailedLoginAttemptCount = user.FailedLoginAttemptCount,
                 FailedResetAttemptCount = user.FailedResetAttemptCount,
                 FirstFailedLoginTime = user.FirstFailedLoginTime,
                 FirstResetLoginTime = user.FirstResetLoginTime,
                 PasswordModificationDate = user.PasswordModificationDate,
-                LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords)
+                LastThreePasswords = user.LastThreePasswords
                 // CreationDate/ModificationDate are set by TimestampInterceptor on save.
             };
 
@@ -180,14 +182,14 @@ namespace AccuSync.EF
                 tracked.LastName = _encryptionService.Encrypt(user.LastName);
                 tracked.Status = user.Status;
                 tracked.ProfileId = _encryptionService.Encrypt(user.ProfileId);
-                tracked.ProfilePassword = user.ProfilePassword;
+                tracked.PasswordHash = user.PasswordHash;
                 tracked.FirstLogin = user.FirstLogin;
                 tracked.FailedLoginAttemptCount = user.FailedLoginAttemptCount;
                 tracked.FailedResetAttemptCount = user.FailedResetAttemptCount;
                 tracked.FirstFailedLoginTime = user.FirstFailedLoginTime;
                 tracked.FirstResetLoginTime = user.FirstResetLoginTime;
                 tracked.PasswordModificationDate = user.PasswordModificationDate;
-                tracked.LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords);
+                tracked.LastThreePasswords = user.LastThreePasswords;
                 // ModificationDate is set by TimestampInterceptor, not here — see class TODO history.
 
                 await _context.SaveChangesAsync();
@@ -213,7 +215,7 @@ namespace AccuSync.EF
                     LastName = user.LastName,
                     Status = user.Status,
                     ProfileId = user.ProfileId,
-                    ProfilePassword = _encryptionService.Encrypt(user.ProfilePassword),
+                    PasswordHash = _passwordHasher.Hash(user.PasswordHash),
                     FirstLogin = user.FirstLogin,
                     FailedLoginAttemptCount = user.FailedLoginAttemptCount,
                     FailedResetAttemptCount = user.FailedResetAttemptCount,
@@ -241,7 +243,7 @@ namespace AccuSync.EF
                 LastName = _encryptionService.Decrypt(stored.LastName),
                 Status = stored.Status,
                 ProfileId = _encryptionService.Decrypt(stored.ProfileId),
-                ProfilePassword = stored.ProfilePassword,
+                PasswordHash = stored.PasswordHash,
                 FirstLogin = stored.FirstLogin,
                 FailedLoginAttemptCount = stored.FailedLoginAttemptCount,
                 FailedResetAttemptCount = stored.FailedResetAttemptCount,
@@ -250,7 +252,7 @@ namespace AccuSync.EF
                 CreationDate = stored.CreationDate,
                 ModificationDate = stored.ModificationDate,
                 PasswordModificationDate = stored.PasswordModificationDate,
-                LastThreePasswords = _encryptionService.Decrypt(stored.LastThreePasswords)
+                LastThreePasswords = stored.LastThreePasswords
             };
         }
     }
