@@ -222,6 +222,24 @@ namespace AccuSync.EF
             }
         }
 
+        public async Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role)
+        {
+            try
+            {
+                var tracked = await _context.Users.FindAsync(userGuid);
+                if (tracked == null) return false;
+
+                tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> CreateUserAsync(User user)
         {
             try
