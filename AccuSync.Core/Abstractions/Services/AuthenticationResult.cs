@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System;
 using AccuSync.Core.Entities;
 
 namespace AccuSync.Core.Abstractions.Services
@@ -18,7 +17,9 @@ namespace AccuSync.Core.Abstractions.Services
         public bool Success { get; set; }
         public string ErrorMessage { get; set; }
         public User User { get; set; }
+
+        /// <summary>True when the failure is specifically account lockout (5 consecutive
+        /// failed attempts) — locked until an Admin unlocks it, no automatic expiry.</summary>
         public bool IsLocked { get; set; }
-        public TimeSpan RemainingLockTime { get; set; }
     }
 }

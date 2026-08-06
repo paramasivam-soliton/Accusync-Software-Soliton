@@ -258,6 +258,25 @@ namespace AccuSync.EF
             }
         }
 
+        public async Task<bool> UnlockUserAsync(string userGuid)
+        {
+            try
+            {
+                var tracked = await _context.Users.FindAsync(userGuid);
+                if (tracked == null) return false;
+
+                tracked.FailedLoginAttemptCount = 0;
+                tracked.FirstFailedLoginTime = 0L;
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> CreateUserAsync(User user)
         {
             try

@@ -13,15 +13,15 @@ using AccuSync.Core.Entities;
 namespace AccuSync.Application.Services
 {
     /// <summary>
-    /// Handles user authentication with lockout protection (10 failed attempts,
-    /// 15-minute cooldown) and 90-day password expiration.
+    /// Handles user authentication with lockout protection (5 consecutive failed
+    /// attempts locks the account until an Admin unlocks it — no automatic
+    /// unlock/cooldown) and 90-day password expiration.
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
-        private const int MaxFailedAttempts = 10;
-        private const int LockoutDurationMinutes = 15;
+        private const int MaxFailedAttempts = 5;
 
         public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
@@ -63,29 +63,17 @@ namespace AccuSync.Application.Services
                 };
             }
 
-            // Lockout check — resets automatically after the cooldown period
+            // Lockout is derived — no discrete "locked" flag/column and no auto-unlock.
+            // Once FailedLoginAttemptCount reaches the threshold, the account stays
+            // locked until an Admin calls IUserRepository.UnlockUserAsync.
             if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
             {
-                long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                long lockoutEndTime = user.FirstFailedLoginTime + (LockoutDurationMinutes * 60);
-
-                if (currentTime < lockoutEndTime)
+                return new AuthenticationResult
                 {
-                    long remainingSeconds = lockoutEndTime - currentTime;
-                    return new AuthenticationResult
-                    {
-                        Success = false,
-                        IsLocked = true,
-                        RemainingLockTime = TimeSpan.FromSeconds(remainingSeconds),
-                        ErrorMessage = $"Account is locked. Please try again in {TimeSpan.FromSeconds(remainingSeconds).Minutes} minutes."
-                    };
-                }
-                else
-                {
-                    user.FailedLoginAttemptCount = 0;
-                    user.FirstFailedLoginTime = 0L;
-                    await _userRepository.UpdateUserAsync(user);
-                }
+                    Success = false,
+                    IsLocked = true,
+                    ErrorMessage = "Account locked. Contact administrator."
+                };
             }
 
             // Password verification — hash-to-hash only, never decrypt/compare plaintext.
@@ -109,7 +97,7 @@ namespace AccuSync.Application.Services
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = $"Account is now locked due to {MaxFailedAttempts} failed attempts. Please try again in {LockoutDurationMinutes} minutes."
+                        ErrorMessage = "Account locked. Contact administrator."
                     };
                 }
 
