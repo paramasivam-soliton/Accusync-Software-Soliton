@@ -4,10 +4,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace AccuSync.Application.Tests.Services
+namespace AccuSync.Application.Tests.Services.Authentication
 {
     /// <summary>
     /// Exercises EncryptionService against a real (not mocked) Data Protection key

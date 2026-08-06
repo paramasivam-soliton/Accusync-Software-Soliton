@@ -8,7 +8,7 @@ using System;
 using System.Security.Cryptography;
 using AccuSync.Core.Abstractions.Services;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// PBKDF2-HMACSHA256 password hashing (<see cref="Rfc2898DeriveBytes"/>, built into

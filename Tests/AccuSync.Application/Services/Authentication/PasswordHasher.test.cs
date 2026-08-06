@@ -4,9 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 
-namespace AccuSync.Application.Tests.Services
+namespace AccuSync.Application.Tests.Services.Authentication
 {
     public class PasswordHasherTests
     {

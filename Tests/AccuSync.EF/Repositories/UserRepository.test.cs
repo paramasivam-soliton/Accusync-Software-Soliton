@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 using AccuSync.Core.Entities;
 using AccuSync.EF;
 using AccuSync.EF.Contexts;

@@ -4,12 +4,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Entities;
 using Moq;
 
-namespace AccuSync.Application.Tests.Services
+namespace AccuSync.Application.Tests.Services.Authentication
 {
     /// <summary>
     /// IUserRepository is mocked (no real persistence needed to exercise the
