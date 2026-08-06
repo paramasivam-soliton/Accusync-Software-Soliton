@@ -172,8 +172,8 @@ namespace AccuSync.Presentation.ViewModels
                 }
                 else
                 {
-                    ErrorMessage = result.ErrorMessage;
                     Password = string.Empty;
+                    ErrorMessage = result.ErrorMessage;
                 }
             }
             catch (Exception ex)
