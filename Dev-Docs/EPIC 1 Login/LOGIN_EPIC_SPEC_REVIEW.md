@@ -35,10 +35,11 @@ want to go deeper on any row — this sheet is just for a fast pass.
 | 🔄🔄 Role vs. ProfileId | **No new column, reversed again.** Reuse the existing `ProfileId` (already an unused plain string) — populate it with `"Admin"`/`"Screener"`, interpreted in application code (small parse helper), no EF-level conversion | Whichever path we pick, the real future Profile system will need *some* data migration later — reusing `ProfileId` means one less column to reconcile at that point, and matches "avoid unnecessary schema churn" | ✅ |
 | 🔄 Password rules | **Back to 5 rules** — length 8+, upper, lower, digit, **and special character**. UI under System Config → User & Profile Config → Password Security Rule → "Complex" must say it requires a special character | Matches existing code/FEATURE_REQUIREMENTS.md; JIRA's 4-rule list treated as non-exhaustive | ✅ |
 | 🔄 `ProfilePassword` column name | **Not renamed.** Stays `ProfilePassword`, just holds a hash now instead of an encrypted value | Avoid unnecessary rename | ✅ |
-| 🔄 Lockout threshold | **Confirmed: 5 attempts, admin-unlock only, no auto-unlock** (JIRA's rule, replacing the old 10-attempt/15-min logic entirely) | Direct instruction | ✅ |
-| 🔄 `IsLocked` flag | **Removed from plan.** No discrete column — "locked" = `FailedLoginAttemptCount >= 5`. On the 5th failure, log the time into the existing `FirstFailedLoginTime` field (repurposed, not renamed) | Simpler; attempt count alone is enough | ✅ |
+| 🔄🔄 Lockout threshold/behavior | **Corrected against the official SRS (DOC-076814), not just JIRA:** 5 attempts locks the account, **auto-unlocks after an admin-configurable duration** (default 15 min), *plus* an Admin can unlock a specific account immediately as an early override | GID-255017 (5 attempts) + GID-254911 (configurable duration) + GID-254907 (admin unlock) — JIRA's text alone read as "no auto-unlock ever," which the SRS contradicts | ✅ |
+| 🔄 `IsLocked` flag | **Removed from plan.** No discrete column — "locked" = `FailedLoginAttemptCount >= 5` AND still within the configured duration. On the 5th failure, log the time into the existing `FirstFailedLoginTime` field (repurposed, not renamed) | Simpler; attempt count + timestamp is enough | ✅ |
 | 🔄 `FirstFailedLoginTime` reuse | **Confirmed** — reuse this existing field as-is for the lockout timestamp, no new field added | Direct instruction | ✅ |
-| Users management screen | Stays mock/hardcoded. Test users via DB seed. Only exception: a real `UnlockUserAsync` method (no UI) | Full Users CRUD screen is separate future work | ✅ |
+| 🔄 Lockout duration storage | New single-row `AppSettings` table (`LockoutDurationMinutes`, default 15), via `IAppSettingsRepository` — no UI wired yet | GID-254911 requires it to be admin-configurable, not hardcoded | ✅ |
+| Users management screen | Stays mock/hardcoded. Test users via DB seed. Exceptions: real `UnlockUserAsync` and `SetLockoutDurationMinutesAsync` methods (no UI) | Full Users/System Config CRUD screens are separate future work | ✅ |
 | 🔄 Audit logging | Not needed for this phase — confirmed, not just deferred pending a ticket | Explicit lead call | ✅ |
 | Session tracking | New `ICurrentUserContext` (who's logged in, in memory) | Needed by Role checks | ✅ |
 | 🔄 Timestamps | **Confirmed already UTC everywhere** (`DateTimeOffset.UtcNow`) — checked every write site, nothing stores local time | You asked us to verify this — done, no code change needed | ✅ |
@@ -53,10 +54,10 @@ want to go deeper on any row — this sheet is just for a fast pass.
 | `AccountName` | unchanged name — encryption mechanism changes to Data Protection API |
 | *(new)* `UsernameHash` | 🔄 added (renamed from `UsernameLookupHash`) — unique index moves here |
 | `ProfileId` | 🔄🔄 **no new column** — reused as-is to hold `"Admin"`/`"Screener"`, interpreted in code |
-| `Status` (int) | still planned: replaced → `IsActive` (bool) |
-| ~~`IsLocked`, `LockedAt`~~ | 🔄 **removed from plan** — lock state derived from attempt count instead |
-| `FailedLoginAttemptCount` | kept — now the sole signal for "is this account locked" (>=5) |
-| `FirstFailedLoginTime` | 🔄 kept, not renamed, reuse **confirmed** — repurposed to record when lockout happened |
+| `Status` | 🔄 **no new column** — reused as-is, type changed `int` → `bool` (was dead/undefined) |
+| ~~`IsLocked`, `LockedAt`~~ | 🔄 **removed from plan** — lock state derived from attempt count + duration instead |
+| `FailedLoginAttemptCount` | kept — now the sole signal for "is this account locked" (>=5, within duration) |
+| `FirstFailedLoginTime` | 🔄 kept, not renamed, reuse **confirmed** — repurposed to record when lockout started; drives the auto-unlock timer |
 | `FailedResetAttemptCount`, `FirstResetLoginTime` | 🔄 **kept, not dropped** — plumbed through the repository but never meaningfully used by any feature; most likely a placeholder for the missing self-service password-reset flow noted in FEATURE_REQUIREMENTS.md §2.1, not dead code. Left untouched. |
 
 ---

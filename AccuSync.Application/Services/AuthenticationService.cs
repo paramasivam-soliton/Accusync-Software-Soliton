@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // <copyright file="AuthenticationService.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
@@ -14,19 +14,28 @@ namespace AccuSync.Application.Services
 {
     /// <summary>
     /// Handles user authentication with lockout protection (5 consecutive failed
-    /// attempts locks the account until an Admin unlocks it — no automatic
-    /// unlock/cooldown) and 90-day password expiration.
+    /// attempts locks the account for an admin-configurable duration, default 15
+    /// minutes — SRS GID-255017/GID-254911) and 90-day password expiration. An Admin
+    /// can also unlock a specific account immediately via
+    /// <see cref="IUserRepository.UnlockUserAsync"/>, overriding the timer for that
+    /// one account (SRS GID-254907). There is no special case for Admin accounts —
+    /// the same mandatory lock/duration applies to every role, including Admin.
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IAppSettingsRepository _appSettingsRepository;
         private const int MaxFailedAttempts = 5;
 
-        public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public AuthenticationService(
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher,
+            IAppSettingsRepository appSettingsRepository)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _appSettingsRepository = appSettingsRepository;
         }
 
         public async Task<AuthenticationResult> AuthenticateAsync(string accountName, string password)
@@ -63,17 +72,30 @@ namespace AccuSync.Application.Services
                 };
             }
 
-            // Lockout is derived — no discrete "locked" flag/column and no auto-unlock.
-            // Once FailedLoginAttemptCount reaches the threshold, the account stays
-            // locked until an Admin calls IUserRepository.UnlockUserAsync.
+            // Lockout check — auto-unlocks once the configured duration has elapsed since
+            // the lockout started, OR earlier if an Admin explicitly called UnlockUserAsync.
             if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
             {
-                return new AuthenticationResult
+                int lockoutDurationMinutes = await _appSettingsRepository.GetLockoutDurationMinutesAsync();
+                long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                long lockoutEndTime = user.FirstFailedLoginTime + (lockoutDurationMinutes * 60);
+
+                if (currentTime < lockoutEndTime)
                 {
-                    Success = false,
-                    IsLocked = true,
-                    ErrorMessage = "Account locked. Contact administrator."
-                };
+                    long remainingSeconds = lockoutEndTime - currentTime;
+                    long remainingMinutes = (remainingSeconds + 59) / 60; // round up to whole minutes
+                    return new AuthenticationResult
+                    {
+                        Success = false,
+                        IsLocked = true,
+                        ErrorMessage = $"Account locked. Try again in {remainingMinutes} minute(s), or contact your administrator."
+                    };
+                }
+
+                // Duration elapsed — auto-unlock and let this attempt proceed normally.
+                user.FailedLoginAttemptCount = 0;
+                user.FirstFailedLoginTime = 0L;
+                await _userRepository.UpdateUserAsync(user);
             }
 
             // Password verification — hash-to-hash only, never decrypt/compare plaintext.
@@ -93,11 +115,12 @@ namespace AccuSync.Application.Services
 
                 if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
                 {
+                    int lockoutDurationMinutes = await _appSettingsRepository.GetLockoutDurationMinutesAsync();
                     return new AuthenticationResult
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = "Account locked. Contact administrator."
+                        ErrorMessage = $"Account is now locked due to {MaxFailedAttempts} failed attempts. Try again in {lockoutDurationMinutes} minute(s), or contact your administrator."
                     };
                 }
 
