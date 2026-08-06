@@ -136,10 +136,10 @@ for display.
 | `AccountName` | Unchanged name; encryption mechanism switches to Data Protection API (§2.2) | |
 | *(new)* `UsernameHash` | Added — unique index moves here (§2.2) | |
 | `ProfileId` | **Reused to hold the role value** *(revised again — no new `Role` column)* | No schema change at all here. `ProfileId` is already a plain, unused `string` column — start actually writing `"Admin"`/`"Screener"` into it instead of leaving it empty. Interpreted as a `UserRole` enum in **application code** only (a small parse/mapping helper), not via an EF-level `HasConversion` — the database column itself is untouched, just finally populated. See explicit note below. |
-| `Status` (int) | Still planned: replace → `bool IsActive` | Unchanged from original plan — current `Status` semantics are undefined in code (pre-existing TODO). Not commented on in lead review; stands as decided. |
+| `Status` | **No new column — reused as-is, type changed `int` → `bool`** *(corrected — ASWD-41 revision)* | Same reuse-over-add reasoning as `ProfileId`/Role: `Status` was already an unused, undefined `int` (confirmed dead via grep — never read anywhere). Rather than add a separate `IsActive` column, its type became `bool` (`true` = active, default) via a straightforward EF migration — SQLite stores both as `INTEGER` under the hood, so this is a type-mapping change, not a data-loss risk. |
 | ~~`IsLocked`, `LockedAt`~~ | **Removed from plan** *(per lead review)* | No discrete lock flag/column. See §2.4 below — lock state is derived, not stored as a separate boolean. |
-| `FailedLoginAttemptCount` | Kept — becomes the **sole driver** of lock state | `>= 5` means locked (§2.4). |
-| `FirstFailedLoginTime` | Kept, **not renamed, reuse confirmed** | Repurposed (not renamed) per §2.4 — previously tracked "start of a failure streak" for the old 10-attempt/15-minute-window logic; now records the moment lockout occurs (set only on the 5th consecutive failure, cleared to `null` on admin unlock). **Confirmed by lead — reusing this existing field is the intended approach, not an open question.** |
+| `FailedLoginAttemptCount` | Kept — becomes the **sole driver** of lock state | `>= 5` means locked, until the configured duration elapses (§2.4). |
+| `FirstFailedLoginTime` | Kept, **not renamed, reuse confirmed** | Repurposed (not renamed) per §2.4 — tracks the start of the current failure streak / lockout window, same role it played in the original pre-epic code. Cleared to `0` either automatically once the configured lockout duration elapses, or immediately via Admin override (`UnlockUserAsync`). **Confirmed by lead — reusing this existing field is the intended approach, not an open question.** |
 | `LastThreePasswords` | Kept | Still a pipe-delimited history, still used for reuse checking — now holds hashes (§2.1's format), not encrypted plaintext. Name unchanged (consistent with not renaming `ProfilePassword`). |
 | `FirstLogin`, `PasswordModificationDate`, `CreationDate`, `ModificationDate` | Unchanged | All already store **UTC** Unix timestamps (`DateTimeOffset.UtcNow.ToUnixTimeSeconds()`) — confirmed per lead review, see §2.5. No code change needed here, this was already correct. |
 
@@ -157,22 +157,49 @@ code) wherever a role-based decision is needed. When the real Profile system is 
 `ProfileId`'s values get migrated from literal role strings to actual profile foreign keys in
 one clean pass — no separate `Role` column to reconcile alongside it.
 
-### 2.4 Account lockout — derived from attempt count, no discrete flag *(rewritten per lead review)*
+### 2.4 Account lockout — timed auto-unlock with a configurable duration, plus Admin override *(corrected against the authoritative SRS)*
 
-- **Threshold, confirmed per lead review:** follow the JIRA ticket (ASWD-45) literally — **5
-  consecutive failed login attempts**, locked until an **Admin** manually unlocks it. **No
-  automatic unlock/cooldown** (this replaces the existing code's 10-attempt/15-minute-auto-unlock
-  behavior entirely — that behavior is being removed, not kept alongside the new rule).
-- **No `IsLocked` boolean.** "Locked" is a derived condition: `FailedLoginAttemptCount >= 5`.
-  Nothing separate needs to be checked or kept in sync.
-- **On the 5th consecutive failure:** `FailedLoginAttemptCount` reaches 5 (already being
-  incremented by existing code), and `FirstFailedLoginTime` is set to the current UTC time —
-  this becomes the record of *when* the account became locked (displayable later, e.g. "Locked
-  since ...", and useful once audit logging exists).
-- **On Admin unlock:** reset `FailedLoginAttemptCount` to `0` and `FirstFailedLoginTime` to
-  `null` (or `0`, matching the field's existing non-nullable `long` type) — both together, in
-  one operation, so the account is fully reset, not just nominally "unlocked." This is the
-  `UnlockUserAsync` repository method already planned in §2.6 below (unchanged).
+~~Earlier revision of this doc said: 5 attempts, locked until an Admin manually unlocks it, no
+automatic unlock/cooldown at all — that behavior removed entirely.~~ **Corrected** — the official
+`AccuSync – Software Requirements` document (DOC-076814, not just the JIRA ticket text) settles
+this with three specific, numbered requirements that JIRA's own wording didn't fully capture:
+
+- **GID-255017:** lock out the user after **a minimum of 5 failed sequential login attempts**.
+- **GID-254911:** administrative users can **configure the lockout duration** — i.e. the lock is
+  time-based and auto-recovers, not permanent-until-admin as the earlier revision assumed.
+- **GID-254907:** administrative users can **unlock a user account** — an explicit early-override
+  on top of the timer, not the only way out.
+
+So the corrected model keeps the *shape* of the original pre-epic code (attempt count + timed
+auto-unlock), with two changes: the threshold drops from 10 to **5**, and the duration is no
+longer a hardcoded constant — it's an **admin-configurable value**, defaulting to **15 minutes**
+(the same default the original code happened to hardcode).
+
+- **No `IsLocked` boolean.** Still a derived condition: `FailedLoginAttemptCount >= 5`, checked
+  against `FirstFailedLoginTime + configured duration`. Nothing separate to keep in sync.
+- **On the 5th consecutive failure:** `FailedLoginAttemptCount` reaches 5, `FirstFailedLoginTime`
+  is set to the current UTC time — the lockout window is measured from here.
+- **While still within the configured duration:** login is refused with a message stating how
+  many minutes remain and that an Admin can be contacted — this is *not* the same generic
+  "invalid username or password" message used for deactivated accounts, because the SRS/JIRA
+  both explicitly ask for a distinguishable locked-account message (GID-255008).
+- **Once the configured duration has elapsed:** the lockout clears itself automatically —
+  `FailedLoginAttemptCount`/`FirstFailedLoginTime` reset to `0`, and the login attempt in progress
+  proceeds normally (no separate action needed, no stale "locked" state lingers).
+- **Admin override, independent of the timer:** `IUserRepository.UnlockUserAsync(userGuid)` resets
+  the same two fields immediately, for an Admin who doesn't want to wait out the configured
+  duration for a specific user. This existed already and needed no change — it's simply not the
+  *only* recovery path anymore.
+- **No special case for Admin accounts.** If the sole Admin account locks itself out, the same
+  mandatory configured duration applies — there is no bypass, and per this corrected model there's
+  also no longer a "break-glass" problem (see the earlier open question raised about this): the
+  account recovers on its own once the timer elapses, same as any other account.
+- **Where the duration is stored:** a new single-row `AppSettings` table
+  (`AccuSync.Core/Entities/AppSettings.cs`), `LockoutDurationMinutes` (default 15), via
+  `IAppSettingsRepository`. No UI wired to change it yet — same narrow-exception pattern as
+  `UnlockUserAsync`/`UpdateUserRoleAsync`/`SetUserActiveStatusAsync`: the capability is real and
+  testable at the repository layer, since the System Configuration screen stays mock for this
+  epic (§2.6).
 
 ### 2.5 Password complexity rules — 5 rules including special character *(reversed per lead review)*
 
@@ -203,11 +230,13 @@ via hash comparison instead of decrypt-and-compare.
   flow to real persistence is a separate future epic, not part of this Login epic.
 - Test/dev users are provisioned via a DB seed, not through the UI, for the duration of these 5
   PRs.
-- **Narrow exception:** ASWD-45's "cannot log in until unlocked by an Admin" AC needs *some*
-  unlock capability to be testable. Resolution: implement unlock at the repository/service layer
-  only — `IUserRepository.UnlockUserAsync(userId)` clearing `FailedLoginAttemptCount` and
-  `FirstFailedLoginTime` together (§2.4) — covered by tests, without building or wiring the Users
-  screen's UI.
+- **Narrow exception:** ASWD-45's Admin-unlock AC (GID-254907) needs *some* unlock capability to
+  be testable — an early override on top of the timed auto-unlock (§2.4). Resolution: implement it
+  at the repository/service layer only — `IUserRepository.UnlockUserAsync(userId)` clearing
+  `FailedLoginAttemptCount` and `FirstFailedLoginTime` together — without building or wiring the
+  Users screen's UI. Same pattern for the lockout *duration* itself (GID-254911) —
+  `IAppSettingsRepository.SetLockoutDurationMinutesAsync(minutes)` (§2.4), real and testable, no
+  System Configuration UI wired to it yet.
 
 ### 2.7 Audit logging — confirmed not needed for this phase *(resolved per lead review)*
 
@@ -272,8 +301,9 @@ Unchanged from prior draft.
 cannot log in even with correct credentials; successful login resets the counter.
 
 **Design:** `PasswordPolicy.Validate(...)` shared validator (5 rules, §2.5), lockout logic in
-`AuthenticationService` using `FailedLoginAttemptCount >= 5` as the derived lock check (§2.4, no
-`IsLocked` column), repository-level `UnlockUserAsync` (§2.6's narrow exception) covered by tests.
+`AuthenticationService` using `FailedLoginAttemptCount >= 5` plus a timed auto-unlock against an
+admin-configurable duration (§2.4, no `IsLocked` column, default 15 minutes), repository-level
+`UnlockUserAsync` and `SetLockoutDurationMinutesAsync` (§2.6's narrow exception) covered by tests.
 Password Security Rule UI copy update under System Configuration (§2.5).
 
 ### ASWD-50 — Implement User Logout
@@ -285,8 +315,11 @@ Unchanged from prior draft.
 
 None outstanding as of 2026-08-05 — all previously raised items are resolved:
 
-1. ~~Lockout threshold and unlock behavior~~ **RESOLVED:** 5 consecutive failed attempts,
-   admin-unlock only, no auto-unlock. See §2.4.
+1. ~~Lockout threshold and unlock behavior~~ **RESOLVED (corrected 2026-08-06 against the
+   authoritative SRS, DOC-076814):** 5 consecutive failed attempts, timed auto-unlock after an
+   admin-configurable duration (default 15 minutes), plus an Admin can unlock a specific account
+   immediately as an early override. Not permanent-lock-until-admin as an earlier revision of this
+   doc assumed — see §2.4.
 2. ~~Audit Trail epic ticket~~ **RESOLVED:** audit logging is not needed for this phase. See §2.7.
 3. ~~`FirstFailedLoginTime` reuse~~ **RESOLVED:** confirmed — reuse the existing field as-is,
    no new field added. See §2.3/§2.4.
