@@ -218,7 +218,7 @@ namespace AccuSync.WPF.Views.Dashboard
             {
                 AppDialog.Show(Strings.ScreenerDashboardWindow_LogoutSuccessMessage, Strings.ScreenerDashboardWindow_NavLogout,
                     MessageBoxButton.OK, MessageBoxImage.Information);
-                this.Close();
+                App.Logout(this);
             }
         }
 

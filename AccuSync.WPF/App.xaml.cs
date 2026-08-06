@@ -177,6 +177,22 @@ namespace AccuSync.WPF
             currentWindow.Close();
         }
 
+        /// <summary>
+        /// Ends the current session and returns to the login screen. Purpose-built for
+        /// logout rather than reusing <see cref="NavigateAfterLogin"/> — that method routes
+        /// to a dashboard based on a just-authenticated (username, role); logout has no role
+        /// to route with, it just needs to go back to login.
+        /// </summary>
+        public static void Logout(Window currentWindow)
+        {
+            GetService<ICurrentUserContext>().SignOut();
+
+            var loginWindow = GetService<LoginWindow>();
+            loginWindow.Show();
+
+            currentWindow.Close();
+        }
+
         private static void NavigateToDashboard(string username, string role)
         {
             if (role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase))
