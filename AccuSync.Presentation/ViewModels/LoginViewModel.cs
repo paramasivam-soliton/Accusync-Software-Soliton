@@ -11,6 +11,7 @@ using AccuSync.Core.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -122,7 +123,7 @@ namespace AccuSync.Presentation.ViewModels
             try
             {
                 var users = await _userRepository.GetAllUsersAsync();
-                foreach (var user in users)
+                foreach (var user in users.Where(u => u.Status))
                 {
                     Usernames.Add(user.AccountName);
                 }

@@ -240,6 +240,24 @@ namespace AccuSync.EF
             }
         }
 
+        public async Task<bool> SetUserActiveStatusAsync(string userGuid, bool isActive)
+        {
+            try
+            {
+                var tracked = await _context.Users.FindAsync(userGuid);
+                if (tracked == null) return false;
+
+                tracked.Status = isActive;
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> CreateUserAsync(User user)
         {
             try

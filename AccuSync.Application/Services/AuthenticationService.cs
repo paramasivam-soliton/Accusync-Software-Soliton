@@ -52,6 +52,17 @@ namespace AccuSync.Application.Services
                 };
             }
 
+            // Deactivated accounts are blocked regardless of password correctness.
+            // Same generic message as a bad password — active status isn't leaked either.
+            if (!user.Status)
+            {
+                return new AuthenticationResult
+                {
+                    Success = false,
+                    ErrorMessage = "Invalid username or password."
+                };
+            }
+
             // Lockout check — resets automatically after the cooldown period
             if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
             {

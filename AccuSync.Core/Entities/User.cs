@@ -6,15 +6,15 @@ namespace AccuSync.Core.Entities
     /// Represents a user account. Field types and conventions (Unix timestamps,
     /// int-as-boolean) match the device database schema.
     /// </summary>
-    // TODO: FirstLogin, Status use int where bool would be clearer. Consider
-    //       bool properties with int-backed fields if the DB schema can't change.
     public class User
     {
         public string Guid { get; set; }
         public string AccountName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Status { get; set; }
+
+        /// <summary>Whether this account can authenticate. True = active, false = deactivated.</summary>
+        public bool Status { get; set; }
         public string ProfileId { get; set; }
         public string UsernameHash { get; set; }
         public string ProfilePassword { get; set; }
@@ -38,7 +38,7 @@ namespace AccuSync.Core.Entities
             AccountName = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;
-            Status = 0;
+            Status = true;
             ProfileId = string.Empty;
             UsernameHash = string.Empty;
             ProfilePassword = string.Empty;
