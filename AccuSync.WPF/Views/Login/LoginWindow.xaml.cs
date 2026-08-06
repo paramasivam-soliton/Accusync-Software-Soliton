@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -31,6 +32,22 @@ namespace AccuSync.WPF.Views.Login
 
             _viewModel.LoginSucceeded += OnLoginSucceeded;
             _viewModel.FirstLoginPasswordChangeRequired += OnFirstLoginPasswordChangeRequired;
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        /// <summary>
+        /// PasswordBox.Password can't be data-bound (WPF security restriction), so it's
+        /// synced manually via PasswordChanged below — but that only covers box → ViewModel.
+        /// This covers the other direction: when the ViewModel clears Password itself (e.g.
+        /// after a failed login attempt), push that back down to the visible control so it
+        /// doesn't keep showing stale text the ViewModel no longer has.
+        /// </summary>
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(LoginViewModel.Password)) return;
+            if (PasswordBox.Password == _viewModel.Password) return;
+
+            PasswordBox.Password = _viewModel.Password;
         }
 
         private void OnLoginSucceeded(string username, string role)
