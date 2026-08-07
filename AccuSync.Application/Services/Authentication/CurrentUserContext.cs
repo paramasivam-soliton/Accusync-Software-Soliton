@@ -7,7 +7,7 @@
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// In-memory <see cref="ICurrentUserContext"/> — registered as a singleton, so
