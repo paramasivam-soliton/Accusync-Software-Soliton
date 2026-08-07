@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.Adapters.DataParser.DependencyInjection;
 using AccuSync.EF.DependencyInjection;

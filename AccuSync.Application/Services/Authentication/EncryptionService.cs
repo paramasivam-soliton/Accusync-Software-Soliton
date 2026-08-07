@@ -7,7 +7,7 @@
 using AccuSync.Core.Abstractions.Services;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Reversible encryption via the ASP.NET Core Data Protection API, used standalone
