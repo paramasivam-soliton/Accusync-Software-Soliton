@@ -37,10 +37,9 @@ namespace AccuSync.Core.Abstractions.Repositories
         Task<bool> SetUserActiveStatusAsync(string userGuid, bool isActive);
 
         /// <summary>
-        /// Clears a lockout directly, without requiring the full Users management UI
-        /// (out of scope for the Login epic — see LOGIN_EPIC_SPEC.md §2.6). Resets
-        /// <c>FailedLoginAttemptCount</c> and <c>FirstFailedLoginTime</c> together, so the
-        /// account is fully reset rather than nominally "unlocked."
+        /// Clears a lockout directly, without requiring a full Users management UI.
+        /// Resets <c>FailedLoginAttemptCount</c> and <c>FirstFailedLoginTime</c> together,
+        /// so the account is fully reset rather than nominally "unlocked."
         /// </summary>
         Task<bool> UnlockUserAsync(string userGuid);
     }
