@@ -27,7 +27,7 @@ namespace AccuSync.EF
     /// and LastThreePasswords travel as hashes end-to-end and are never reversed. AccountName's
     /// encryption is non-deterministic, so uniqueness/lookup is carried by UsernameHash — a
     /// deterministic SHA-256 of the normalized username (see ComputeUsernameHash) — instead of
-    /// the encrypted column itself (blind index pattern, LOGIN_EPIC_SPEC.md §2.2).
+    /// the encrypted column itself (a "blind index" pattern).
     /// </summary>
     public class UserRepository : IUserRepository
     {
@@ -162,7 +162,7 @@ namespace AccuSync.EF
         /// Deterministic SHA-256 hash of the normalized (trimmed, lowercased) username.
         /// Used only for uniqueness enforcement and login lookup — AccountName itself is
         /// encrypted non-deterministically (see <see cref="IEncryptionService"/>) and can
-        /// no longer be compared directly. Blind index pattern, LOGIN_EPIC_SPEC.md §2.2.
+        /// no longer be compared directly (a "blind index" pattern).
         /// </summary>
         private static string ComputeUsernameHash(string accountName)
         {

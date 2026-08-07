@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Authentication;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.Adapters.DataParser.DependencyInjection;
 using AccuSync.EF.DependencyInjection;
@@ -42,8 +42,8 @@ namespace AccuSync.WPF
             services.AddDataParserServices();
 
             // Data Protection key ring lives alongside the database so it travels with
-            // it if the DB file is ever backed up/restored onto another machine — see
-            // LOGIN_EPIC_SPEC.md §2.2. Standalone use only; no web server/hosting involved.
+            // it if the DB file is ever backed up/restored onto another machine.
+            // Standalone use only; no web server/hosting involved.
             string keysPath = Path.Combine(Path.GetDirectoryName(databasePath), "DataProtectionKeys");
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 

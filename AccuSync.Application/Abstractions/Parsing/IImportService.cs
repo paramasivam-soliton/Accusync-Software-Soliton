@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System;
 using AccuSync.Application.Models;
-using AccuSync.Application.Services;
+using AccuSync.Application.Services.Parsing;
 using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Abstractions.Parsing

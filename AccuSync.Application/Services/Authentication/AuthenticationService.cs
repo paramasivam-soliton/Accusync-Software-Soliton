@@ -10,7 +10,7 @@ using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Handles user authentication with lockout protection (10 failed attempts,

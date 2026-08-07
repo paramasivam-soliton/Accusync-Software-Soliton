@@ -23,10 +23,9 @@ namespace AccuSync.Core.Abstractions.Repositories
         Task<bool> CreateUserAsync(User user);
 
         /// <summary>
-        /// Assigns or changes a user's role directly, without requiring the full Users
-        /// management UI (which stays out of scope for the Login epic — see
-        /// LOGIN_EPIC_SPEC.md §2.6). The new role takes effect on that user's next login,
-        /// not live for any session already in progress.
+        /// Assigns or changes a user's role directly, without requiring a full Users
+        /// management UI. The new role takes effect on that user's next login, not
+        /// live for any session already in progress.
         /// </summary>
         Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role);
 
