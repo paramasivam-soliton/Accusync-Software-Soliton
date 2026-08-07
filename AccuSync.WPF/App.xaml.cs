@@ -205,7 +205,7 @@ namespace AccuSync.WPF
             else
             {
                 var dashboard = GetService<ScreenerDashboardWindow>();
-                // TODO: Add SetCurrentUser to ScreenerDashboardWindow when implemented
+                dashboard.SetUsername(username);
                 dashboard.Show();
             }
         }
@@ -226,6 +226,7 @@ namespace AccuSync.WPF
                 // For non-admin roles, open ScreenerDashboard instead
                 // (ScreenerDashboard would need similar NavigateToView support)
                 var screenerDash = GetService<ScreenerDashboardWindow>();
+                screenerDash.SetUsername(username);
                 screenerDash.Show();
                 return;
             }
