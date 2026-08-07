@@ -12,25 +12,32 @@ using Moq;
 namespace AccuSync.Application.Tests.Services.Authentication
 {
     /// <summary>
-    /// IUserRepository is mocked (no real persistence needed to exercise the
-    /// authentication rules), but PasswordHasher is real — so these tests verify
-    /// AuthenticationService's actual hash-verification behavior, not just that
-    /// some mock returned what it was told to.
+    /// IUserRepository and IAppSettingsRepository are mocked (no real persistence
+    /// needed to exercise the authentication rules), but PasswordHasher is real —
+    /// so these tests verify AuthenticationService's actual hash-verification
+    /// behavior, not just that some mock returned what it was told to.
     /// </summary>
     public class AuthenticationServiceTests
     {
         private const string AccountName = "Screener";
         private const string CorrectPassword = "Password@123";
+        private const int DefaultLockoutDurationMinutes = 15;
 
         private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly Mock<IAppSettingsRepository> _appSettingsRepositoryMock;
         private readonly PasswordHasher _passwordHasher;
         private readonly AuthenticationService _sut;
 
         public AuthenticationServiceTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
+            _appSettingsRepositoryMock = new Mock<IAppSettingsRepository>();
+            _appSettingsRepositoryMock
+                .Setup(a => a.GetLockoutDurationMinutesAsync())
+                .ReturnsAsync(DefaultLockoutDurationMinutes);
+
             _passwordHasher = new PasswordHasher();
-            _sut = new AuthenticationService(_userRepositoryMock.Object, _passwordHasher);
+            _sut = new AuthenticationService(_userRepositoryMock.Object, _passwordHasher, _appSettingsRepositoryMock.Object);
         }
 
         private User CreateUser(
@@ -59,6 +66,13 @@ namespace AccuSync.Application.Tests.Services.Authentication
             _userRepositoryMock
                 .Setup(r => r.UpdateUserAsync(It.IsAny<User>()))
                 .ReturnsAsync(true);
+        }
+
+        private void GivenLockoutDurationMinutes(int minutes)
+        {
+            _appSettingsRepositoryMock
+                .Setup(a => a.GetLockoutDurationMinutesAsync())
+                .ReturnsAsync(minutes);
         }
 
         [Theory]
@@ -179,8 +193,8 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [Fact]
         public async Task AuthenticateAsync_GivenAWrongPasswordWithAttemptsStillRemaining_WhenAuthenticating_ThenTheErrorMessageStatesHowManyAttemptsRemain()
         {
-            // Arrange — 7 prior failures; this 8th failure leaves 2 attempts before the 10-attempt lockout.
-            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 7, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            // Arrange — 3 prior failures; this 4th failure leaves 1 attempt before the 5-attempt lockout.
+            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 3, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             GivenUserExists(user);
 
             // Act
@@ -189,15 +203,16 @@ namespace AccuSync.Application.Tests.Services.Authentication
             // Assert
             Assert.False(result.Success);
             Assert.False(result.IsLocked);
-            Assert.Equal("Invalid username or password. 2 attempt(s) remaining.", result.ErrorMessage);
+            Assert.Equal("Invalid username or password. 1 attempt(s) remaining.", result.ErrorMessage);
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAWrongPasswordOnTheTenthConsecutiveAttempt_WhenAuthenticating_ThenLocksTheAccount()
+        public async Task AuthenticateAsync_GivenAWrongPasswordOnTheFifthConsecutiveAttempt_WhenAuthenticating_ThenLocksTheAccountForTheConfiguredDuration()
         {
-            // Arrange — 9 prior failures; this 10th failure crosses the lockout threshold.
-            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 9, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            // Arrange — 4 prior failures; this 5th failure crosses the lockout threshold.
+            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 4, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             GivenUserExists(user);
+            GivenLockoutDurationMinutes(15);
 
             // Act
             var result = await _sut.AuthenticateAsync(AccountName, "some-wrong-password");
@@ -205,19 +220,20 @@ namespace AccuSync.Application.Tests.Services.Authentication
             // Assert
             Assert.False(result.Success);
             Assert.True(result.IsLocked);
-            Assert.Equal(10, user.FailedLoginAttemptCount);
-            Assert.Contains("locked", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal(5, user.FailedLoginAttemptCount);
+            Assert.Equal("Account is now locked due to 5 failed attempts. Try again in 15 minute(s), or contact your administrator.", result.ErrorMessage);
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedWithinTheCooldownWindow_WhenAuthenticatingEvenWithTheCorrectPassword_ThenStillReturnsLocked()
+        public async Task AuthenticateAsync_GivenAnAccountLockedWithinTheConfiguredDuration_WhenAuthenticatingEvenWithTheCorrectPassword_ThenStillReturnsLocked()
         {
-            // Arrange — locked just now; the 15-minute cooldown hasn't elapsed.
+            // Arrange — locked just now; the configured 15-minute duration hasn't elapsed.
             var user = CreateUser(
                 CorrectPassword,
-                failedLoginAttemptCount: 10,
+                failedLoginAttemptCount: 5,
                 firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             GivenUserExists(user);
+            GivenLockoutDurationMinutes(15);
 
             // Act
             var result = await _sut.AuthenticateAsync(AccountName, CorrectPassword);
@@ -228,15 +244,52 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithTheCorrectPassword_ThenAutoResetsAndSucceeds()
+        public async Task AuthenticateAsync_GivenAnAdministratorHasConfiguredALongerDuration_WhenAuthenticatingWithinThatWindow_ThenStillReturnsLockedEvenPastTheOldFixedFifteenMinutes()
         {
-            // Arrange — locked 16 minutes ago; the 15-minute cooldown has elapsed.
+            // Arrange — locked 20 minutes ago, but the admin has configured a 30-minute
+            // duration. A hardcoded 15-minute assumption would incorrectly treat this as
+            // expired; the actual duration must come from IAppSettingsRepository.
+            long twentyMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (20 * 60);
+            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 5, firstFailedLoginTime: twentyMinutesAgo);
+            GivenUserExists(user);
+            GivenLockoutDurationMinutes(30);
+
+            // Act
+            var result = await _sut.AuthenticateAsync(AccountName, CorrectPassword);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.True(result.IsLocked);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_GivenThirtySecondsRemainingOnTheLockout_WhenAuthenticating_ThenTheRemainingTimeRoundsUpToOneMinuteRatherThanZero()
+        {
+            // Arrange — 14.5 minutes into a 15-minute lockout: 30 seconds remain.
+            long fourteenAndHalfMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (14 * 60 + 30);
+            var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 5, firstFailedLoginTime: fourteenAndHalfMinutesAgo);
+            GivenUserExists(user);
+            GivenLockoutDurationMinutes(15);
+
+            // Act
+            var result = await _sut.AuthenticateAsync(AccountName, CorrectPassword);
+
+            // Assert — a user should never be told "try again in 0 minutes".
+            Assert.False(result.Success);
+            Assert.Equal("Account locked. Try again in 1 minute(s), or contact your administrator.", result.ErrorMessage);
+        }
+
+        [Fact]
+        public async Task AuthenticateAsync_GivenAnAccountLockedButTheConfiguredDurationHasElapsed_WhenAuthenticatingWithTheCorrectPassword_ThenAutoResetsAndSucceeds()
+        {
+            // Arrange — locked 16 minutes ago; the configured 15-minute duration has elapsed.
             long sixteenMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (16 * 60);
             var user = CreateUser(
                 CorrectPassword,
-                failedLoginAttemptCount: 10,
+                failedLoginAttemptCount: 5,
                 firstFailedLoginTime: sixteenMinutesAgo);
             GivenUserExists(user);
+            GivenLockoutDurationMinutes(15);
 
             // Act
             var result = await _sut.AuthenticateAsync(AccountName, CorrectPassword);
@@ -249,20 +302,21 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithAWrongPassword_ThenStartsANewFailureStreakInsteadOfStayingLocked()
+        public async Task AuthenticateAsync_GivenAnAccountLockedButTheConfiguredDurationHasElapsed_WhenAuthenticatingWithAWrongPassword_ThenStartsANewFailureStreakInsteadOfStayingLocked()
         {
-            // Arrange — locked 16 minutes ago; cooldown elapsed, but this attempt uses the wrong password.
+            // Arrange — locked 16 minutes ago; duration elapsed, but this attempt uses the wrong password.
             long sixteenMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (16 * 60);
             var user = CreateUser(
                 CorrectPassword,
-                failedLoginAttemptCount: 10,
+                failedLoginAttemptCount: 5,
                 firstFailedLoginTime: sixteenMinutesAgo);
             GivenUserExists(user);
+            GivenLockoutDurationMinutes(15);
 
             // Act
             var result = await _sut.AuthenticateAsync(AccountName, "some-wrong-password");
 
-            // Assert — auto-unlock clears the old streak, then this failure starts a fresh one at 1, not 11.
+            // Assert — auto-unlock clears the old streak, then this failure starts a fresh one at 1, not 6.
             Assert.False(result.Success);
             Assert.False(result.IsLocked);
             Assert.Equal(1, user.FailedLoginAttemptCount);

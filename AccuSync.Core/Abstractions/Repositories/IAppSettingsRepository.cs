@@ -17,9 +17,9 @@ namespace AccuSync.Core.Abstractions.Repositories
         Task<int> GetLockoutDurationMinutesAsync();
 
         /// <summary>
-        /// Admin-configurable (SRS GID-254911). No dedicated UI yet — the Users/System
-        /// Configuration screens stay mock for this epic (LOGIN_EPIC_SPEC.md §2.6) — so
-        /// this is the real, testable capability until that UI exists.
+        /// Admin-configurable. No dedicated UI yet — the Users/System Configuration
+        /// screens stay mock for now, so this is the real, testable capability until
+        /// that UI exists.
         /// </summary>
         Task<bool> SetLockoutDurationMinutesAsync(int minutes);
     }
