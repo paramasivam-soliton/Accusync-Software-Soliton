@@ -11,7 +11,7 @@ namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Reversible encryption via the ASP.NET Core Data Protection API, used standalone
-    /// (no web server/hosting involved — see LOGIN_EPIC_SPEC.md §2.2). Active in every
+    /// (no web server/hosting involved). Active in every
     /// build configuration, including Debug. Each <see cref="Encrypt"/> call produces a
     /// different ciphertext for the same input (non-deterministic by design), which is
     /// why lookups/uniqueness on encrypted fields go through a separate deterministic

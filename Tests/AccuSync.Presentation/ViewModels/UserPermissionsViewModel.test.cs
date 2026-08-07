@@ -16,7 +16,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
             // Act
             var permissions = UserPermissionsViewModel.Admin();
 
-            // Assert — an Admin must be able to access every app feature, per ASWD-36's AC.
+            // Assert — an Admin must be able to access every app feature.
             Assert.Equal("Admin", permissions.Role);
             Assert.True(permissions.CanAccessDashboard);
             Assert.True(permissions.CanAccessPatients);
@@ -40,7 +40,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
             // Act
             var permissions = UserPermissionsViewModel.Screener();
 
-            // Assert — a Screener must not see administrative navigation, per ASWD-36's AC.
+            // Assert — a Screener must not see administrative navigation.
             Assert.Equal("Screener", permissions.Role);
             Assert.False(permissions.CanAccessUsers);
             Assert.False(permissions.CanAccessSites);

@@ -13,10 +13,10 @@ using Moq;
 namespace AccuSync.Presentation.Tests.ViewModels
 {
     /// <summary>
-    /// Scoped narrowly to ASWD-36's role-on-sign-in behavior — "role changes take
-    /// effect on the user's next login" — rather than re-testing credential
+    /// Scoped narrowly to role-on-sign-in behavior — a freshly assigned role takes
+    /// effect on the user's next login — rather than re-testing credential
     /// verification, lockout, or dropdown loading, which belong to the login flow
-    /// itself (ASWD-41) and are already covered where that logic actually lives
+    /// itself and are already covered where that logic actually lives
     /// (AuthenticationServiceTests).
     /// </summary>
     public class LoginViewModelTests

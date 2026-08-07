@@ -212,7 +212,7 @@ namespace AccuSync.EF.Tests.Repositories
         [Fact]
         public async Task CreateUserAsync_GivenARoleAssignedAtCreation_WhenCreated_ThenTheRoleIsPersistedAndRetrievable()
         {
-            // Arrange — ASWD-36 AC: users can be assigned a role at account creation.
+            // Arrange — users can be assigned a role at account creation.
             var user = NewUser("Admin");
             user.ProfileId = "Admin";
 
@@ -233,7 +233,7 @@ namespace AccuSync.EF.Tests.Repositories
             await _sut.CreateUserAsync(user);
 
             // Act — promoted to Admin via the narrow admin-exception method
-            // (no Users-management UI exists yet, per LOGIN_EPIC_SPEC.md §2.6).
+            // (no Users-management UI exists yet).
             bool success = await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
 
             // Assert

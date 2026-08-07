@@ -11,7 +11,7 @@ namespace AccuSync.Core.Abstractions.Services
     /// <summary>
     /// The signed-in user for the current application session, held in memory only.
     /// Populated once at login; role changes for that user take effect on their next
-    /// login, not live mid-session (see LOGIN_EPIC_SPEC.md §2.8).
+    /// login, not live mid-session.
     /// </summary>
     public interface ICurrentUserContext
     {

@@ -27,7 +27,7 @@ namespace AccuSync.EF.Configurations
             // AccountName is encrypted non-deterministically (Data Protection API), so
             // uniqueness/lookup can no longer live on it directly — UsernameHash is a
             // deterministic hash of the normalized username and carries the unique index
-            // instead (blind index pattern, see LOGIN_EPIC_SPEC.md §2.2).
+            // instead (a "blind index" pattern).
             builder.Property(u => u.UsernameHash).IsRequired();
             builder.HasIndex(u => u.UsernameHash).IsUnique();
 
