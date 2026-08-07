@@ -209,6 +209,66 @@ namespace AccuSync.EF.Tests.Repositories
             Assert.Equal(beforeUpdate.UsernameHash, afterUpdate.UsernameHash);
         }
 
+        [Fact]
+        public async Task CreateUserAsync_GivenARoleAssignedAtCreation_WhenCreated_ThenTheRoleIsPersistedAndRetrievable()
+        {
+            // Arrange — ASWD-36 AC: users can be assigned a role at account creation.
+            var user = NewUser("Admin");
+            user.ProfileId = "Admin";
+
+            // Act
+            await _sut.CreateUserAsync(user);
+
+            // Assert
+            var result = await _sut.GetUserByAccountNameAsync("Admin");
+            Assert.Equal("Admin", result!.ProfileId);
+        }
+
+        [Fact]
+        public async Task UpdateUserRoleAsync_GivenAnExistingUser_WhenTheRoleIsChanged_ThenLaterLookupsReflectTheNewRole()
+        {
+            // Arrange — created as Screener.
+            var user = NewUser("Admin");
+            user.ProfileId = "Screener";
+            await _sut.CreateUserAsync(user);
+
+            // Act — promoted to Admin via the narrow admin-exception method
+            // (no Users-management UI exists yet, per LOGIN_EPIC_SPEC.md §2.6).
+            bool success = await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+
+            // Assert
+            Assert.True(success);
+            var result = await _sut.GetUserByAccountNameAsync("Admin");
+            Assert.Equal("Admin", result!.ProfileId);
+        }
+
+        [Fact]
+        public async Task UpdateUserRoleAsync_GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        {
+            // Act
+            bool success = await _sut.UpdateUserRoleAsync(System.Guid.NewGuid().ToString(), UserRole.Admin);
+
+            // Assert
+            Assert.False(success);
+        }
+
+        [Fact]
+        public async Task UpdateUserRoleAsync_GivenARoleChange_WhenUpdated_ThenOtherFieldsAreLeftUntouched()
+        {
+            // Arrange
+            var user = NewUser("Admin");
+            user.ProfileId = "Screener";
+            await _sut.CreateUserAsync(user);
+
+            // Act
+            await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+
+            // Assert — a role change is not supposed to be a disguised full profile overwrite.
+            var result = await _sut.GetUserByAccountNameAsync("Admin");
+            Assert.Equal("Admin", result!.AccountName);
+            Assert.Equal("Admin", result.FirstName);
+        }
+
         public void Dispose()
         {
             _context.Dispose();
