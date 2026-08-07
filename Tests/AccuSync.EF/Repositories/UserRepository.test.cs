@@ -269,6 +269,34 @@ namespace AccuSync.EF.Tests.Repositories
             Assert.Equal("Admin", result.FirstName);
         }
 
+        [Fact]
+        public async Task SetUserActiveStatusAsync_GivenAnActiveUser_WhenDeactivated_ThenLaterLookupsReflectTheDeactivationWithoutTouchingOtherFields()
+        {
+            // Arrange — active by default (see User's constructor).
+            var user = NewUser("Admin");
+            await _sut.CreateUserAsync(user);
+
+            // Act — deactivated via the narrow admin-exception method
+            // (no Users-management UI exists yet).
+            bool success = await _sut.SetUserActiveStatusAsync(user.Guid, isActive: false);
+
+            // Assert
+            Assert.True(success);
+            var result = await _sut.GetUserByAccountNameAsync("Admin");
+            Assert.False(result!.Status);
+            Assert.Equal("Admin", result.AccountName);
+        }
+
+        [Fact]
+        public async Task SetUserActiveStatusAsync_GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        {
+            // Act
+            bool success = await _sut.SetUserActiveStatusAsync(System.Guid.NewGuid().ToString(), isActive: false);
+
+            // Assert
+            Assert.False(success);
+        }
+
         public void Dispose()
         {
             _context.Dispose();

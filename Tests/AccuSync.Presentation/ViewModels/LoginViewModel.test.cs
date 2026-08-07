@@ -13,11 +13,10 @@ using Moq;
 namespace AccuSync.Presentation.Tests.ViewModels
 {
     /// <summary>
-    /// Scoped narrowly to role-on-sign-in behavior — a freshly assigned role takes
-    /// effect on the user's next login — rather than re-testing credential
-    /// verification, lockout, or dropdown loading, which belong to the login flow
-    /// itself and are already covered where that logic actually lives
-    /// (AuthenticationServiceTests).
+    /// Covers the username dropdown's active-only filtering and role-on-sign-in
+    /// wiring — not credential verification or lockout, which belong to the
+    /// authentication logic itself and are already covered where that logic
+    /// actually lives (AuthenticationServiceTests).
     /// </summary>
     public class LoginViewModelTests
     {
@@ -42,12 +41,33 @@ namespace AccuSync.Presentation.Tests.ViewModels
             _passwordHasherMock.Object,
             _currentUserContextMock.Object);
 
-        private static User NewUser(string profileId, int firstLogin = 0) => new()
+        private static User NewUser(string profileId, int firstLogin = 0, string accountName = "SomeUser", bool status = true) => new()
         {
-            AccountName = "SomeUser",
+            AccountName = accountName,
             ProfileId = profileId,
-            FirstLogin = firstLogin
+            FirstLogin = firstLogin,
+            Status = status
         };
+
+        [Fact]
+        public async Task Usernames_GivenAMixOfActiveAndDeactivatedAccounts_WhenTheDropdownLoads_ThenListsOnlyTheActiveOnes()
+        {
+            // Arrange — loading happens fire-and-forget from the constructor, so the
+            // mock must be set up beforehand.
+            _userRepositoryMock.Setup(r => r.GetAllUsersAsync()).ReturnsAsync(new List<User>
+            {
+                NewUser(profileId: "Admin", accountName: "ActiveAdmin", status: true),
+                NewUser(profileId: "Screener", accountName: "DeactivatedScreener", status: false),
+                NewUser(profileId: "Screener", accountName: "ActiveScreener", status: true)
+            });
+
+            // Act
+            var sut = CreateSut();
+            await Task.Delay(50); // LoadUsernamesAsync is async void, fired from the constructor
+
+            // Assert
+            Assert.Equal(new[] { "ActiveAdmin", "ActiveScreener" }, sut.Usernames);
+        }
 
         [Fact]
         public async Task SignInCommand_GivenAUserWhoseStoredProfileIdIsAdmin_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheAdminRole()
