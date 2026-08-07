@@ -10,16 +10,16 @@ using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
-    /// Handles user authentication with lockout protection (5 consecutive failed
+    /// Handles user authentication: rejects deactivated accounts regardless of
+    /// password correctness, enforces lockout protection (5 consecutive failed
     /// attempts locks the account for an admin-configurable duration, default 15
-    /// minutes — SRS GID-255017/GID-254911) and 90-day password expiration. An Admin
-    /// can also unlock a specific account immediately via
-    /// <see cref="IUserRepository.UnlockUserAsync"/>, overriding the timer for that
-    /// one account (SRS GID-254907). There is no special case for Admin accounts —
-    /// the same mandatory lock/duration applies to every role, including Admin.
+    /// minutes), and enforces 90-day password expiration. An Admin can also unlock
+    /// a specific account immediately via <see cref="IUserRepository.UnlockUserAsync"/>,
+    /// overriding the timer for that one account. There is no special case for Admin
+    /// accounts — the same mandatory lock/duration applies to every role.
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {

@@ -11,9 +11,9 @@ namespace AccuSync.Core.Entities
 
         /// <summary>
         /// Minutes an account stays locked after hitting the failed-attempt threshold
-        /// before it auto-unlocks. Admin-configurable (SRS GID-254911); an Admin can
-        /// also unlock a specific account immediately via <c>UnlockUserAsync</c>,
-        /// overriding this duration for that one account.
+        /// before it auto-unlocks. Admin-configurable; an Admin can also unlock a
+        /// specific account immediately via <c>UnlockUserAsync</c>, overriding this
+        /// duration for that one account.
         /// </summary>
         public int LockoutDurationMinutes { get; set; }
 
