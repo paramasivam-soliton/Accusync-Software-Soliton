@@ -210,7 +210,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task CreateUserAsync_GivenARoleAssignedAtCreation_WhenCreated_ThenTheRoleIsPersistedAndRetrievable()
+        public async Task GivenARoleAssignedAtCreation_WhenCreated_ThenTheRoleIsPersistedAndRetrievable()
         {
             // Arrange — users can be assigned a role at account creation.
             var user = NewUser("Admin");
@@ -225,7 +225,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserRoleAsync_GivenAnExistingUser_WhenTheRoleIsChanged_ThenLaterLookupsReflectTheNewRole()
+        public async Task GivenAnExistingUser_WhenTheRoleIsChanged_ThenLaterLookupsReflectTheNewRole()
         {
             // Arrange — created as Screener.
             var user = NewUser("Admin");
@@ -243,7 +243,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserRoleAsync_GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        public async Task GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
         {
             // Act
             bool success = await _sut.UpdateUserRoleAsync(System.Guid.NewGuid().ToString(), UserRole.Admin);
@@ -253,7 +253,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserRoleAsync_GivenARoleChange_WhenUpdated_ThenOtherFieldsAreLeftUntouched()
+        public async Task GivenARoleChange_WhenUpdated_ThenOtherFieldsAreLeftUntouched()
         {
             // Arrange
             var user = NewUser("Admin");
