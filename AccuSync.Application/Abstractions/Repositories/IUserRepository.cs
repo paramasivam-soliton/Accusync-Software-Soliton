@@ -11,9 +11,9 @@ using AccuSync.Application.Models;
 namespace AccuSync.Application.Abstractions.Repositories
 {
     /// <summary>
-    /// Persistence contract for user accounts. Implemented by AccuSync.Persistence
-    /// (currently SQLite-backed; a future EF Core implementation only needs to
-    /// satisfy this same contract).
+    /// Persistence contract for user accounts. Implemented by
+    /// AccuSync.Application.Repositories.UserRepository (currently SQLite-backed;
+    /// a future EF Core implementation only needs to satisfy this same contract).
     /// </summary>
     public interface IUserRepository
     {

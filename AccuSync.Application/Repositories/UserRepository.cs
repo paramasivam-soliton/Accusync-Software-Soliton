@@ -14,7 +14,7 @@ using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Models;
 using Microsoft.Data.Sqlite;
 
-namespace AccuSync.Persistence
+namespace AccuSync.Application.Repositories
 {
     /// <summary>
     /// SQLite-backed data access for user accounts.

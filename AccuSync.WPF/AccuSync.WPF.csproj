@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
-    <ProjectReference Include="..\AccuSync.Persistence\AccuSync.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
