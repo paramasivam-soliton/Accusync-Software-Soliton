@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AccuSync.Helpers
+namespace AccuSync.Presentation.Helpers
 {
     /// <summary>
     /// Minimal async-aware <see cref="ICommand"/> implementation.

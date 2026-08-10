@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.WPF.Resources;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

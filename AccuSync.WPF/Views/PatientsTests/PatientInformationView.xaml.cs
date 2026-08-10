@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Resources;
 using System;
 using System.ComponentModel;

@@ -10,12 +10,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AccuSync.Helpers;
+using AccuSync.Presentation.Helpers;
 using AccuSync.Models;
 using AccuSync.Resources;
 using AccuSync.Services;
 
-namespace AccuSync.ViewModels
+namespace AccuSync.Presentation.ViewModels
 {
     /// <summary>
     /// Drives the change-password screen. Validates against password policy

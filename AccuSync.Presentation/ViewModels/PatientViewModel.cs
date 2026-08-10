@@ -12,7 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 
-namespace AccuSync.ViewModels
+namespace AccuSync.Presentation.ViewModels
 {
     /// <summary>
     /// Main patient form ViewModel. Provides real-time validation, dirty-state

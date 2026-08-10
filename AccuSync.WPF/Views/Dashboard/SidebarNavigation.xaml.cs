@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Controls;
 using AccuSync.Helpers;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views.UsersProfiles;
 using AccuSync.WPF.Views.About;
 using AccuSync.WPF.Views.Settings;

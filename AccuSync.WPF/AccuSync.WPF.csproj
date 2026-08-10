@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -19,9 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Not-yet-extracted layers (Models/ViewModels/Services/Helpers) are referenced
-         from AccuSync until each is pulled into its own project in a future PR. -->
+    <!-- Not-yet-extracted layers (Models/Services/Helpers) are referenced from AccuSync
+         until each is pulled into its own project in a future PR. -->
+    <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
     <ProjectReference Include="..\AccuSync\AccuSync.csproj" />
+    <!-- ViewModels layer, extracted. -->
   </ItemGroup>
 
   <ItemGroup>

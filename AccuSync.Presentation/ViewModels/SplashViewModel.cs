@@ -12,7 +12,7 @@ using System.Windows;
 using AccuSync.Resources;
 using AccuSync.Services;
 
-namespace AccuSync.ViewModels
+namespace AccuSync.Presentation.ViewModels
 {
     /// <summary>
     /// Drives the splash screen. Initializes the database and shows
