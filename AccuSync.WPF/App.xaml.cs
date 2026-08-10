@@ -30,8 +30,13 @@ namespace AccuSync.WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
-            string settingsDatabasePath = ResolveDatabasePath("Persistence:DatabasePath", "SettingsDatabase.db");
-            string patientDatabasePath = ResolveDatabasePath("Persistence:PatientDatabasePath", "PatientDatabase.db");
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true)
+                .Build();
+
+            string settingsDatabasePath = ResolveDatabasePath(configuration, "Persistence:DatabasePath", "SettingsDatabase.db");
+            string patientDatabasePath = ResolveDatabasePath(configuration, "Persistence:PatientDatabasePath", "PatientDatabase.db");
 
             // Persistence — provider selection happens right here: swapping database
             // engines later means calling a different sibling adapter project's
@@ -45,7 +50,7 @@ namespace AccuSync.WPF
             // Data Protection key ring lives alongside the settings database so it travels
             // with it if the DB file is ever backed up/restored onto another machine.
             // Standalone use only; no web server/hosting involved.
-            string keysPath = Path.Combine(Path.GetDirectoryName(settingsDatabasePath), "DataProtectionKeys");
+            string keysPath = ResolveDataProtectionKeysPath(configuration, settingsDatabasePath);
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 
             // Services
@@ -72,13 +77,8 @@ namespace AccuSync.WPF
         /// %ProgramData%\Natus\AccuSync\<paramref name="defaultFileName"/> when the setting
         /// is absent or blank, so the app works out of the box with zero config.
         /// </summary>
-        private static string ResolveDatabasePath(string configKey, string defaultFileName)
+        private static string ResolveDatabasePath(IConfiguration configuration, string configKey, string defaultFileName)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: true)
-                .Build();
-
             string configuredPath = configuration[configKey];
 
             string databasePath = string.IsNullOrWhiteSpace(configuredPath)
@@ -89,6 +89,21 @@ namespace AccuSync.WPF
 
             Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
             return databasePath;
+        }
+
+        /// <summary>
+        /// Reads Persistence:DataProtectionKeysPath from appsettings.json. Falls back to a
+        /// "DataProtectionKeys" folder alongside the database when the setting is absent
+        /// or blank, so the key ring travels with the database if it's ever backed up or
+        /// restored onto another machine.
+        /// </summary>
+        private static string ResolveDataProtectionKeysPath(IConfiguration configuration, string databasePath)
+        {
+            string configuredPath = configuration["Persistence:DataProtectionKeysPath"];
+
+            return string.IsNullOrWhiteSpace(configuredPath)
+                ? Path.Combine(Path.GetDirectoryName(databasePath), "DataProtectionKeys")
+                : configuredPath;
         }
 
         protected override void OnStartup(StartupEventArgs e)

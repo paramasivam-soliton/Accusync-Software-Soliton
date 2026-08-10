@@ -56,7 +56,7 @@ namespace AccuSync.EF.Tests.Repositories
         };
 
         [Fact]
-        public async Task CreateUserAsync_GivenANewUser_WhenCreated_ThenTheStoredAccountNameIsEncryptedNotPlaintext()
+        public async Task GivenANewUser_WhenCreated_ThenTheStoredAccountNameIsEncryptedNotPlaintext()
         {
             // Arrange
             var user = NewUser("Admin");
@@ -71,7 +71,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task CreateUserAsync_GivenANewUser_WhenCreated_ThenTheStoredPasswordIsAOneWayHashNotThePlaintext()
+        public async Task GivenANewUser_WhenCreated_ThenTheStoredPasswordIsAOneWayHashNotThePlaintext()
         {
             // Arrange
             var user = NewUser("Admin", plainTextPassword: "Password@123");
@@ -86,7 +86,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetUserByAccountNameAsync_GivenAnExistingAccountName_WhenLookedUp_ThenReturnsTheDecryptedUser()
+        public async Task GivenAnExistingAccountName_WhenLookedUp_ThenReturnsTheDecryptedUser()
         {
             // Arrange
             var user = NewUser("Admin");
@@ -102,7 +102,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetUserByAccountNameAsync_GivenAnAccountNameThatDoesNotExist_WhenLookedUp_ThenReturnsNull()
+        public async Task GivenAnAccountNameThatDoesNotExist_WhenLookedUp_ThenReturnsNull()
         {
             // Act
             var result = await _sut.GetUserByAccountNameAsync("NoSuchAccount");
@@ -115,7 +115,7 @@ namespace AccuSync.EF.Tests.Repositories
         [InlineData("ADMIN")]
         [InlineData("admin")]
         [InlineData(" Admin ")]
-        public async Task GetUserByAccountNameAsync_GivenAccountNameDifferingOnlyByCasingOrSurroundingWhitespace_WhenLookedUp_ThenStillMatchesTheSameAccount(
+        public async Task GivenAccountNameDifferingOnlyByCasingOrSurroundingWhitespace_WhenLookedUp_ThenStillMatchesTheSameAccount(
             string suppliedAccountName)
         {
             // Arrange
@@ -131,7 +131,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetAllUsersAsync_GivenMultipleUsers_WhenRetrieved_ThenReturnsAllOfThemDecrypted()
+        public async Task GivenMultipleUsers_WhenRetrieved_ThenReturnsAllOfThemDecrypted()
         {
             // Arrange
             await _sut.CreateUserAsync(NewUser("Admin"));
@@ -147,7 +147,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task CreateUserAsync_GivenAnAccountNameThatAlreadyExists_WhenCreated_ThenReturnsFalseInsteadOfViolatingTheUniqueUsernameConstraint()
+        public async Task GivenAnAccountNameThatAlreadyExists_WhenCreated_ThenReturnsFalseInsteadOfViolatingTheUniqueUsernameConstraint()
         {
             // Arrange
             await _sut.CreateUserAsync(NewUser("Admin"));
@@ -160,7 +160,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserAsync_GivenAnExistingUser_WhenTheAccountNameIsChanged_ThenLaterLookupsFindItUnderTheNewName()
+        public async Task GivenAnExistingUser_WhenTheAccountNameIsChanged_ThenLaterLookupsFindItUnderTheNewName()
         {
             // Arrange
             var user = NewUser("Admin");
@@ -178,7 +178,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserAsync_GivenAUserGuidThatDoesNotExist_WhenUpdated_ThenReturnsFalse()
+        public async Task GivenAUserGuidThatDoesNotExist_WhenUpdated_ThenReturnsFalse()
         {
             // Arrange
             var nonExistentUser = NewUser("NoSuchAccount");
@@ -191,7 +191,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UpdateUserAsync_GivenTheAccountNameIsSetBackToItsOwnCurrentValue_WhenUpdated_ThenTheStoredCiphertextChangesButTheUsernameHashDoesNot()
+        public async Task GivenTheAccountNameIsSetBackToItsOwnCurrentValue_WhenUpdated_ThenTheStoredCiphertextChangesButTheUsernameHashDoesNot()
         {
             // Arrange
             var user = NewUser("Admin");

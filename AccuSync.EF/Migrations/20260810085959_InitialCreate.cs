@@ -20,6 +20,7 @@ namespace AccuSync.EF.Migrations
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
                     ProfileId = table.Column<string>(type: "TEXT", nullable: false),
+                    UsernameHash = table.Column<string>(type: "TEXT", nullable: false),
                     ProfilePassword = table.Column<string>(type: "TEXT", nullable: false),
                     FirstLogin = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 1),
                     FailedLoginAttemptCount = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
@@ -37,9 +38,9 @@ namespace AccuSync.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_AccountName",
+                name: "IX_Users_UsernameHash",
                 table: "Users",
-                column: "AccountName",
+                column: "UsernameHash",
                 unique: true);
         }
 
