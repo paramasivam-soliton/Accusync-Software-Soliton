@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-namespace AccuSync.ViewModels
+namespace AccuSync.Presentation.ViewModels
 {
     /// <summary>
     /// Navigation and feature permissions for a logged-in user.

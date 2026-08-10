@@ -6,7 +6,7 @@
 
 using AccuSync.Helpers;
 using AccuSync.WPF.Resources;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;

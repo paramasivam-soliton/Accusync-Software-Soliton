@@ -6,7 +6,7 @@
 
 using AccuSync.Helpers;
 using AccuSync.Models;
-using AccuSync.ViewModels;
+using AccuSync.Presentation.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Windows;

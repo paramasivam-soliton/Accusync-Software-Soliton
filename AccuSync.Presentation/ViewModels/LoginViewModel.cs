@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Helpers;
+using AccuSync.Presentation.Helpers;
 using AccuSync.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AccuSync.Resources;
 
-namespace AccuSync.ViewModels
+namespace AccuSync.Presentation.ViewModels
 {
     /// <summary>
     /// Drives the login screen. Loads available usernames into a dropdown
