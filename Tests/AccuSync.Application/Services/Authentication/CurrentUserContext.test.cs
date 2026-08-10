@@ -18,7 +18,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         };
 
         [Fact]
-        public void IsSignedIn_GivenAFreshlyConstructedContext_WhenNeverSignedIn_ThenIsFalse()
+        public void GivenAFreshlyConstructedContext_WhenNeverSignedIn_ThenIsFalse()
         {
             // Arrange
             var sut = new CurrentUserContext();
@@ -28,7 +28,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void SignIn_GivenAUserAndRole_WhenSignedIn_ThenExposesThatIdentityAndRole()
+        public void GivenAUserAndRole_WhenSignedIn_ThenExposesThatIdentityAndRole()
         {
             // Arrange
             var sut = new CurrentUserContext();
@@ -45,7 +45,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void SignOut_GivenASignedInContext_WhenSignedOut_ThenClearsIdentityAndResetsRoleToScreener()
+        public void GivenASignedInContext_WhenSignedOut_ThenClearsIdentityAndResetsRoleToScreener()
         {
             // Arrange
             var sut = new CurrentUserContext();
@@ -63,7 +63,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void SignIn_GivenAContextThatWasPreviouslySignedInAsAnotherUser_WhenSignedInAgain_ThenReplacesTheIdentityEntirely()
+        public void GivenAContextThatWasPreviouslySignedInAsAnotherUser_WhenSignedInAgain_ThenReplacesTheIdentityEntirely()
         {
             // Arrange — simulates one user logging out and a different user logging in,
             // without a fresh CurrentUserContext instance (it's a process-lifetime singleton).

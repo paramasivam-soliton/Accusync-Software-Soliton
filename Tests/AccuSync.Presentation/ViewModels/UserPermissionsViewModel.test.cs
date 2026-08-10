@@ -11,7 +11,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
     public class UserPermissionsViewModelTests
     {
         [Fact]
-        public void Admin_GivenTheAdminPreset_WhenCreated_ThenEveryNavItemAndFeatureFlagIsEnabled()
+        public void GivenTheAdminPreset_WhenCreated_ThenEveryNavItemAndFeatureFlagIsEnabled()
         {
             // Act
             var permissions = UserPermissionsViewModel.Admin();
@@ -35,7 +35,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public void Screener_GivenTheScreenerPreset_WhenCreated_ThenAdminOnlyNavItemsAreDisabled()
+        public void GivenTheScreenerPreset_WhenCreated_ThenAdminOnlyNavItemsAreDisabled()
         {
             // Act
             var permissions = UserPermissionsViewModel.Screener();
@@ -53,7 +53,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public void Screener_GivenTheScreenerPreset_WhenCreated_ThenPatientWorkflowFeaturesAreStillEnabled()
+        public void GivenTheScreenerPreset_WhenCreated_ThenPatientWorkflowFeaturesAreStillEnabled()
         {
             // Act
             var permissions = UserPermissionsViewModel.Screener();
@@ -68,7 +68,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public void Constructor_GivenNoPresetIsUsed_WhenCreatedDirectly_ThenDefaultsToTheLeastPrivilegedScreenerShape()
+        public void GivenNoPresetIsUsed_WhenCreatedDirectly_ThenDefaultsToTheLeastPrivilegedScreenerShape()
         {
             // Act — this is the shape a not-yet-permission-assigned view starts from.
             var permissions = new UserPermissionsViewModel();
