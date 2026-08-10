@@ -65,7 +65,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task AuthenticateAsync_GivenNullOrWhitespaceAccountName_WhenAuthenticating_ThenReturnsRequiredFieldsErrorWithoutTouchingTheRepository(
+        public async Task GivenNullOrWhitespaceAccountName_WhenAuthenticating_ThenReturnsRequiredFieldsErrorWithoutTouchingTheRepository(
             string? accountName)
         {
             // Act
@@ -81,7 +81,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task AuthenticateAsync_GivenNullOrWhitespacePassword_WhenAuthenticating_ThenReturnsRequiredFieldsErrorWithoutTouchingTheRepository(
+        public async Task GivenNullOrWhitespacePassword_WhenAuthenticating_ThenReturnsRequiredFieldsErrorWithoutTouchingTheRepository(
             string? password)
         {
             // Act
@@ -94,7 +94,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountNameThatDoesNotExist_WhenAuthenticating_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
+        public async Task GivenAnAccountNameThatDoesNotExist_WhenAuthenticating_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
         {
             // Arrange
             _userRepositoryMock
@@ -111,7 +111,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenADeactivatedAccount_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
+        public async Task GivenADeactivatedAccount_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
         {
             // Arrange
             var user = CreateUser(CorrectPassword, status: false);
@@ -127,7 +127,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenTheCorrectPassword_WhenAuthenticating_ThenReturnsSuccessWithTheUser()
+        public async Task GivenTheCorrectPassword_WhenAuthenticating_ThenReturnsSuccessWithTheUser()
         {
             // Arrange
             var user = CreateUser(CorrectPassword);
@@ -143,7 +143,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenTheCorrectPasswordAfterPriorFailures_WhenAuthenticating_ThenResetsTheFailedAttemptCounter()
+        public async Task GivenTheCorrectPasswordAfterPriorFailures_WhenAuthenticating_ThenResetsTheFailedAttemptCounter()
         {
             // Arrange
             var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 3, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
@@ -160,7 +160,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAWrongPassword_WhenAuthenticating_ThenReturnsFailureAndIncrementsTheFailedAttemptCounter()
+        public async Task GivenAWrongPassword_WhenAuthenticating_ThenReturnsFailureAndIncrementsTheFailedAttemptCounter()
         {
             // Arrange
             var user = CreateUser(CorrectPassword);
@@ -177,7 +177,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAWrongPasswordWithAttemptsStillRemaining_WhenAuthenticating_ThenTheErrorMessageStatesHowManyAttemptsRemain()
+        public async Task GivenAWrongPasswordWithAttemptsStillRemaining_WhenAuthenticating_ThenTheErrorMessageStatesHowManyAttemptsRemain()
         {
             // Arrange — 7 prior failures; this 8th failure leaves 2 attempts before the 10-attempt lockout.
             var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 7, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
@@ -193,7 +193,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAWrongPasswordOnTheTenthConsecutiveAttempt_WhenAuthenticating_ThenLocksTheAccount()
+        public async Task GivenAWrongPasswordOnTheTenthConsecutiveAttempt_WhenAuthenticating_ThenLocksTheAccount()
         {
             // Arrange — 9 prior failures; this 10th failure crosses the lockout threshold.
             var user = CreateUser(CorrectPassword, failedLoginAttemptCount: 9, firstFailedLoginTime: DateTimeOffset.UtcNow.ToUnixTimeSeconds());
@@ -210,7 +210,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedWithinTheCooldownWindow_WhenAuthenticatingEvenWithTheCorrectPassword_ThenStillReturnsLocked()
+        public async Task GivenAnAccountLockedWithinTheCooldownWindow_WhenAuthenticatingEvenWithTheCorrectPassword_ThenStillReturnsLocked()
         {
             // Arrange — locked just now; the 15-minute cooldown hasn't elapsed.
             var user = CreateUser(
@@ -228,7 +228,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithTheCorrectPassword_ThenAutoResetsAndSucceeds()
+        public async Task GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithTheCorrectPassword_ThenAutoResetsAndSucceeds()
         {
             // Arrange — locked 16 minutes ago; the 15-minute cooldown has elapsed.
             long sixteenMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (16 * 60);
@@ -249,7 +249,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithAWrongPassword_ThenStartsANewFailureStreakInsteadOfStayingLocked()
+        public async Task GivenAnAccountLockedButTheCooldownHasElapsed_WhenAuthenticatingWithAWrongPassword_ThenStartsANewFailureStreakInsteadOfStayingLocked()
         {
             // Arrange — locked 16 minutes ago; cooldown elapsed, but this attempt uses the wrong password.
             long sixteenMinutesAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (16 * 60);
@@ -269,7 +269,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAPasswordOlderThanNinetyDays_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsAnExpiredError()
+        public async Task GivenAPasswordOlderThanNinetyDays_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsAnExpiredError()
         {
             // Arrange
             long ninetyOneDaysAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (91L * 24 * 60 * 60);
@@ -285,7 +285,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public async Task AuthenticateAsync_GivenAPasswordWithinNinetyDays_WhenAuthenticatingWithTheCorrectPassword_ThenSucceeds()
+        public async Task GivenAPasswordWithinNinetyDays_WhenAuthenticatingWithTheCorrectPassword_ThenSucceeds()
         {
             // Arrange
             long eightyNineDaysAgo = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - (89L * 24 * 60 * 60);

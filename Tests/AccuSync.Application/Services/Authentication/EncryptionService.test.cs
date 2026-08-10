@@ -29,7 +29,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Encrypt_GivenPlainText_WhenEncrypted_ThenReturnsCiphertextDifferentFromTheInput()
+        public void GivenPlainText_WhenEncrypted_ThenReturnsCiphertextDifferentFromTheInput()
         {
             // Arrange
             const string plainText = "Screener";
@@ -42,7 +42,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Encrypt_GivenTheSamePlainTextTwice_WhenEncryptedEachTime_ThenProducesDifferentCiphertext()
+        public void GivenTheSamePlainTextTwice_WhenEncryptedEachTime_ThenProducesDifferentCiphertext()
         {
             // Arrange
             const string plainText = "Screener";
@@ -57,7 +57,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Decrypt_GivenValueThatWasEncryptedBySameService_WhenDecrypted_ThenReturnsOriginalPlainText()
+        public void GivenValueThatWasEncryptedBySameService_WhenDecrypted_ThenReturnsOriginalPlainText()
         {
             // Arrange
             const string plainText = "Screener";
@@ -73,7 +73,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Encrypt_GivenNullOrEmptyInput_WhenEncrypted_ThenReturnsInputUnchanged(string? plainText)
+        public void GivenNullOrEmptyInput_WhenEncrypted_ThenReturnsInputUnchanged(string? plainText)
         {
             // Act
             string? result = _sut.Encrypt(plainText!);
@@ -85,7 +85,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Decrypt_GivenNullOrEmptyInput_WhenDecrypted_ThenReturnsInputUnchanged(string? cipherText)
+        public void GivenNullOrEmptyInput_WhenDecrypted_ThenReturnsInputUnchanged(string? cipherText)
         {
             // Act
             string? result = _sut.Decrypt(cipherText!);
