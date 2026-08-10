@@ -46,7 +46,7 @@ written.
 | 1 | One database or two | **Two** — new `PatientDbContext` → `PatientDatabase.db`, alongside existing `SettingsDbContext` → `SettingsDatabase.db` | Matches what's already shipped; `PatientDatabase.sql`'s own header already assumes this split (cross-DB `[XDB:]` annotations); SRS lists AES-256 encryption as two separate requirements (GID-256510, GID-256511) — one per database. |
 | 2 | Cross-DB references (`SiteId`, `AssignedUserId`, `MatchedDeviceId`, `MatchedProtocolId`) | Plain `int?` columns, validated at the repository layer against `SettingsDbContext` before write. No EF navigation/FK across contexts. | SQLite cannot enforce FKs across separate database files; this is the pattern the schema file already documents. |
 | 3 | Entity scope for this story | **In scope:** `Patients`, `PatientContacts`, `TestSessions`, `TestRecords`, plus a new `PatientRiskFactorValues` table. **Out of scope:** `ImportBatches`, `ABRResults`, `TEOAEResults`, `DPOAEResults`. | Those four tables belong to the later Import and OAE/ABR Test Result stories. This story's code is still built so those can be added later without rework (`ImportBatchId`). |
-| 4 | Whole-database encryption (GID-256510) | **Out of scope for this story.** `PatientDatabase.db` is created unencrypted, same current state as `SettingsDatabase.db`. | No existing pattern to mirror (Settings DB doesn't do whole-DB encryption either — only per-field encryption of `Username`), and it isn't in this story's acceptance criteria. Tracked as a known gap, not silently dropped. |
+| 4 | Database encryption at rest (GID-256510) | **Out of scope for this story.** `PatientDatabase.db` is created unencrypted, same current state as `SettingsDatabase.db`. | GID-256510 requires file-based encryption of the database file itself, not per-field/per-record encryption of individual columns — a different mechanism from the per-field encryption already used for `Username`. Not in this story's acceptance criteria; left for whichever future story addresses it, with no implementation approach assumed here. |
 | 5 | Risk-factor storage | **Join table now** (`PatientRiskFactorValues`), replacing the `Patients.PatientRiskFactors` JSON column — for the schema change. | Solves the Yes/No/Unknown tri-state gap (GID-254888) that the JSON-array-of-codes design can't represent. Doing it in this story avoids building JSON mapping now and ripping it out later.|
 | 6 | List / detail / import type split | **Keep all three existing types** (`Application.Models.Patient` for the list grid, `PatientViewModel` for the detail/edit panel, `PatientData` for import), each produced by one shared mapper (see 7). | `PatientViewModel`'s validation/dirty-tracking/QR-generation machinery isn't meant for bulk list binding; forcing every list row through it would be wasteful. The acceptance criteria's wording ("PatientViewModel / PatientData") most likely didn't account for the third type already in use — not a deliberate instruction to remove it. |
 
@@ -332,7 +332,9 @@ Unit tests (`Tests/AccuSync.EF/Repositories/`, mirroring `UserRepository.test.cs
 
 - `ImportBatches`, `ABRResults`, `TEOAEResults`, `DPOAEResults` entities/migrations (2, decision
   3) — later Import / OAE / ABR stories.
-- Whole-database AES-256 encryption, GID-256510 (2, decision 4) — tracked gap, not fixed here.
+- Database encryption at rest, GID-256510 (2, decision 4) — file-based encryption of the `.db`
+  file itself, not per-field/per-record encryption of individual columns; tracked gap, not fixed
+  here, no implementation approach assumed.
 - An admin-facing "Show Deleted" toggle/filter for patients — the default list query excludes
   soft-deleted patients regardless of the answer to this; the toggle is additional UI, pending
   the client decision in 11.

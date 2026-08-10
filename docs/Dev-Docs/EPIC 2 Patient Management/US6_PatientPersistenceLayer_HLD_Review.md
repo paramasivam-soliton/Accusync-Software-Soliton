@@ -21,7 +21,8 @@ persisted data instead of static in-memory collections.
 **Out of scope (later phases):**
 - `ImportBatches`, `ABRResults`, `TEOAEResults`, `DPOAEResults` entities — covered by the Import
   and Test Result phases.
-- Database-level encryption at rest.
+- Database-level encryption at rest (file-based encryption of the database file itself, not
+  per-field/per-record encryption of individual columns).
 - UI for viewing or restoring soft-deleted patients.
 - Retention of deleted individual test records beyond an audit log entry.
 
@@ -68,7 +69,7 @@ Risk factor selections are stored as a normalized table (`PatientId`, `RiskFacto
 rather than a single JSON column. This supports the required tri-state value (Yes / No / Unknown)
 and allows an efficient existence check when determining whether a risk factor definition is
 currently in use. `RiskFactorId` references the settings database and is not database-enforced,
-consistent with §4.2.
+consistent with 4.2.
 
 ```sql
 CREATE TABLE IF NOT EXISTS PatientRiskFactorValues (
@@ -159,8 +160,10 @@ inline at each call site.
 
 ## 11. Non-Functional Considerations
 
-- **Encryption at rest:** not implemented in this phase. Tracked as a known gap against the
-  applicable security requirement for a future phase.
+- **Encryption at rest:** not implemented in this phase. The applicable requirement (GID-256510)
+  is file-based encryption of the database file itself, not per-field/per-record encryption of
+  individual columns. Tracked as a known gap for a future phase; no implementation approach is
+  assumed here.
 - **Data retention:** individual test record deletion is a hard delete in this phase; no
   retention period is implemented.
 
@@ -175,11 +178,11 @@ inline at each call site.
 
 | Capability | Delivered by |
 |---|---|
-| Patient database context and registration | §6.1, §6.3 |
-| Entity model matching target schema | §5 |
-| Automatic schema creation on first run | §6.4 |
-| Repository layer | §7 |
-| Timestamp auditing | §6.2 |
-| Mapping layer | §8 |
-| Repository unit tests | §10 |
-| Removal of hardcoded sample data | §9 |
+| Patient database context and registration | 6.1, 6.3 |
+| Entity model matching target schema | 5 |
+| Automatic schema creation on first run | 6.4 |
+| Repository layer | 7 |
+| Timestamp auditing | 6.2 |
+| Mapping layer | 8 |
+| Repository unit tests | 10 |
+| Removal of hardcoded sample data | 9 |
