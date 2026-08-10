@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(SettingsDbContext))]
-    [Migration("20260731064341_InitialCreate")]
+    [Migration("20260810085959_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -95,9 +95,13 @@ namespace AccuSync.EF.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("UsernameHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Guid");
 
-                    b.HasIndex("AccountName")
+                    b.HasIndex("UsernameHash")
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
