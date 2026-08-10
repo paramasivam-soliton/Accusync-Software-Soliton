@@ -11,11 +11,11 @@ namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Reversible encryption via the ASP.NET Core Data Protection API, used standalone
-    /// (no web server/hosting involved — see LOGIN_EPIC_SPEC.md §2.2). Active in every
-    /// build configuration, including Debug. Each <see cref="Encrypt"/> call produces a
-    /// different ciphertext for the same input (non-deterministic by design), which is
-    /// why lookups/uniqueness on encrypted fields go through a separate deterministic
-    /// hash column (see UserRepository.ComputeUsernameHash) instead of this service.
+    /// (no web server/hosting involved). Active in every build configuration, including
+    /// Debug. Each <see cref="Encrypt"/> call produces a different ciphertext for the
+    /// same input (non-deterministic by design), which is why lookups/uniqueness on
+    /// encrypted fields go through a separate deterministic hash column (see
+    /// UserRepository.ComputeUsernameHash) instead of this service.
     /// </summary>
     public class EncryptionService : IEncryptionService
     {
@@ -28,16 +28,14 @@ namespace AccuSync.Application.Services.Authentication
 
         public string Encrypt(string plainText)
         {
-            if (string.IsNullOrEmpty(plainText))
-                return plainText;
+            if (string.IsNullOrEmpty(plainText)) return plainText;
 
             return _protector.Protect(plainText);
         }
 
         public string Decrypt(string cipherText)
         {
-            if (string.IsNullOrEmpty(cipherText))
-                return cipherText;
+            if (string.IsNullOrEmpty(cipherText)) return cipherText;
 
             return _protector.Unprotect(cipherText);
         }

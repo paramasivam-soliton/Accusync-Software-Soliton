@@ -204,31 +204,30 @@ namespace AccuSync.Presentation.ViewModels
                     return;
                 }
 
-                // LastThreePasswords is a pipe-delimited string of password hashes.
-                // See User.cs TODO about documenting this format.
-                if (!string.IsNullOrEmpty(_currentUser.LastThreePasswords))
+                // LastThreePasswords is a pipe-delimited string of password hashes. The
+                // delimiter can't collide with a stored hash — Base64 (the hash's own
+                // encoding) never produces '|' — but entries are still filtered for
+                // empty/malformed values in case the stored string was ever hand-edited.
+                var previousHashes = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
+                    ? []
+                    : _currentUser.LastThreePasswords.Split('|').Where(h => !string.IsNullOrEmpty(h)).ToArray();
+
+                foreach (var oldHash in previousHashes)
                 {
-                    var lastPasswords = _currentUser.LastThreePasswords.Split('|');
-                    foreach (var oldHash in lastPasswords)
+                    if (_passwordHasher.Verify(NewPassword, oldHash))
                     {
-                        if (!string.IsNullOrEmpty(oldHash) && _passwordHasher.Verify(NewPassword, oldHash))
-                        {
-                            ErrorMessage = Strings.ChangePasswordViewModel_PasswordReused;
-                            IsLoading = false;
-                            return;
-                        }
+                        ErrorMessage = Strings.ChangePasswordViewModel_PasswordReused;
+                        IsLoading = false;
+                        return;
                     }
                 }
 
                 string newPasswordHash = _passwordHasher.Hash(NewPassword);
 
                 // Prepend the current password to the history and keep only three.
-                var passwordList = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
-                    ? new string[0]
-                    : _currentUser.LastThreePasswords.Split('|');
-
                 var updatedPasswordList = new[] { _currentUser.ProfilePassword }
-                    .Concat(passwordList)
+                    .Concat(previousHashes)
+                    .Where(h => !string.IsNullOrEmpty(h))
                     .Take(3)
                     .ToArray();
 
