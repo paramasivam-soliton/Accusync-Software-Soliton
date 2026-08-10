@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------
-// <copyright file="IUserRepository.cs" company="Natus Sensory">
+// <copyright file="IDatabaseService.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
@@ -8,14 +8,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccuSync.Application.Models;
 
-namespace AccuSync.Application.Abstractions.Repositories
+namespace AccuSync.Application.Abstractions.Services
 {
     /// <summary>
     /// Persistence contract for user accounts. Implemented by
-    /// AccuSync.Application.Repositories.UserRepository (currently SQLite-backed;
+    /// AccuSync.Application.Services.DatabaseService (currently SQLite-backed;
     /// a future EF Core implementation only needs to satisfy this same contract).
     /// </summary>
-    public interface IUserRepository
+    public interface IDatabaseService
     {
         Task InitializeDatabaseAsync();
         Task<List<User>> GetAllUsersAsync();

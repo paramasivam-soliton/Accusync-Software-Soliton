@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------
-// <copyright file="UserRepository.cs" company="Natus Sensory">
+// <copyright file="DatabaseService.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
@@ -9,12 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Models;
 using Microsoft.Data.Sqlite;
 
-namespace AccuSync.Application.Repositories
+namespace AccuSync.Application.Services
 {
     /// <summary>
     /// SQLite-backed data access for user accounts.
@@ -22,13 +21,13 @@ namespace AccuSync.Application.Repositories
     /// Sensitive fields (names, account names, passwords) are encrypted via
     /// <see cref="IEncryptionService"/> before storage.
     /// </summary>
-    public class UserRepository : IUserRepository
+    public class DatabaseService : IDatabaseService
     {
         private readonly string _databasePath;
         private readonly IEncryptionService _encryptionService;
         private readonly string _connectionString;
 
-        public UserRepository(IEncryptionService encryptionService)
+        public DatabaseService(IEncryptionService encryptionService)
         {
             _encryptionService = encryptionService;
 
@@ -116,7 +115,7 @@ namespace AccuSync.Application.Repositories
         }
 
         // NOTE: Encryption is applied per-field here rather than in the User model.
-        //       This means callers must always go through UserRepository — if anyone
+        //       This means callers must always go through DatabaseService — if anyone
         //       writes raw SQL against the same database, they'll get encrypted values.
         //       That's intentional, but worth knowing.
         private async Task InsertUserAsync(SqliteConnection connection, User user)

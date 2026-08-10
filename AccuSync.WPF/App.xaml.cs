@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Helpers;
-using AccuSync.Application.Repositories;
 using AccuSync.Application.Services;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views.Dashboard;
@@ -27,7 +25,7 @@ namespace AccuSync.WPF
         private void ConfigureServices(IServiceCollection services)
         {
             // Services
-            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IDatabaseService, DatabaseService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 

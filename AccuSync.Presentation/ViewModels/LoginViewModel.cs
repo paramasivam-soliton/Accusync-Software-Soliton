@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
-using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -26,7 +25,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class LoginViewModel : INotifyPropertyChanged
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IDatabaseService _databaseService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEncryptionService _encryptionService;
 
@@ -98,9 +97,9 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
-        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IEncryptionService encryptionService)
+        public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService, IEncryptionService encryptionService)
         {
-            _userRepository = userRepository;
+            _databaseService = databaseService;
             _authenticationService = authenticationService;
             _encryptionService = encryptionService;
 
@@ -118,7 +117,7 @@ namespace AccuSync.Presentation.ViewModels
         {
             try
             {
-                var users = await _userRepository.GetAllUsersAsync();
+                var users = await _databaseService.GetAllUsersAsync();
                 foreach (var user in users)
                 {
                     Usernames.Add(user.AccountName);
@@ -149,7 +148,7 @@ namespace AccuSync.Presentation.ViewModels
                     if (result.User.FirstLogin == 1)
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
-                            _userRepository,
+                            _databaseService,
                             _encryptionService,
                             result.User
                         );

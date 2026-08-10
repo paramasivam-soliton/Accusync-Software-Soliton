@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Application.Abstractions.Repositories;
+using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
@@ -21,7 +21,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IDatabaseService _databaseService;
         private string _statusMessage;
 
         public string StatusMessage
@@ -34,9 +34,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        public SplashViewModel(IUserRepository userRepository)
+        public SplashViewModel(IDatabaseService databaseService)
         {
-            _userRepository = userRepository;
+            _databaseService = databaseService;
         }
 
         public async Task InitializeAsync()
@@ -46,7 +46,7 @@ namespace AccuSync.Presentation.ViewModels
                 StatusMessage = Strings.SplashViewModel_InitializingDatabase;
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
-                await _userRepository.InitializeDatabaseAsync();
+                await _databaseService.InitializeDatabaseAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);

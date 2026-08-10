@@ -6,7 +6,6 @@
 
 using System;
 using System.Threading.Tasks;
-using AccuSync.Application.Abstractions.Repositories;
 using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Models;
 
@@ -23,14 +22,14 @@ namespace AccuSync.Application.Services
     //       can read all passwords.
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IDatabaseService _databaseService;
         private readonly IEncryptionService _encryptionService;
         private const int MaxFailedAttempts = 10;
         private const int LockoutDurationMinutes = 15;
 
-        public AuthenticationService(IUserRepository userRepository, IEncryptionService encryptionService)
+        public AuthenticationService(IDatabaseService databaseService, IEncryptionService encryptionService)
         {
-            _userRepository = userRepository;
+            _databaseService = databaseService;
             _encryptionService = encryptionService;
         }
 
@@ -45,7 +44,7 @@ namespace AccuSync.Application.Services
                 };
             }
 
-            var user = await _userRepository.GetUserByAccountNameAsync(accountName);
+            var user = await _databaseService.GetUserByAccountNameAsync(accountName);
             if (user == null)
             {
                 // Same error message whether the user exists or not,
@@ -78,7 +77,7 @@ namespace AccuSync.Application.Services
                 {
                     user.FailedLoginAttemptCount = 0;
                     user.FirstFailedLoginTime = 0L;
-                    await _userRepository.UpdateUserAsync(user);
+                    await _databaseService.UpdateUserAsync(user);
                 }
             }
 
@@ -94,7 +93,7 @@ namespace AccuSync.Application.Services
                 }
 
                 user.FailedLoginAttemptCount++;
-                await _userRepository.UpdateUserAsync(user);
+                await _databaseService.UpdateUserAsync(user);
 
                 int attemptsRemaining = MaxFailedAttempts - user.FailedLoginAttemptCount;
 
@@ -138,7 +137,7 @@ namespace AccuSync.Application.Services
             // Success — reset the failure streak
             user.FailedLoginAttemptCount = 0;
             user.FirstFailedLoginTime = 0L;
-            await _userRepository.UpdateUserAsync(user);
+            await _databaseService.UpdateUserAsync(user);
 
             return new AuthenticationResult
             {
