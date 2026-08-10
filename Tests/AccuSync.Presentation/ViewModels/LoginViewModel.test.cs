@@ -50,7 +50,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         };
 
         [Fact]
-        public async Task Usernames_GivenAMixOfActiveAndDeactivatedAccounts_WhenTheDropdownLoads_ThenListsOnlyTheActiveOnes()
+        public async Task GivenAMixOfActiveAndDeactivatedAccounts_WhenTheDropdownLoads_ThenListsOnlyTheActiveOnes()
         {
             // Arrange — loading happens fire-and-forget from the constructor, so the
             // mock must be set up beforehand.
@@ -70,7 +70,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public async Task SignInCommand_GivenAUserWhoseStoredProfileIdIsAdmin_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheAdminRole()
+        public async Task GivenAUserWhoseStoredProfileIdIsAdmin_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheAdminRole()
         {
             // Arrange — the freshly-fetched User carries whatever role an admin most
             // recently assigned; the ViewModel must not use a cached/stale role.
@@ -89,7 +89,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public async Task SignInCommand_GivenAUserWhoseStoredProfileIdIsScreener_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheScreenerRole()
+        public async Task GivenAUserWhoseStoredProfileIdIsScreener_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheScreenerRole()
         {
             // Arrange
             var sut = CreateSut();
@@ -107,7 +107,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public async Task SignInCommand_GivenASuccessfulNonFirstLoginSignIn_WhenSignedIn_ThenTheLoginSucceededEventCarriesTheParsedRoleAsText()
+        public async Task GivenASuccessfulNonFirstLoginSignIn_WhenSignedIn_ThenTheLoginSucceededEventCarriesTheParsedRoleAsText()
         {
             // Arrange
             var sut = CreateSut();
@@ -129,7 +129,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public async Task SignInCommand_GivenAFailedSignIn_WhenAuthenticationFails_ThenTheCurrentUserContextIsNeverSignedIn()
+        public async Task GivenAFailedSignIn_WhenAuthenticationFails_ThenTheCurrentUserContextIsNeverSignedIn()
         {
             // Arrange
             var sut = CreateSut();
