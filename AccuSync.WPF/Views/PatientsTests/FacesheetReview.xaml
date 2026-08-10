@@ -1,0 +1,734 @@
+﻿<!--
+    Copyright (c) 2026 Natus Sensory. All rights reserved.
+-->
+
+<UserControl x:Class="AccuSync.WPF.Views.PatientsTests.FacesheetReview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:AccuSync.Helpers;assembly=AccuSync"
+             xmlns:res="clr-namespace:AccuSync.WPF.Resources"
+             Background="White">
+
+    <!-- FacesheetReview.xaml
+         Side-by-side facesheet review: original document on the left,
+         editable patient fields on the right in three tabs (Patient, Risks, Additional).
+         Risk factor rows use Grid.Tag as the dictionary key for CollectRiskFactors
+         in code-behind — do not change Tags without updating the matching keys
+         in the parsers' risk factor dictionaries. -->
+
+    <UserControl.Resources>
+        <!-- TODO: Brush duplication — same set as the dialog files.
+             Merge from a shared resource dictionary. -->
+        <SolidColorBrush x:Key="MidnightBrush" Color="#002856"/>
+        <SolidColorBrush x:Key="PurpleBrush" Color="#473089"/>
+        <SolidColorBrush x:Key="PurpleHoverBrush" Color="#5A3DA8"/>
+        <SolidColorBrush x:Key="BrightBlueBrush" Color="#005FBE"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#5C5149"/>
+        <SolidColorBrush x:Key="GrayBrush" Color="#9EA2AC"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#e5e7eb"/>
+        <SolidColorBrush x:Key="BgLightBrush" Color="#f8f9fa"/>
+        <SolidColorBrush x:Key="BgLighterBrush" Color="#f3f4f6"/>
+        <SolidColorBrush x:Key="LabelBrush" Color="#6B7280"/>
+        <SolidColorBrush x:Key="HeadingBrush" Color="#374151"/>
+        <SolidColorBrush x:Key="DarkTextBrush" Color="#111827"/>
+        <SolidColorBrush x:Key="FilledBorderBrush" Color="#28a745"/>
+        <SolidColorBrush x:Key="ErrorBrush" Color="#dc3545"/>
+
+        <SolidColorBrush x:Key="RiskYesBrush" Color="#10B981"/>
+        <SolidColorBrush x:Key="RiskNoBrush" Color="#EF4444"/>
+        <SolidColorBrush x:Key="RiskUnknownBrush" Color="#6B7280"/>
+        <SolidColorBrush x:Key="RiskDefaultBorderBrush" Color="#D1D5DB"/>
+
+        <!-- Form input styles -->
+        <Style x:Key="ReviewTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ReviewComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <!-- Risk toggle button — active state is set in code-behind -->
+        <Style x:Key="RiskToggleStyle" TargetType="Button">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource RiskDefaultBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#9CA3AF"/>
+                                <Setter Property="Background" Value="#f9fafb"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BulkButtonBase" TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FooterSecondaryButton" TargetType="Button">
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BgLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ReviewTabItem" TargetType="TabItem">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder"
+                                BorderThickness="0,0,0,3"
+                                BorderBrush="Transparent"
+                                Background="Transparent"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="ContentSite"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource BrightBlueBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource BrightBlueBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource LabelBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource BgLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header bar -->
+        <Border Grid.Row="0" Background="{StaticResource MidnightBrush}" Padding="20,10">
+            <StackPanel Orientation="Horizontal">
+                <Path Width="16" Height="16" Stretch="Uniform" Fill="White" Opacity="0.7" Margin="0,0,8,0"
+                      Data="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                <TextBlock Text="{x:Static res:Strings.FacesheetReview_HeaderTitle}"
+                           Foreground="White" FontSize="13" FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- OCR confidence banner — only visible for image facesheets -->
+        <Border x:Name="ConfidenceBanner" Grid.Row="1"
+                Background="#FFFBEB" BorderBrush="#FDE68A" BorderThickness="0,0,0,1"
+                Padding="20,8" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Path Width="16" Height="16" Stretch="Uniform" Fill="#F59E0B" Margin="0,0,8,0"
+                      Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                <TextBlock x:Name="ConfidenceText" Text="{x:Static res:Strings.FacesheetReview_OcrConfidence}"
+                           FontSize="12" FontWeight="SemiBold" Foreground="#92400E"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Border Width="120" Height="6" Background="#E5E7EB" CornerRadius="3"
+                        VerticalAlignment="Center" Margin="0,0,8,0">
+                    <Border x:Name="ConfidenceBar" HorizontalAlignment="Left"
+                            Width="0" Height="6" CornerRadius="3" Background="#F59E0B"/>
+                </Border>
+                <TextBlock FontSize="12" Foreground="#A16207" VerticalAlignment="Center"><Run Text="— "/><Run Text="{x:Static res:Strings.FacesheetReview_ReviewAllFields}"/></TextBlock>
+            </StackPanel>
+        </Border>
+
+        <!-- Two-panel body: document preview (left) + form tabs (right) -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Document preview panel -->
+            <Border Grid.Column="0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0"
+                    Background="#f9fafb">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="White" Padding="16,10"
+                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Width="16" Height="16" Stretch="Uniform" Fill="#6B7280" Margin="0,0,8,0"
+                                  Data="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                            <TextBlock Text="{x:Static res:Strings.FacesheetReview_OriginalDocument}" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Image viewer (facesheet-image and rendered PDFs) -->
+                    <ScrollViewer x:Name="ImageViewer" Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  Padding="12" Visibility="Collapsed">
+                        <Image x:Name="DocumentImage" Stretch="Uniform"
+                               HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Image.LayoutTransform>
+                                <ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+                            </Image.LayoutTransform>
+                            <Image.Effect>
+                                <DropShadowEffect Color="Black" Direction="270"
+                                                  ShadowDepth="2" BlurRadius="8" Opacity="0.1"/>
+                            </Image.Effect>
+                        </Image>
+                    </ScrollViewer>
+
+                    <!-- Text viewer (DOCX extracted text) -->
+                    <ScrollViewer x:Name="TextViewer" Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Padding="12" Visibility="Collapsed">
+                        <TextBlock x:Name="DocumentText"
+                                   FontFamily="Consolas" FontSize="11"
+                                   Foreground="{StaticResource HeadingBrush}"
+                                   TextWrapping="Wrap" LineHeight="16"/>
+                    </ScrollViewer>
+
+                    <!-- Empty state fallback -->
+                    <StackPanel x:Name="EmptyPreview" Grid.Row="1"
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Path Width="32" Height="32" Stretch="Uniform" Fill="#D1D5DB" Margin="0,0,0,8"
+                              HorizontalAlignment="Center"
+                              Data="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                        <TextBlock Text="{x:Static res:Strings.FacesheetReview_NoPreviewAvailable}" FontSize="13"
+                                   Foreground="{StaticResource GrayBrush}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Form tabs -->
+            <TabControl x:Name="ReviewTabs" Grid.Column="1"
+                        BorderThickness="0" Background="White" Padding="0">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem" BasedOn="{StaticResource ReviewTabItem}"/>
+                </TabControl.Resources>
+
+                <!-- Patient tab -->
+                <TabItem Header="{x:Static res:Strings.FacesheetReview_TabPatient}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_PatientId}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtPatientId" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_HospitalId}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtHospitalId" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_FirstName}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtFirstName" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_LastName}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtLastName" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_DateOfBirth}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtDOB" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Gender}" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox x:Name="CmbGender" Style="{StaticResource ReviewComboBox}">
+                                        <ComboBoxItem Content=""/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.FacesheetReview_GenderMale}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.FacesheetReview_GenderFemale}"/>
+                                        <ComboBoxItem Content="{x:Static res:Strings.FacesheetReview_Unknown}"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Weight}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtWeight" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_HeightLength}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtHeight" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_GestationalAge}" Style="{StaticResource FieldLabel}"/>
+                                    <ComboBox x:Name="CmbGestationalAge" Style="{StaticResource ReviewComboBox}"
+                                              ItemsSource="{x:Static helpers:ClinicalOptions.GestationalAgeWeeks}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_BirthLocation}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtBirthLocation" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Risks tab -->
+                <!-- TODO: Same 16 identical risk row structures as RiskFactorsTab.xaml.
+                     Both should be generated from a shared risk factor definitions list. -->
+                <TabItem Header="{x:Static res:Strings.FacesheetReview_TabRisks}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,16">
+                        <StackPanel x:Name="RiskFactorsPanel">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                        Margin="0,0,0,12">
+                                <TextBlock Text="{x:Static res:Strings.FacesheetReview_QuickActions}" FontSize="12"
+                                           Foreground="{StaticResource LabelBrush}"
+                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <Button Content="{x:Static res:Strings.FacesheetReview_AllYes}" Style="{StaticResource BulkButtonBase}"
+                                        Background="#D1FAE5" Foreground="#065F46" BorderBrush="#6EE7B7"
+                                        Click="BulkSetYes_Click"/>
+                                <Button Content="{x:Static res:Strings.FacesheetReview_AllNo}" Style="{StaticResource BulkButtonBase}"
+                                        Background="#FEE2E2" Foreground="#991B1B" BorderBrush="#FCA5A5"
+                                        Click="BulkSetNo_Click"/>
+                                <Button Content="{x:Static res:Strings.FacesheetReview_AllUnknown}" Style="{StaticResource BulkButtonBase}"
+                                        Background="#E5E7EB" Foreground="#374151" BorderBrush="#D1D5DB"
+                                        Click="BulkSetUnknown_Click" Margin="0"/>
+                            </StackPanel>
+
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+                                    Padding="0,8,0,0">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,6" Tag="Family History of Permanent Childhood Hearing Loss">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskFamilyHistory}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Low Birth Weight">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskLowBirthWeight}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Hyperbilirubinemia with Exchange Transfusion">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskHyperbilirubinemia}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Asphyxia- Hypoxic Ischemic Encephalopathy (HIE)">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskAsphyxia}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Craniofacial Anomalies-Microtia/Atresia, Clefting">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskCraniofacial}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Syndromes &amp; Genetic Disorders of Hearing Loss">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskSyndromes}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="In Utero Infections such as CMV &amp; Zika">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskInUteroInfections}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Bacterial Meningitis">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskBacterialMeningitis}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Ototoxic Medications">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskOtotoxicMedications}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Perinatal or Postnatal Infection">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskPerinatalInfection}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Prolonged Ventilation">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskProlongedVentilation}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Aminoglycosides for >5 Days">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskAminoglycosides}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Caregiver Concern">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskCaregiverConcern}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="NICU >5 Days">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskNicu}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="Exposure to Head Trauma or Chemotherapy">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskHeadTrauma}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,6" Tag="ECMO-Extracorporeal Membrane Oxygenation">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Static res:Strings.FacesheetReview_RiskEcmo}"
+                                                   FontSize="13" Foreground="{StaticResource HeadingBrush}" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Yes}" Style="{StaticResource RiskToggleStyle}" Tag="Yes" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_No}" Style="{StaticResource RiskToggleStyle}" Tag="No" Click="RiskButton_Click"/>
+                                            <Button Content="{x:Static res:Strings.FacesheetReview_Unknown}" Style="{StaticResource RiskToggleStyle}" Tag="Unknown" Click="RiskButton_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- Additional tab -->
+                <TabItem Header="{x:Static res:Strings.FacesheetReview_TabAdditional}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,16">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static res:Strings.FacesheetReview_MotherInformation}" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource MidnightBrush}" Margin="0,0,0,12"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_FirstName}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtMotherFirstName" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_LastName}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtMotherLastName" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Dob}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtMotherDOB" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Phone}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtMotherPhone" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="{x:Static res:Strings.FacesheetReview_MedicalInformation}" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{StaticResource MidnightBrush}" Margin="0,0,0,12"/>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Physician}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtPhysician" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{x:Static res:Strings.FacesheetReview_Medication}" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TxtMedication" Style="{StaticResource ReviewTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+                Padding="20,12" Background="White">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Content="{x:Static res:Strings.FacesheetReview_Back}" Style="{StaticResource FooterSecondaryButton}"
+                            Margin="0,0,8,0" Click="BackButton_Click"/>
+                    <Button Content="{x:Static res:Strings.FacesheetReview_Cancel}" Style="{StaticResource FooterSecondaryButton}"
+                            Click="CancelButton_Click"/>
+                </StackPanel>
+
+                <Button HorizontalAlignment="Right" Click="ImportButton_Click"
+                        Padding="20,8" Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{StaticResource PurpleBrush}"
+                                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Width="14" Height="14" Stretch="Uniform" Fill="White"
+                                                      Margin="0,0,6,0" VerticalAlignment="Center"
+                                                      Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                                <TextBlock Text="{x:Static res:Strings.FacesheetReview_ImportPatient}" Foreground="White"
+                                                           FontSize="13" FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.9"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

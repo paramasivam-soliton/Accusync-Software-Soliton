@@ -1,0 +1,27 @@
+<Project>
+
+  <!-- Applies to every project under this directory tree. NuGet's default build output
+       nests native libraries under runtimes\<rid>\native\ (kept for every RID, not just
+       Windows) and some packages (Tesseract) copy to their own x64\/x86\ folders. This
+       flattens the Windows-relevant native files to sit directly next to the .exe/.dll,
+       then removes the now-empty subfolders, so the output folder has no subdirectories. -->
+  <Target Name="FlattenNativeOutput" AfterTargets="Build">
+
+    <ItemGroup>
+      <_FlattenSqliteNative Include="$(OutDir)runtimes\win-x64\native\e_sqlite3.dll" Condition="Exists('$(OutDir)runtimes\win-x64\native\e_sqlite3.dll')" />
+      <_FlattenPdfiumNative Include="$(OutDir)runtimes\win-x64\native\pdfium.dll" Condition="Exists('$(OutDir)runtimes\win-x64\native\pdfium.dll')" />
+      <_FlattenTesseractNative Include="$(OutDir)x64\*.dll" Condition="Exists('$(OutDir)x64')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_FlattenSqliteNative)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_FlattenSqliteNative)' != ''" />
+    <Copy SourceFiles="@(_FlattenPdfiumNative)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_FlattenPdfiumNative)' != ''" />
+    <Copy SourceFiles="@(_FlattenTesseractNative)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_FlattenTesseractNative)' != ''" />
+
+    <RemoveDir Directories="$(OutDir)runtimes" Condition="Exists('$(OutDir)runtimes')" />
+    <RemoveDir Directories="$(OutDir)x64" Condition="Exists('$(OutDir)x64')" />
+    <RemoveDir Directories="$(OutDir)x86" Condition="Exists('$(OutDir)x86')" />
+    <RemoveDir Directories="$(OutDir)Resources" Condition="Exists('$(OutDir)Resources')" />
+
+  </Target>
+
+</Project>

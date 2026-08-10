@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <!-- annotations: keep nullable annotations (string?, etc.) meaningful, but suppress
          the ~800 flow-analysis warnings from code that isn't nullable-annotated yet.
@@ -23,8 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Images\company_logo.png" />
-    <None Remove="Resources\Images\splash.png" />
     <None Remove="Resources\OCR\tessdata\eng.traineddata" />
   </ItemGroup>
 
@@ -44,15 +42,6 @@
     <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\Images\company_logo.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\splash.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>

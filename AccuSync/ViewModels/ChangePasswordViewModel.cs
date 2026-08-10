@@ -9,25 +9,21 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using AccuSync.Helpers;
 using AccuSync.Models;
 using AccuSync.Resources;
 using AccuSync.Services;
-using AccuSync.Views;
-using AccuSync.Views.Login;
 
 namespace AccuSync.ViewModels
 {
     /// <summary>
     /// Drives the change-password screen. Validates against password policy
     /// rules in real time and checks the last three passwords on save.
-    /// Also handles the first-login forced password change flow.
+    /// Also handles the first-login forced password change flow. Raises
+    /// <see cref="PasswordChangeSucceeded"/> so the hosting View decides which
+    /// dashboard Window to open — this VM has no dependency on any concrete Window type.
     /// </summary>
-    // TODO: Navigation logic (opening AdminDashboardWindow vs ScreenerDashboardWindow)
-    //       doesn't belong in a ViewModel. Move to a navigation service or use an
-    //       event/callback so this VM stays testable without UI dependencies.
     public class ChangePasswordViewModel : INotifyPropertyChanged
     {
         private readonly IDatabaseService _databaseService;
@@ -152,6 +148,9 @@ namespace AccuSync.ViewModels
 
         public ICommand SaveCommand { get; }
 
+        /// <summary>Raised after a successful password change. Carries (username, role).</summary>
+        public event Action<string, string> PasswordChangeSucceeded;
+
         public ChangePasswordViewModel(IDatabaseService databaseService, IEncryptionService encryptionService, User currentUser)
         {
             _databaseService = databaseService;
@@ -243,31 +242,12 @@ namespace AccuSync.ViewModels
 
                 if (success)
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        Window currentWindow = null;
-                        foreach (Window window in Application.Current.Windows)
-                        {
-                            if (window is ChangePasswordWindow)
-                            {
-                                currentWindow = window;
-                                break;
-                            }
-                        }
+                    // TODO: Use an actual Role field from the User model.
+                    string role = string.Equals(_currentUser.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
+                        ? "Admin"
+                        : "Screener";
 
-                        if (string.Equals(_currentUser.AccountName, "Admin", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var adminDashboard = App.GetService<AdminDashboardWindow>();
-                            adminDashboard.Show();
-                        }
-                        else
-                        {
-                            var screenerDashboard = App.GetService<ScreenerDashboardWindow>();
-                            screenerDashboard.Show();
-                        }
-
-                        currentWindow?.Close();
-                    });
+                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, role);
                 }
                 else
                 {

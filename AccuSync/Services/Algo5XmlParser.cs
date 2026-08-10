@@ -4,14 +4,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Controls;
 using AccuSync.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using AccuSync.Views.PatientsTests;
 
 namespace AccuSync.Services
 {

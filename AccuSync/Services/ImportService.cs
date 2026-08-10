@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Models;
-using AccuSync.Views.PatientsTests;
 using System;
 using System.Collections.Generic;
 using System.IO;
