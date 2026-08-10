@@ -18,7 +18,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Hash_GivenAPassword_WhenHashed_ThenReturnsSelfDescribingThreePartString()
+        public void GivenAPassword_WhenHashed_ThenReturnsSelfDescribingThreePartString()
         {
             // Arrange
             const string password = "Password@123";
@@ -36,7 +36,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Hash_GivenTheSamePasswordTwice_WhenHashedEachTime_ThenProducesDifferentHashes()
+        public void GivenTheSamePasswordTwice_WhenHashedEachTime_ThenProducesDifferentHashes()
         {
             // Arrange
             const string password = "Correct-Horse-9";
@@ -51,7 +51,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void Verify_GivenTheExactPasswordThatWasHashed_WhenVerified_ThenReturnsTrue()
+        public void GivenTheExactPasswordThatWasHashed_WhenVerified_ThenReturnsTrue()
         {
             // Arrange
             const string password = "Correct-Horse-9";
@@ -68,7 +68,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [InlineData("Correct-Horse-9", "wrong-password")]
         [InlineData("Correct-Horse-9", "correct-horse-9")] // case differs
         [InlineData("Correct-Horse-9", "Correct-Horse-9 ")] // trailing space
-        public void Verify_GivenAPasswordThatDoesNotMatchTheHashedOne_WhenVerified_ThenReturnsFalse(
+        public void GivenAPasswordThatDoesNotMatchTheHashedOne_WhenVerified_ThenReturnsFalse(
             string hashedPassword, string suppliedPassword)
         {
             // Arrange
@@ -84,7 +84,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Verify_GivenANullOrEmptyStoredHash_WhenVerified_ThenReturnsFalseRatherThanThrowing(string? storedHash)
+        public void GivenANullOrEmptyStoredHash_WhenVerified_ThenReturnsFalseRatherThanThrowing(string? storedHash)
         {
             // Act
             bool result = _sut.Verify("any-password", storedHash!);
@@ -97,7 +97,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         [InlineData("not-a-valid-hash-format")]                 // no separators at all
         [InlineData("210000.onlyTwoParts")]                      // missing the third part
         [InlineData("not-a-number.c29tZXNhbHQ=.c29tZWhhc2g=")]   // non-numeric iteration count
-        public void Verify_GivenAMalformedStoredHash_WhenVerified_ThenReturnsFalseRatherThanThrowing(string malformedHash)
+        public void GivenAMalformedStoredHash_WhenVerified_ThenReturnsFalseRatherThanThrowing(string malformedHash)
         {
             // Act
             bool result = _sut.Verify("any-password", malformedHash);
