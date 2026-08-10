@@ -22,7 +22,7 @@ namespace AccuSync.EF.DependencyInjection
     /// </summary>
     public static class SqliteServiceCollectionExtensions
     {
-        public static IServiceCollection AddSqlitePersistence(this IServiceCollection services, string settingsDatabasePath, string patientDatabasePath)
+        public static IServiceCollection AddSqlitePersistence(this IServiceCollection services, string databasePath)
         {
             services.AddSingleton<TimestampInterceptor>();
 
@@ -31,20 +31,12 @@ namespace AccuSync.EF.DependencyInjection
                 // Default Timeout: seconds SQLite will retry before giving up on a locked
                 // file, instead of failing immediately — covers the brief window where a
                 // previous process instance hasn't fully released the file yet.
-                options.UseSqlite($"Data Source={settingsDatabasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
-                options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
-            });
-
-            services.AddDbContext<PatientDbContext>((provider, options) =>
-            {
-                options.UseSqlite($"Data Source={patientDatabasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
+                options.UseSqlite($"Data Source={databasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
                 options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
-            services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<ITestRepository, TestRepository>();
 
             return services;
         }

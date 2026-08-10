@@ -50,10 +50,9 @@ CREATE TABLE IF NOT EXISTS ImportBatches (
 -- SECTION 2: PATIENTS
 -- One row per patient. SourceId is the device-assigned GUID
 -- used for deduplication across imports.
--- Risk factor selections live in PatientRiskFactorValues (see
--- Section 2A), not on this table — a normalized table is needed
--- to represent the tri-state Yes/No/Unknown value per risk
--- factor, which a JSON array of codes cannot express.
+-- PatientRiskFactors stores a JSON array of RiskFactor.Code
+-- values, e.g. ["RF01","RF04"]. Codes must match rows in
+-- SettingsDatabase.RiskFactors.
 -- FreeField1–4 labels are defined in SettingsDatabase.FieldSetup.
 -- ============================================================
 
@@ -83,6 +82,7 @@ CREATE TABLE IF NOT EXISTS Patients (
     -- Clinical
     GestationalAge      INTEGER,    -- weeks
     RaceReferenceId     TEXT,
+    PatientRiskFactors  TEXT,       -- JSON array of RiskFactor.Code values
 
     -- Referral
     ReferralFrom        TEXT,
@@ -112,26 +112,6 @@ CREATE TABLE IF NOT EXISTS Patients (
     SourceModifiedAt    TEXT,
     CreatedAt           TEXT    NOT NULL DEFAULT (datetime('now')),
     ModifiedAt          TEXT    NOT NULL DEFAULT (datetime('now'))
-);
-
-
--- ============================================================
--- SECTION 2A: PATIENT RISK FACTOR VALUES
--- One row per (Patient, RiskFactor) pair the user has explicitly
--- set. RiskFactorId codes must match rows in
--- SettingsDatabase.RiskFactors (cross-database, no FK — same
--- pattern as Patients.SiteId/AssignedUserId).
--- Value is tri-state: 'Yes' | 'No' | 'Unknown'.
--- ============================================================
-
-CREATE TABLE IF NOT EXISTS PatientRiskFactorValues (
-    PatientRiskFactorValueId INTEGER PRIMARY KEY AUTOINCREMENT,
-    PatientId                INTEGER NOT NULL REFERENCES Patients(PatientId),
-    RiskFactorId             INTEGER NOT NULL,    -- [XDB: SettingsDatabase.RiskFactors.RiskFactorId]
-    Value                    TEXT    NOT NULL,    -- 'Yes' | 'No' | 'Unknown'
-    CreatedAt                TEXT    NOT NULL DEFAULT (datetime('now')),
-    ModifiedAt               TEXT    NOT NULL DEFAULT (datetime('now')),
-    UNIQUE (PatientId, RiskFactorId)
 );
 
 
@@ -482,9 +462,6 @@ CREATE INDEX IF NOT EXISTS IX_Patients_SiteId        ON Patients(SiteId);
 CREATE INDEX IF NOT EXISTS IX_Patients_AssignedUser  ON Patients(AssignedUserId);
 CREATE INDEX IF NOT EXISTS IX_Patients_IsExported    ON Patients(IsExported);
 CREATE INDEX IF NOT EXISTS IX_Patients_IsDeleted     ON Patients(IsDeleted);
-
-CREATE INDEX IF NOT EXISTS IX_RiskFactorValues_PatientId    ON PatientRiskFactorValues(PatientId);
-CREATE INDEX IF NOT EXISTS IX_RiskFactorValues_RiskFactorId ON PatientRiskFactorValues(RiskFactorId);
 
 CREATE INDEX IF NOT EXISTS IX_Contacts_PatientId     ON PatientContacts(PatientId);
 CREATE INDEX IF NOT EXISTS IX_Contacts_Type          ON PatientContacts(ContactType);
