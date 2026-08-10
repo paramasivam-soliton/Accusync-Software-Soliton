@@ -22,6 +22,7 @@ namespace AccuSync.Presentation.ViewModels
     public class SplashViewModel : INotifyPropertyChanged
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPatientRepository _patientRepository;
         private string _statusMessage;
 
         public string StatusMessage
@@ -34,9 +35,10 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        public SplashViewModel(IUserRepository userRepository)
+        public SplashViewModel(IUserRepository userRepository, IPatientRepository patientRepository)
         {
             _userRepository = userRepository;
+            _patientRepository = patientRepository;
         }
 
         public async Task InitializeAsync()
@@ -47,6 +49,7 @@ namespace AccuSync.Presentation.ViewModels
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
                 await _userRepository.InitializeDatabaseAsync();
+                await _patientRepository.InitializeDatabaseAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);

@@ -30,21 +30,22 @@ namespace AccuSync.WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
-            string databasePath = ResolveDatabasePath();
+            string settingsDatabasePath = ResolveDatabasePath("Persistence:DatabasePath", "SettingsDatabase.db");
+            string patientDatabasePath = ResolveDatabasePath("Persistence:PatientDatabasePath", "PatientDatabase.db");
 
             // Persistence — provider selection happens right here: swapping database
             // engines later means calling a different sibling adapter project's
             // equivalent method instead of AddSqlitePersistence.
-            services.AddSqlitePersistence(databasePath);
+            services.AddSqlitePersistence(settingsDatabasePath, patientDatabasePath);
 
             // File-format exchange — import parsing, QR generation. Same "provider
             // selection happens here" pattern as AddSqlitePersistence above.
             services.AddDataParserServices();
 
-            // Data Protection key ring lives alongside the database so it travels with
-            // it if the DB file is ever backed up/restored onto another machine.
+            // Data Protection key ring lives alongside the settings database so it travels
+            // with it if the DB file is ever backed up/restored onto another machine.
             // Standalone use only; no web server/hosting involved.
-            string keysPath = Path.Combine(Path.GetDirectoryName(databasePath), "DataProtectionKeys");
+            string keysPath = Path.Combine(Path.GetDirectoryName(settingsDatabasePath), "DataProtectionKeys");
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 
             // Services
@@ -67,23 +68,23 @@ namespace AccuSync.WPF
         }
 
         /// <summary>
-        /// Reads Persistence:DatabasePath from appsettings.json. Falls back to the
-        /// existing %ProgramData%\Natus\AccuSync\SettingsDatabase.db location when the
-        /// setting is absent or blank, so the app works out of the box with zero config.
+        /// Reads <paramref name="configKey"/> from appsettings.json. Falls back to
+        /// %ProgramData%\Natus\AccuSync\<paramref name="defaultFileName"/> when the setting
+        /// is absent or blank, so the app works out of the box with zero config.
         /// </summary>
-        private static string ResolveDatabasePath()
+        private static string ResolveDatabasePath(string configKey, string defaultFileName)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: true)
                 .Build();
 
-            string configuredPath = configuration["Persistence:DatabasePath"];
+            string configuredPath = configuration[configKey];
 
             string databasePath = string.IsNullOrWhiteSpace(configuredPath)
                 ? Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                    "Natus", "AccuSync", "SettingsDatabase.db")
+                    "Natus", "AccuSync", defaultFileName)
                 : configuredPath;
 
             Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
