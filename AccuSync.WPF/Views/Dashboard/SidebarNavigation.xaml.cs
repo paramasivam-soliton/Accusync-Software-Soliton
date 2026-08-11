@@ -27,6 +27,11 @@ using AccuSync.WPF.Resources.Constants;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
+    /// <summary>
+    /// Main navigation shell: owns the sidebar nav items, hosts each screen's
+    /// <see cref="BaseScreenView"/>, and routes ribbon button clicks to the
+    /// currently active screen (and its active takeover mode, if any).
+    /// </summary>
     public partial class SidebarNavigation : UserControl
     {
         private string _currentView = "Dashboard";
@@ -61,6 +66,10 @@ namespace AccuSync.WPF.Views.Dashboard
         private readonly SolidColorBrush _navInactiveBg = new SolidColorBrush(Color.FromArgb(0x1A, 0xFF, 0xFF, 0xFF));
         private readonly SolidColorBrush _navHoverBg = new SolidColorBrush(Color.FromArgb(0x26, 0xFF, 0xFF, 0xFF));
 
+        /// <summary>
+        /// Initializes the control, sets up each screen's base view, and
+        /// navigates to the default landing view once loaded.
+        /// </summary>
         public SidebarNavigation()
         {
             InitializeComponent();
@@ -83,6 +92,10 @@ namespace AccuSync.WPF.Views.Dashboard
 
         // Public API — called from AdminDashboardWindow
 
+        /// <summary>
+        /// Sets the current user's display name and forwards it to the dashboard greeting.
+        /// </summary>
+        /// <param name="username">The logged-in user's display name.</param>
         public void SetCurrentUser(string username)
         {
             _currentUser = username;

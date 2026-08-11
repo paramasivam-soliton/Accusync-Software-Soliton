@@ -32,8 +32,19 @@ namespace AccuSync.Application.Helpers
 
         // TODO: These hit the filesystem on every access. Consider caching the result
         //       at startup if the checks become a performance concern.
+        /// <summary>
+        /// Gets a value indicating whether <c>skip_login.flag</c> is present.
+        /// </summary>
         public static bool SkipLogin => File.Exists(LoginFlagPath);
+
+        /// <summary>
+        /// Gets a value indicating whether <c>skip_dashboard.flag</c> is present.
+        /// </summary>
         public static bool SkipDashboard => File.Exists(DashboardFlagPath);
+
+        /// <summary>
+        /// Gets a value indicating whether any dev mode flag is currently active.
+        /// </summary>
         public static bool IsAnyDevMode => SkipLogin || SkipDashboard;
 
         /// <summary>

@@ -26,6 +26,7 @@ namespace AccuSync.WPF.Controls
         /// </summary>
         public event EventHandler<RibbonItemClickEventArgs> ItemClicked;
 
+        /// <summary>Initializes the toolbar control.</summary>
         public RibbonToolbar()
         {
             InitializeComponent();
