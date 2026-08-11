@@ -13,8 +13,8 @@ using Moq;
 namespace AccuSync.Presentation.Tests.ViewModels
 {
     /// <summary>
-    /// Scoped narrowly to role-on-sign-in behavior — a freshly assigned role takes
-    /// effect on the user's next login — rather than re-testing credential
+    /// Scoped narrowly to profile-on-sign-in behavior — a freshly assigned profile
+    /// takes effect on the user's next login — rather than re-testing credential
     /// verification, lockout, or dropdown loading, which belong to the login flow
     /// itself and are already covered where that logic actually lives
     /// (AuthenticationServiceTests).
@@ -25,6 +25,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
         private readonly Mock<IAuthenticationService> _authenticationServiceMock;
         private readonly Mock<IPasswordHasher> _passwordHasherMock;
         private readonly Mock<ICurrentUserContext> _currentUserContextMock;
+        private readonly Mock<IProfileRepository> _profileRepositoryMock;
 
         public LoginViewModelTests()
         {
@@ -34,13 +35,15 @@ namespace AccuSync.Presentation.Tests.ViewModels
             _authenticationServiceMock = new Mock<IAuthenticationService>();
             _passwordHasherMock = new Mock<IPasswordHasher>();
             _currentUserContextMock = new Mock<ICurrentUserContext>();
+            _profileRepositoryMock = new Mock<IProfileRepository>();
         }
 
         private LoginViewModel CreateSut() => new(
             _userRepositoryMock.Object,
             _authenticationServiceMock.Object,
             _passwordHasherMock.Object,
-            _currentUserContextMock.Object);
+            _currentUserContextMock.Object,
+            _profileRepositoryMock.Object);
 
         private static User NewUser(string profileId, int firstLogin = 0) => new()
         {
@@ -49,13 +52,19 @@ namespace AccuSync.Presentation.Tests.ViewModels
             FirstLogin = firstLogin
         };
 
+        private void SetUpProfile(string profileId) =>
+            _profileRepositoryMock
+                .Setup(r => r.GetProfileByIdAsync(profileId))
+                .ReturnsAsync(new Profile { Id = profileId, Name = profileId });
+
         [Fact]
-        public async Task GivenAUserWhoseStoredProfileIdIsAdmin_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheAdminRole()
+        public async Task GivenAUserWhoseStoredProfileIdIsAdmin_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheAdminProfile()
         {
-            // Arrange — the freshly-fetched User carries whatever role an admin most
-            // recently assigned; the ViewModel must not use a cached/stale role.
+            // Arrange — the freshly-fetched User carries whatever profile an admin most
+            // recently assigned; the ViewModel must not use a cached/stale profile.
             var sut = CreateSut();
             var user = NewUser(profileId: "Admin");
+            SetUpProfile("Admin");
             _authenticationServiceMock
                 .Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new AuthenticationResult { Success = true, User = user });
@@ -65,15 +74,16 @@ namespace AccuSync.Presentation.Tests.ViewModels
             await Task.Delay(50); // SignInCommand's handler is async void via RelayCommand
 
             // Assert
-            _currentUserContextMock.Verify(c => c.SignIn(user, UserRole.Admin), Times.Once);
+            _currentUserContextMock.Verify(c => c.SignIn(user, It.Is<Profile>(p => p.Id == "Admin")), Times.Once);
         }
 
         [Fact]
-        public async Task GivenAUserWhoseStoredProfileIdIsScreener_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheScreenerRole()
+        public async Task GivenAUserWhoseStoredProfileIdIsScreener_WhenSignedIn_ThenTheCurrentUserContextIsSignedInWithTheScreenerProfile()
         {
             // Arrange
             var sut = CreateSut();
             var user = NewUser(profileId: "Screener");
+            SetUpProfile("Screener");
             _authenticationServiceMock
                 .Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new AuthenticationResult { Success = true, User = user });
@@ -83,29 +93,30 @@ namespace AccuSync.Presentation.Tests.ViewModels
             await Task.Delay(50);
 
             // Assert
-            _currentUserContextMock.Verify(c => c.SignIn(user, UserRole.Screener), Times.Once);
+            _currentUserContextMock.Verify(c => c.SignIn(user, It.Is<Profile>(p => p.Id == "Screener")), Times.Once);
         }
 
         [Fact]
-        public async Task GivenASuccessfulNonFirstLoginSignIn_WhenSignedIn_ThenTheLoginSucceededEventCarriesTheParsedRoleAsText()
+        public async Task GivenASuccessfulNonFirstLoginSignIn_WhenSignedIn_ThenTheLoginSucceededEventCarriesTheResolvedProfileName()
         {
             // Arrange
             var sut = CreateSut();
             var user = NewUser(profileId: "Admin", firstLogin: 0);
+            SetUpProfile("Admin");
             _authenticationServiceMock
                 .Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new AuthenticationResult { Success = true, User = user });
 
-            string? raisedRole = null;
-            sut.LoginSucceeded += (_, role) => raisedRole = role;
+            string? raisedProfileName = null;
+            sut.LoginSucceeded += (_, profileName) => raisedProfileName = profileName;
 
             // Act
             sut.SignInCommand.Execute(null);
             await Task.Delay(50);
 
             // Assert — this is what App.NavigateAfterLogin uses to pick a dashboard,
-            // so it must reflect the freshly-parsed role, not a hardcoded string.
-            Assert.Equal(nameof(UserRole.Admin), raisedRole);
+            // so it must reflect the freshly-resolved profile, not a hardcoded string.
+            Assert.Equal("Admin", raisedProfileName);
         }
 
         [Fact]
@@ -122,7 +133,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
             await Task.Delay(50);
 
             // Assert
-            _currentUserContextMock.Verify(c => c.SignIn(It.IsAny<User>(), It.IsAny<UserRole>()), Times.Never);
+            _currentUserContextMock.Verify(c => c.SignIn(It.IsAny<User>(), It.IsAny<Profile>()), Times.Never);
         }
     }
 }

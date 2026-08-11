@@ -34,6 +34,12 @@ namespace AccuSync.EF.Configurations
 
             builder.Property(u => u.ProfilePassword).IsRequired();
 
+            builder.Property(u => u.ProfileId).IsRequired();
+            builder.HasOne<Profile>()
+                .WithMany()
+                .HasForeignKey(u => u.ProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(u => u.Status).HasDefaultValue(0);
             builder.Property(u => u.FirstLogin).HasDefaultValue(1);
             builder.Property(u => u.FailedLoginAttemptCount).HasDefaultValue(0);

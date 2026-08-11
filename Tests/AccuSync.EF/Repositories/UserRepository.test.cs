@@ -234,7 +234,7 @@ namespace AccuSync.EF.Tests.Repositories
 
             // Act — promoted to Admin via the narrow admin-exception method
             // (no Users-management UI exists yet).
-            bool success = await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+            bool success = await _sut.UpdateUserProfileAsync(user.Guid, "Admin");
 
             // Assert
             Assert.True(success);
@@ -246,7 +246,7 @@ namespace AccuSync.EF.Tests.Repositories
         public async Task GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
         {
             // Act
-            bool success = await _sut.UpdateUserRoleAsync(System.Guid.NewGuid().ToString(), UserRole.Admin);
+            bool success = await _sut.UpdateUserProfileAsync(System.Guid.NewGuid().ToString(), "Admin");
 
             // Assert
             Assert.False(success);
@@ -261,7 +261,7 @@ namespace AccuSync.EF.Tests.Repositories
             await _sut.CreateUserAsync(user);
 
             // Act
-            await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+            await _sut.UpdateUserProfileAsync(user.Guid, "Admin");
 
             // Assert — a role change is not supposed to be a disguised full profile overwrite.
             var result = await _sut.GetUserByAccountNameAsync("Admin");
