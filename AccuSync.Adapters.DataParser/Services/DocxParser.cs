@@ -23,12 +23,23 @@ namespace AccuSync.Adapters.DataParser.Services
     /// Supports the same hospital formats as <see cref="PdfParser"/> and
     /// <see cref="OcrParser"/>, plus Markdown-formatted DOCX variations.
     /// </summary>
+    /// <summary>
+    /// Extracts patient data from Word (.docx) facesheet documents using
+    /// OpenXml for text extraction and regex-based field mapping.
+    /// Supports the same hospital formats as <see cref="PdfParser"/> and
+    /// <see cref="OcrParser"/>, plus Markdown-formatted DOCX variations.
+    /// </summary>
     // TODO: This is the third copy of the facesheet extraction logic (alongside
     //       PdfParser and OcrParser). Only the text-extraction step differs.
     //       Extract a shared FacesheetFieldExtractor and have each parser call it.
     // TODO: Same PII-in-debug-output concern as PdfParser and OcrParser.
     public class DocxParser
     {
+        /// <summary>
+        /// Parses a Word (.docx) facesheet into a <see cref="PatientData"/> record.
+        /// </summary>
+        /// <param name="filePath">Path to the DOCX facesheet to parse.</param>
+        /// <returns>The extracted <see cref="PatientData"/>.</returns>
         public static PatientData ParseDocxFacesheet(string filePath)
         {
             if (!File.Exists(filePath))

@@ -15,22 +15,31 @@ namespace AccuSync.Application.Services.Authentication
     /// </summary>
     public class CurrentUserContext : ICurrentUserContext
     {
-        public string Guid { get; private set; }
+        /// <summary>The signed-in user's unique identifier, or null if no one is signed in.</summary>
+        public string Id { get; private set; }
+
+        /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
         public string AccountName { get; private set; }
+
+        /// <summary>The signed-in user's role. Screener (least-privilege) when no one is signed in.</summary>
         public UserRole Role { get; private set; }
+
+        /// <summary>Whether a user is currently signed in.</summary>
         public bool IsSignedIn { get; private set; }
 
+        /// <summary>Populates the session from a successful login.</summary>
         public void SignIn(User user, UserRole role)
         {
-            Guid = user.Guid;
+            Id = user.Id;
             AccountName = user.AccountName;
             Role = role;
             IsSignedIn = true;
         }
 
+        /// <summary>Clears the session.</summary>
         public void SignOut()
         {
-            Guid = null;
+            Id = null;
             AccountName = null;
             Role = UserRole.Screener;
             IsSignedIn = false;

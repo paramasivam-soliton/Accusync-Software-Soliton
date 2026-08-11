@@ -13,7 +13,9 @@ namespace AccuSync.Application.Models
     /// </summary>
     public class ImportRequest
     {
+        /// <summary>The patient to import.</summary>
         public PatientData Patient { get; set; }
+        /// <summary>The action to take for this patient.</summary>
         public ImportAction Action { get; set; }
     }
 }

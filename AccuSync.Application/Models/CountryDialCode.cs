@@ -12,15 +12,23 @@ namespace AccuSync.Application.Models
     //       Drive the formatter from this model so there's a single source of truth.
     public class CountryDialCode
     {
+        /// <summary>The country's two-letter code (e.g., "US").</summary>
         public string Code { get; set; }
+        /// <summary>The country's display name.</summary>
         public string Name { get; set; }
+        /// <summary>The country's flag identifier.</summary>
         public string Flag { get; set; }
+        /// <summary>The country's international dial code (e.g., "+1").</summary>
         public string DialCode { get; set; }
+        /// <summary>The phone number format mask for the country (e.g., "(XXX) XXX-XXXX").</summary>
         public string Format { get; set; }
+        /// <summary>An example formatted phone number for the country.</summary>
         public string Example { get; set; }
 
         // TODO: GetCountries() allocates a new list on every call. Cache the list
         //       in a static field — country data doesn't change at runtime.
+        /// <summary>Returns the fixed list of supported countries and their dial codes.</summary>
+        /// <returns>A new list of <see cref="CountryDialCode"/> entries.</returns>
         public static List<CountryDialCode> GetCountries()
         {
             return new List<CountryDialCode>
@@ -45,11 +53,17 @@ namespace AccuSync.Application.Models
 
         // TODO: Both lookups call GetCountries() twice on a miss (once for FirstOrDefault,
         //       once for the fallback First). Store the list in a local variable.
+        /// <summary>Finds the country matching the given dial code, falling back to the first country if not found.</summary>
+        /// <param name="dialCode">The international dial code to search for (e.g., "+1").</param>
+        /// <returns>The matching <see cref="CountryDialCode"/>, or the first country if none matches.</returns>
         public static CountryDialCode GetByDialCode(string dialCode)
         {
             return GetCountries().FirstOrDefault(c => c.DialCode == dialCode) ?? GetCountries().First();
         }
 
+        /// <summary>Finds the country matching the given two-letter code, falling back to the first country if not found.</summary>
+        /// <param name="code">The country's two-letter code to search for (e.g., "US").</param>
+        /// <returns>The matching <see cref="CountryDialCode"/>, or the first country if none matches.</returns>
         public static CountryDialCode GetByCode(string code)
         {
             return GetCountries().FirstOrDefault(c => c.Code == code) ?? GetCountries().First();

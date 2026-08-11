@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
@@ -21,9 +21,10 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IDatabaseInitializer _databaseInitializer;
         private string _statusMessage;
 
+        /// <summary>Current progress message shown on the splash screen.</summary>
         public string StatusMessage
         {
             get => _statusMessage;
@@ -34,11 +35,17 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        public SplashViewModel(IUserRepository userRepository)
+        /// <summary>Creates the view model with the initializer used to bring the database up to date.</summary>
+        /// <param name="databaseInitializer">Service used to initialize the application database.</param>
+        public SplashViewModel(IDatabaseInitializer databaseInitializer)
         {
-            _userRepository = userRepository;
+            _databaseInitializer = databaseInitializer;
         }
 
+        /// <summary>
+        /// Initializes the database and updates <see cref="StatusMessage"/> as progress advances.
+        /// Shuts down the application if initialization fails.
+        /// </summary>
         public async Task InitializeAsync()
         {
             try
@@ -46,7 +53,7 @@ namespace AccuSync.Presentation.ViewModels
                 StatusMessage = Strings.SplashViewModel_InitializingDatabase;
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
-                await _userRepository.InitializeDatabaseAsync();
+                await _databaseInitializer.InitializeAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);
@@ -61,6 +68,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

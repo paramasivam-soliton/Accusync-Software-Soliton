@@ -66,7 +66,7 @@ namespace AccuSync.EF.Tests.Repositories
 
             // Assert
             Assert.True(success);
-            var stored = await _context.Users.AsNoTracking().SingleAsync(u => u.Guid == user.Guid);
+            var stored = await _context.Users.AsNoTracking().SingleAsync(u => u.Id == user.Id);
             Assert.NotEqual("Admin", stored.AccountName);
         }
 
@@ -80,7 +80,7 @@ namespace AccuSync.EF.Tests.Repositories
             await _sut.CreateUserAsync(user);
 
             // Assert
-            var stored = await _context.Users.AsNoTracking().SingleAsync(u => u.Guid == user.Guid);
+            var stored = await _context.Users.AsNoTracking().SingleAsync(u => u.Id == user.Id);
             Assert.NotEqual("Password@123", stored.ProfilePassword);
             Assert.True(new PasswordHasher().Verify("Password@123", stored.ProfilePassword));
         }
@@ -98,7 +98,7 @@ namespace AccuSync.EF.Tests.Repositories
             // Assert
             Assert.NotNull(result);
             Assert.Equal("Admin", result!.AccountName);
-            Assert.Equal(user.Guid, result.Guid);
+            Assert.Equal(user.Id, result.Id);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace AccuSync.EF.Tests.Repositories
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(user.Guid, result!.Guid);
+            Assert.Equal(user.Id, result!.Id);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task GivenAUserGuidThatDoesNotExist_WhenUpdated_ThenReturnsFalse()
+        public async Task GivenAUserIdThatDoesNotExist_WhenUpdated_ThenReturnsFalse()
         {
             // Arrange
             var nonExistentUser = NewUser("NoSuchAccount");
@@ -196,12 +196,12 @@ namespace AccuSync.EF.Tests.Repositories
             // Arrange
             var user = NewUser("Admin");
             await _sut.CreateUserAsync(user);
-            var beforeUpdate = await _context.Users.AsNoTracking().SingleAsync(u => u.Guid == user.Guid);
+            var beforeUpdate = await _context.Users.AsNoTracking().SingleAsync(u => u.Id == user.Id);
             var current = await _sut.GetUserByAccountNameAsync("Admin");
 
             // Act — re-save with the exact same account name.
             await _sut.UpdateUserAsync(current!);
-            var afterUpdate = await _context.Users.AsNoTracking().SingleAsync(u => u.Guid == user.Guid);
+            var afterUpdate = await _context.Users.AsNoTracking().SingleAsync(u => u.Id == user.Id);
 
             // Assert — encryption is non-deterministic (a fresh ciphertext every write),
             // while the deterministic blind-index hash used for lookup stays the same.
@@ -234,7 +234,7 @@ namespace AccuSync.EF.Tests.Repositories
 
             // Act — promoted to Admin via the narrow admin-exception method
             // (no Users-management UI exists yet).
-            bool success = await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+            bool success = await _sut.UpdateUserRoleAsync(user.Id, UserRole.Admin);
 
             // Assert
             Assert.True(success);
@@ -243,7 +243,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        public async Task GivenAUserIdThatDoesNotExist_WhenCalled_ThenReturnsFalse()
         {
             // Act
             bool success = await _sut.UpdateUserRoleAsync(System.Guid.NewGuid().ToString(), UserRole.Admin);
@@ -261,7 +261,7 @@ namespace AccuSync.EF.Tests.Repositories
             await _sut.CreateUserAsync(user);
 
             // Act
-            await _sut.UpdateUserRoleAsync(user.Guid, UserRole.Admin);
+            await _sut.UpdateUserRoleAsync(user.Id, UserRole.Admin);
 
             // Assert — a role change is not supposed to be a disguised full profile overwrite.
             var result = await _sut.GetUserByAccountNameAsync("Admin");
@@ -278,7 +278,7 @@ namespace AccuSync.EF.Tests.Repositories
 
             // Act — deactivated via the narrow admin-exception method
             // (no Users-management UI exists yet).
-            bool success = await _sut.SetUserActiveStatusAsync(user.Guid, isActive: false);
+            bool success = await _sut.SetUserActiveStatusAsync(user.Id, isActive: false);
 
             // Assert
             Assert.True(success);
@@ -288,7 +288,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task SetUserActiveStatusAsync_GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        public async Task SetUserActiveStatusAsync_GivenAUserIdThatDoesNotExist_WhenCalled_ThenReturnsFalse()
         {
             // Act
             bool success = await _sut.SetUserActiveStatusAsync(System.Guid.NewGuid().ToString(), isActive: false);
@@ -309,7 +309,7 @@ namespace AccuSync.EF.Tests.Repositories
             await _sut.UpdateUserAsync(lockedOut);
 
             // Act — an Admin unlocking the account immediately, ahead of the configured duration.
-            bool success = await _sut.UnlockUserAsync(user.Guid);
+            bool success = await _sut.UnlockUserAsync(user.Id);
 
             // Assert — both fields reset together, not just the counter.
             Assert.True(success);
@@ -319,7 +319,7 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
-        public async Task UnlockUserAsync_GivenAUserGuidThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        public async Task UnlockUserAsync_GivenAUserIdThatDoesNotExist_WhenCalled_ThenReturnsFalse()
         {
             // Act
             bool success = await _sut.UnlockUserAsync(System.Guid.NewGuid().ToString());
