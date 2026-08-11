@@ -18,16 +18,39 @@ namespace AccuSync.WPF.Helpers
     /// </summary>
     public static class FieldSetupTable
     {
+        /// <summary>
+        /// Background brush for alternating (zebra-striped) table rows.
+        /// </summary>
         public static readonly SolidColorBrush AltRowBg =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fafbfc"));
+
+        /// <summary>
+        /// Brush used for table and cell borders.
+        /// </summary>
         public static readonly SolidColorBrush BorderBrush =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e5e7eb"));
+
+        /// <summary>
+        /// Brush used for standard cell text.
+        /// </summary>
         public static readonly SolidColorBrush TextBrush =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5C5149"));
+
+        /// <summary>
+        /// Brush used for placeholder/watermark text in empty cells.
+        /// </summary>
         public static readonly SolidColorBrush PlaceholderBrush =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BBBBBB"));
+
+        /// <summary>
+        /// Default border brush for an input cell that has no value yet.
+        /// </summary>
         public static readonly SolidColorBrush DefaultBorderBrush =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D1D5DB"));
+
+        /// <summary>
+        /// Border brush applied to an input cell once it has been filled in.
+        /// </summary>
         public static readonly SolidColorBrush FilledBorderBrush =
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#28a745"));
 

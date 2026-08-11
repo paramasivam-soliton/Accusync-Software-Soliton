@@ -24,6 +24,7 @@ namespace AccuSync.Presentation.ViewModels
         private readonly IDatabaseInitializer _databaseInitializer;
         private string _statusMessage;
 
+        /// <summary>Current progress message shown on the splash screen.</summary>
         public string StatusMessage
         {
             get => _statusMessage;
@@ -34,11 +35,17 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Creates the view model with the initializer used to bring the database up to date.</summary>
+        /// <param name="databaseInitializer">Service used to initialize the application database.</param>
         public SplashViewModel(IDatabaseInitializer databaseInitializer)
         {
             _databaseInitializer = databaseInitializer;
         }
 
+        /// <summary>
+        /// Initializes the database and updates <see cref="StatusMessage"/> as progress advances.
+        /// Shuts down the application if initialization fails.
+        /// </summary>
         public async Task InitializeAsync()
         {
             try
@@ -61,6 +68,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

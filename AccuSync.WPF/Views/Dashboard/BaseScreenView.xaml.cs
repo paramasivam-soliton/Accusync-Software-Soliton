@@ -11,6 +11,11 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
+    /// <summary>
+    /// Reusable screen shell combining a <see cref="RibbonToolbar"/> with a
+    /// swappable content area. Concrete screens plug their content in via
+    /// <see cref="SetContent"/>.
+    /// </summary>
     public partial class BaseScreenView : UserControl
     {
         /// <summary>
@@ -18,6 +23,9 @@ namespace AccuSync.WPF.Views.Dashboard
         /// </summary>
         public event EventHandler<RibbonItemClickEventArgs> RibbonItemClicked;
 
+        /// <summary>
+        /// Initializes the control and wires up ribbon click forwarding.
+        /// </summary>
         public BaseScreenView()
         {
             InitializeComponent();

@@ -15,6 +15,9 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.SystemConfiguration
 {
+    /// <summary>
+    /// Toolbar takeover view for configuring risk factors and their translations.
+    /// </summary>
     public partial class RiskFactorsConfigView : UserControl
     {
         private ObservableCollection<RiskFactorEntry> _riskFactors = new();
@@ -31,6 +34,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         private RiskFactorSnapshot _savedState;
         private readonly Stack<RiskFactorSnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default risk factor list once loaded.
+        /// </summary>
         public RiskFactorsConfigView()
         {
             InitializeComponent();
@@ -214,6 +220,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         // Save / Revert / Undo / Add / Delete — called from toolbar
 
         // NOTE: HandleSave captures snapshot only — doesn't persist to database
+        /// <summary>
+        /// Adds a new risk factor with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var entry = new RiskFactorEntry
@@ -230,6 +239,10 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             RiskFactorsListView.SelectedItem = entry;
         }
 
+        /// <summary>
+        /// Deletes the selected risk factor after user confirmation. Refuses to delete
+        /// a risk factor that is currently in use.
+        /// </summary>
         public void HandleDelete()
         {
             if (RiskFactorsListView.SelectedItem is not RiskFactorEntry rf) return;
@@ -264,6 +277,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             }
         }
 
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = CaptureSnapshot();
@@ -271,6 +287,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             AppDialog.Show(Strings.RiskFactorsConfigView_RiskFactorSaved, Strings.RiskFactorsConfigView_Save, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -278,6 +297,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             _undoStack.Clear();
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

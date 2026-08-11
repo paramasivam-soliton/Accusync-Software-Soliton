@@ -11,9 +11,13 @@ namespace AccuSync.WPF.Controls
     /// </summary>
     public enum RibbonItemType
     {
+        /// <summary>An icon+text button.</summary>
         Button,
+        /// <summary>A dropdown selection control.</summary>
         Dropdown,
+        /// <summary>A text search input with clear button.</summary>
         SearchField,
+        /// <summary>A non-interactive visual spacer.</summary>
         Separator
     }
 }

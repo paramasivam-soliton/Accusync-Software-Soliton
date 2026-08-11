@@ -23,6 +23,9 @@ namespace AccuSync.WPF.Views.PatientsTests.Tabs
     /// </summary>
     public partial class PatientDetailsTab : UserControl
     {
+        /// <summary>
+        /// Initializes the control.
+        /// </summary>
         public PatientDetailsTab()
         {
             InitializeComponent();
