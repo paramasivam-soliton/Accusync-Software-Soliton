@@ -20,6 +20,8 @@ namespace AccuSync.WPF.Controls
     {
         // Patients — Edit/Delete live on the Patient Info panel pills;
         //            Search lives in the Patient List's built-in filter.
+        /// <summary>Ribbon definition for the Patients screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Patients()
         {
             return new RibbonDefinition(
@@ -43,6 +45,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Users & Profiles
+        /// <summary>Ribbon definition for the Users &amp; Profiles screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Users()
         {
             return new RibbonDefinition(
@@ -70,6 +74,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Profiles (takeover inside Users)
+        /// <summary>Ribbon definition for the Profiles takeover screen inside Users.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Profiles()
         {
             return new RibbonDefinition(
@@ -93,6 +99,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Sites & Facilities
+        /// <summary>Ribbon definition for the Sites &amp; Facilities screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Sites()
         {
             return new RibbonDefinition(
@@ -120,6 +128,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Facilities (takeover inside Sites)
+        /// <summary>Ribbon definition for the Facilities takeover screen inside Sites.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Facilities()
         {
             return new RibbonDefinition(
@@ -143,6 +153,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Locations (takeover inside Sites)
+        /// <summary>Ribbon definition for the Locations takeover screen inside Sites.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Locations()
         {
             return new RibbonDefinition(
@@ -166,6 +178,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Device Management
+        /// <summary>Ribbon definition for the Device Management screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Devices()
         {
             return new RibbonDefinition(
@@ -195,6 +209,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // ABR (takeover inside Devices)
+        /// <summary>Ribbon definition for the ABR protocol takeover screen inside Devices.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition ABR()
         {
             return new RibbonDefinition(
@@ -218,6 +234,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // DPOAE (takeover inside Devices)
+        /// <summary>Ribbon definition for the DPOAE protocol takeover screen inside Devices.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition DPOAE()
         {
             return new RibbonDefinition(
@@ -241,6 +259,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Device Field Setup (takeover inside Devices)
+        /// <summary>Ribbon definition for the Device Field Setup takeover screen inside Devices.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition DeviceFieldSetup()
         {
             return new RibbonDefinition(
@@ -259,6 +279,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // System Configuration
+        /// <summary>Ribbon definition for the System Configuration screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition SystemConfig()
         {
             return new RibbonDefinition(
@@ -290,6 +312,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Risk Factors (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Risk Factors takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition RiskFactors()
         {
             return new RibbonDefinition(
@@ -313,6 +337,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Comments (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Comments takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Comments()
         {
             return new RibbonDefinition(
@@ -336,6 +362,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // User & Profile Config (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the User &amp; Profile Config takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition UserProfileConfig()
         {
             return new RibbonDefinition(
@@ -354,6 +382,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Field Setup Config (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Field Setup Config takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition FieldSetupConfig()
         {
             return new RibbonDefinition(
@@ -372,6 +402,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Site & Facility Config (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Site &amp; Facility Config takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition SiteFacilityConfig()
         {
             return new RibbonDefinition(
@@ -390,6 +422,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Import Config (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Import Config takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition ImportConfig()
         {
             return new RibbonDefinition(
@@ -413,6 +447,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Export Config (takeover inside SystemConfig)
+        /// <summary>Ribbon definition for the Export Config takeover screen inside System Configuration.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition ExportConfig()
         {
             return new RibbonDefinition(
@@ -436,6 +472,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // Settings
+        /// <summary>Ribbon definition for the Settings screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition Settings()
         {
             return new RibbonDefinition(
@@ -451,6 +489,8 @@ namespace AccuSync.WPF.Controls
         }
 
         // About
+        /// <summary>Ribbon definition for the About screen.</summary>
+        /// <returns>The configured ribbon definition.</returns>
         public static RibbonDefinition About()
         {
             return new RibbonDefinition(

@@ -12,10 +12,15 @@ namespace AccuSync.Application.Models
     /// </summary>
     public enum ImportAction
     {
+        /// <summary>Import the patient as a new record.</summary>
         Import,
+        /// <summary>Replace the existing patient's information with the imported data.</summary>
         Replace,
+        /// <summary>Create a new patient record instead of matching the existing one.</summary>
         Create,
+        /// <summary>Keep the existing patient's information and add the imported tests to it.</summary>
         AddTests,
+        /// <summary>Skip this patient and do not import it.</summary>
         Skip
     }
 }

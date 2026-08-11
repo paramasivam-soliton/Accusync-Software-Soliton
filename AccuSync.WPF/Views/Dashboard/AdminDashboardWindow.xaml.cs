@@ -10,8 +10,13 @@ using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
+    /// <summary>
+    /// Main admin shell window. Hosts the <see cref="SidebarNavigation"/> control
+    /// and forwards user/navigation calls to it.
+    /// </summary>
     public partial class AdminDashboardWindow : Window
     {
+        /// <summary>Creates the window and applies the dev-mode title suffix if active.</summary>
         public AdminDashboardWindow()
         {
             InitializeComponent();
@@ -20,6 +25,10 @@ namespace AccuSync.WPF.Views.Dashboard
                 Title += DevModeConfig.GetDevModeLabel();
         }
 
+        /// <summary>
+        /// Forwards the current username to the sidebar shell.
+        /// </summary>
+        /// <param name="username">The logged-in user's display name.</param>
         public void SetCurrentUser(string username)
         {
             Shell.SetCurrentUser(username);
@@ -34,6 +43,10 @@ namespace AccuSync.WPF.Views.Dashboard
             Shell.SetPermissions(permissions);
         }
 
+        /// <summary>
+        /// Forwards a navigation request to the sidebar shell.
+        /// </summary>
+        /// <param name="screenName">The name of the screen to navigate to.</param>
         public void NavigateToView(string screenName)
         {
             Shell.NavigateToView(screenName);

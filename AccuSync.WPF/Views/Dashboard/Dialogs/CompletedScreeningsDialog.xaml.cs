@@ -18,6 +18,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
     // TODO: This code-behind is near-identical to AssignedPatientsDialog.xaml.cs (three-state visibility,
     //       placeholder search, card hover animations, View/Print stubs). Extract a shared base or helper.
+    /// <summary>
+    /// Dialog listing screenings completed today.
+    /// </summary>
     public partial class CompletedScreeningsDialog : CardListDialogBase
     {
         private List<CompletedScreening> _allScreenings;
@@ -29,6 +32,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         protected override TextBox SearchInput => SearchBox;
         protected override string SearchPlaceholder => Strings.CompletedScreeningsDialog_SearchPlaceholder;
 
+        /// <summary>
+        /// Initializes the dialog and asynchronously loads completed screening data.
+        /// </summary>
         public CompletedScreeningsDialog()
         {
             InitializeComponent();
