@@ -106,7 +106,7 @@ merely to search it.
 | `UsernameHash` | `string` | Deterministic hash of the normalized username; carries the unique index and drives lookup. |
 | `FirstName`, `LastName` | `string` | Encrypted display name fields. |
 | `Status` | `bool` | Whether the account can authenticate. `false` (deactivated) is rejected at login regardless of credential correctness. |
-| `ProfileId` | `string` | Holds the account's role (`"Admin"` / `"Screener"`), interpreted in application code — see Role-based access control below. |
+| `ProfileId` | `string` | Foreign key into `Profiles.Id` — see Role-based access control below. |
 | `ProfilePassword` | `string` | One-way password hash (§ Password storage). Column name is retained from the prior schema; only its contents change. |
 | `LastThreePasswords` | `string` | Pipe-delimited history of the three most recent password hashes, used for reuse rejection. |
 | `FirstLogin` | `int` (0/1) | Forces a mandatory password change on the account's first successful login. |
@@ -125,23 +125,37 @@ A companion single-row table, `AppSettings`, holds application-wide configuratio
 
 ### Role-based access control
 
-A two-value role model is used: `UserRole { Screener = 0, Admin = 1 }`, with `Screener` as the
-default (least-privileged) value. No new schema is introduced for this — the existing, previously
-unused `ProfileId` string column is populated with the literal value `"Admin"` or `"Screener"`
-and interpreted by a small parsing helper wherever a role-based decision is needed; anything other
-than an exact, case-insensitive match on `"Admin"` resolves to `Screener`.
+Roles are a real, data-backed `Profile` (`Id`, `Name`, `Description`, `IsSystemDefined`, plus one
+boolean column per permission — see below), not a fixed enum. `User.ProfileId` is a foreign key
+into `Profiles.Id`. Two system-defined profiles, `Admin` and `Screener`
+(`IsSystemDefined = true`), are seeded with the application; additional profiles can be added as
+data — a new row, not a code change — once an administrative Profile Management screen exists to
+create them (not part of this design; see Open issues).
+
+The permission catalog itself — which permissions exist at all — is fixed and code-owned: one
+boolean column per permission on `Profile` (e.g. `PatientsView`, `UsersProfilesAddEditUsers`),
+grouped by the same six components the (currently mock) Profiles screen already presents
+(AccuScreen Management, Device Management, Patients and Tests, Sites and Facilities, System
+Configuration, Users and Profiles — 33 permissions in total). What's configurable is which of
+those a given profile grants, not the catalog of possible permissions — an administrator assembles
+combinations of known permissions into a named profile; the software's own understanding of what a
+permission means is not something a data-entry screen can extend on its own. A wide table (one
+column per permission) was chosen over a normalized permission-catalog-plus-join-table model,
+since the fixed-catalog assumption means the extra normalization has no near-term payoff — see
+`docs/design-documents/AccuSync/RBAC-Custom-Profiles-Plan.md` for the fuller design discussion.
 
 `ICurrentUserContext` is an in-memory, process-lifetime singleton that holds the identity and
-role of the currently signed-in user. It is populated once, at successful sign-in, and cleared
-on logout; a role change made to an account takes effect the next time that account signs in, not
+`Profile` of the currently signed-in user, resolved once at successful sign-in and cleared on
+logout; a profile change made to an account takes effect the next time that account signs in, not
 live against a session already in progress.
 
-The signed-in user's role determines:
+The signed-in user's profile determines:
 - Which of two distinct dashboard shells is shown after login (an administrative dashboard vs. a
-  screener-focused dashboard).
-- Which navigation items and features are enabled within that dashboard, driven by a permissions
-  object with named presets per role (full access for Admin; patient-workflow-only, no
-  administrative navigation, for Screener).
+  screener-focused dashboard) — currently driven by the profile's name, matched against the
+  `Admin` system profile.
+- Which navigation items and features are enabled within that dashboard — the permission flags
+  above are the source of truth for this; wiring them into the dashboard's navigation is tracked
+  as open work (see Open issues), not part of this design.
 
 ### Login
 
@@ -207,20 +221,21 @@ the application requires signing in again.
 
 Full administrative screens for managing user accounts (create/edit/deactivate, role assignment)
 and system-wide configuration (including the lockout duration) are not part of this design and
-remain their existing mock/placeholder presentation; user accounts are provisioned by database
-seed. In their place, this design provides real, testable administrative operations at the
-repository layer — assigning a role, activating/deactivating an account, clearing a lockout, and
-setting the lockout duration — usable by an administrator or test harness ahead of the
-corresponding UI being built.
+remain their existing mock/placeholder presentation; user accounts and profiles are provisioned
+by database seed. In their place, this design provides real, testable administrative operations
+at the repository layer — assigning a profile, activating/deactivating an account, clearing a
+lockout, and setting the lockout duration — usable by an administrator or test harness ahead of
+the corresponding UI being built.
 
 ### Modules affected
 
-- `AccuSync.Core` — `User` and `AppSettings` entities; `UserRole` enum; authentication,
+- `AccuSync.Core` — `User`, `Profile`, and `AppSettings` entities; authentication,
   password-hashing, encryption, current-user-context, and repository abstractions.
 - `AccuSync.Application` — password hasher, encryption service, authentication service,
-  current-user-context implementation, role-parsing helper.
-- `AccuSync.EF` — user and app-settings repositories and EF configurations; schema migrations
-  for the username blind index, the `Status` column type change, and the new `AppSettings` table.
+  current-user-context implementation.
+- `AccuSync.EF` — user, profile, and app-settings repositories and EF configurations; schema
+  migrations for the username blind index, the `Status` column type change, the `Profiles` table
+  (with the seeded `Admin`/`Screener` rows), and the `AppSettings` table.
 - `AccuSync.Presentation` — login, change-password, and permissions view models.
 - `AccuSync.WPF` — login and change-password windows, dashboard shells, application startup and
   navigation/logout wiring, dependency-injection registration.
@@ -247,7 +262,9 @@ corresponding UI being built.
    reusing the existing, previously unused `ProfileId` column. A future, richer profile/permission
    system will require a data-migration step regardless of which path is taken now; reusing
    `ProfileId` avoids introducing an additional column that would also need to be reconciled at
-   that point.
+   that point. *This prediction held* — `ProfileId` was later turned into a real foreign key into
+   a `Profiles` table (see Role-based access control, above), with no need to introduce or
+   reconcile a separate `Role` column.
 6. **A discrete `IsLocked` flag (with a separate `LockedAt` timestamp)** — considered and
    rejected in favor of deriving lockout state entirely from `FailedLoginAttemptCount` and
    `FirstFailedLoginTime`, avoiding a second piece of state that could drift out of sync with the
@@ -273,5 +290,9 @@ corresponding UI being built.
   a locked-out or expired account currently requires administrator intervention. Two fields on
   the `User` entity (`FailedResetAttemptCount`, `FirstResetLoginTime`) appear reserved for a future
   reset flow and are retained but not currently used by any implemented feature.
-- A richer, granular permission-bundle model (as opposed to the two-value Admin/Screener role
-  used here) is described in broader product requirements but is not implemented by this design.
+- A richer, granular permission-bundle model (as opposed to a two-value Admin/Screener role) is
+  now implemented at the data layer — see Role-based access control, above, and
+  `docs/design-documents/AccuSync/RBAC-Custom-Profiles-Plan.md`. Still open: an administrative
+  Profile Management screen to create/edit profiles (profiles remain seed-provisioned, the same
+  way `Users` are), and wiring the profile's permission flags into `SidebarNavigation`/dashboard
+  gating, which today still uses the placeholder `UserPermissionsViewModel` presets.
