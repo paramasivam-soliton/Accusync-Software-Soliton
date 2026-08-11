@@ -21,18 +21,18 @@ namespace AccuSync.Application.Services.Authentication
         /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
         public string AccountName { get; private set; }
 
-        /// <summary>The signed-in user's assigned profile, or null if no one is signed in.</summary>
-        public Profile Profile { get; private set; }
+        /// <summary>The signed-in user's role. Screener (least-privilege) when no one is signed in.</summary>
+        public UserRole Role { get; private set; }
 
         /// <summary>Whether a user is currently signed in.</summary>
         public bool IsSignedIn { get; private set; }
 
         /// <summary>Populates the session from a successful login.</summary>
-        public void SignIn(User user, Profile profile)
+        public void SignIn(User user, UserRole role)
         {
             Id = user.Id;
             AccountName = user.AccountName;
-            Profile = profile;
+            Role = role;
             IsSignedIn = true;
         }
 
@@ -41,7 +41,7 @@ namespace AccuSync.Application.Services.Authentication
         {
             Id = null;
             AccountName = null;
-            Profile = null;
+            Role = UserRole.Screener;
             IsSignedIn = false;
         }
     }

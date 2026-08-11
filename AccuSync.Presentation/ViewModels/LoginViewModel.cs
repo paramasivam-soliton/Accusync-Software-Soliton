@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
+using AccuSync.Application.Helpers;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using System;
@@ -31,7 +32,6 @@ namespace AccuSync.Presentation.ViewModels
         private readonly IAuthenticationService _authenticationService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly ICurrentUserContext _currentUserContext;
-        private readonly IProfileRepository _profileRepository;
 
         private string _selectedUsername;
         private string _password = string.Empty;
@@ -102,20 +102,19 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Command bound to the Sign In button.</summary>
         public ICommand SignInCommand { get; }
 
-        /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, profile name).</summary>
+        /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
         public event Action<string, string> LoginSucceeded;
 
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
         /// <summary>Creates the view model and kicks off loading the username dropdown.</summary>
-        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext, IProfileRepository profileRepository)
+        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
             _passwordHasher = passwordHasher;
             _currentUserContext = currentUserContext;
-            _profileRepository = profileRepository;
 
             Usernames = new ObservableCollection<string>();
             _isPasswordVisible = false;
@@ -159,8 +158,8 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (result.Success)
                 {
-                    var profile = await _profileRepository.GetProfileByIdAsync(result.User.ProfileId);
-                    _currentUserContext.SignIn(result.User, profile);
+                    var role = UserRoleParser.Parse(result.User.ProfileId);
+                    _currentUserContext.SignIn(result.User, role);
 
                     if (result.User.FirstLogin == 1)
                     {
@@ -174,7 +173,7 @@ namespace AccuSync.Presentation.ViewModels
                     }
                     else
                     {
-                        LoginSucceeded?.Invoke(result.User.AccountName, profile.Name);
+                        LoginSucceeded?.Invoke(result.User.AccountName, role.ToString());
                     }
 
                     Password = string.Empty;
