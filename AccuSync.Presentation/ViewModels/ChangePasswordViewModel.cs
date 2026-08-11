@@ -163,7 +163,7 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Command bound to the Save button; validates and persists the new password.</summary>
         public ICommand SaveCommand { get; }
 
-        /// <summary>Raised after a successful password change. Carries (username, role).</summary>
+        /// <summary>Raised after a successful password change. Carries (username, profile name).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
         /// <summary>Creates the view model for the given signed-in user.</summary>
@@ -257,7 +257,7 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (success)
                 {
-                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, _currentUserContext.Role.ToString());
+                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, _currentUserContext.Profile.Name);
                 }
                 else
                 {
