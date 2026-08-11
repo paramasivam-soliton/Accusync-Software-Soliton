@@ -10,8 +10,8 @@ namespace AccuSync.Core.Abstractions.Services
 {
     /// <summary>
     /// The signed-in user for the current application session, held in memory only.
-    /// Populated once at login; profile/permission changes for that user take effect
-    /// on their next login, not live mid-session.
+    /// Populated once at login; role changes for that user take effect on their next
+    /// login, not live mid-session.
     /// </summary>
     public interface ICurrentUserContext
     {
@@ -21,14 +21,14 @@ namespace AccuSync.Core.Abstractions.Services
         /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
         string AccountName { get; }
 
-        /// <summary>The signed-in user's assigned profile, or null if no one is signed in.</summary>
-        Profile Profile { get; }
+        /// <summary>The signed-in user's role. Undefined/least-privilege when no one is signed in.</summary>
+        UserRole Role { get; }
 
         /// <summary>Whether a user is currently signed in.</summary>
         bool IsSignedIn { get; }
 
         /// <summary>Populates the session from a successful login.</summary>
-        void SignIn(User user, Profile profile);
+        void SignIn(User user, UserRole role);
 
         /// <summary>Clears the session.</summary>
         void SignOut();

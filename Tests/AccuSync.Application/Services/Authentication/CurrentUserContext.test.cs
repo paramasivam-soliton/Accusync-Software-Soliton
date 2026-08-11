@@ -17,12 +17,6 @@ namespace AccuSync.Application.Tests.Services.Authentication
             AccountName = accountName
         };
 
-        private static Profile NewProfile(string id = "Screener") => new()
-        {
-            Id = id,
-            Name = id
-        };
-
         [Fact]
         public void GivenAFreshlyConstructedContext_WhenNeverSignedIn_ThenIsFalse()
         {
@@ -34,40 +28,38 @@ namespace AccuSync.Application.Tests.Services.Authentication
         }
 
         [Fact]
-        public void GivenAUserAndProfile_WhenSignedIn_ThenExposesThatIdentityAndProfile()
+        public void GivenAUserAndRole_WhenSignedIn_ThenExposesThatIdentityAndRole()
         {
             // Arrange
             var sut = new CurrentUserContext();
             var user = NewUser(id: "abc-123", accountName: "Admin");
-            var profile = NewProfile(id: "Admin");
-            profile.UsersProfilesViewUsers = true;
 
             // Act
-            sut.SignIn(user, profile);
+            sut.SignIn(user, UserRole.Admin);
 
             // Assert
             Assert.True(sut.IsSignedIn);
             Assert.Equal("abc-123", sut.Id);
             Assert.Equal("Admin", sut.AccountName);
-            Assert.Same(profile, sut.Profile);
-            Assert.True(sut.Profile.UsersProfilesViewUsers);
+            Assert.Equal(UserRole.Admin, sut.Role);
         }
 
         [Fact]
-        public void GivenASignedInContext_WhenSignedOut_ThenClearsIdentityAndProfile()
+        public void GivenASignedInContext_WhenSignedOut_ThenClearsIdentityAndResetsRoleToScreener()
         {
             // Arrange
             var sut = new CurrentUserContext();
-            sut.SignIn(NewUser(), NewProfile("Admin"));
+            sut.SignIn(NewUser(), UserRole.Admin);
 
             // Act
             sut.SignOut();
 
-            // Assert
+            // Assert — Screener (the least-privileged role) rather than leaving the
+            // prior Admin role dangling on an otherwise-signed-out context.
             Assert.False(sut.IsSignedIn);
             Assert.Null(sut.Id);
             Assert.Null(sut.AccountName);
-            Assert.Null(sut.Profile);
+            Assert.Equal(UserRole.Screener, sut.Role);
         }
 
         [Fact]
@@ -76,15 +68,15 @@ namespace AccuSync.Application.Tests.Services.Authentication
             // Arrange — simulates one user logging out and a different user logging in,
             // without a fresh CurrentUserContext instance (it's a process-lifetime singleton).
             var sut = new CurrentUserContext();
-            sut.SignIn(NewUser(id: "admin-guid", accountName: "Admin"), NewProfile("Admin"));
+            sut.SignIn(NewUser(id: "admin-guid", accountName: "Admin"), UserRole.Admin);
 
             // Act
-            sut.SignIn(NewUser(id: "screener-guid", accountName: "Screener"), NewProfile("Screener"));
+            sut.SignIn(NewUser(id: "screener-guid", accountName: "Screener"), UserRole.Screener);
 
             // Assert — no leftover state from the previous session.
             Assert.Equal("screener-guid", sut.Id);
             Assert.Equal("Screener", sut.AccountName);
-            Assert.Equal("Screener", sut.Profile.Id);
+            Assert.Equal(UserRole.Screener, sut.Role);
         }
     }
 }
