@@ -19,6 +19,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 {
     // NOTE: Unlike other config views (which use ListView.ItemsSource), this view builds
     // list cards imperatively and manages selection with index tracking. Consider standardizing.
+    /// <summary>
+    /// Toolbar takeover view for configuring export entries (format, scope, and destination folder).
+    /// </summary>
     public partial class ExportConfigView : UserControl
     {
         private bool _isInitialized = false;
@@ -45,6 +48,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         private ExportSnapshot _savedState;
         private readonly Stack<ExportSnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default export entry once loaded.
+        /// </summary>
         public ExportConfigView()
         {
             InitializeComponent();
@@ -260,6 +266,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 
         // Public API
 
+        /// <summary>
+        /// Adds a new export entry with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             PushUndo();
@@ -274,6 +283,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             SelectItem(_entries.Count - 1);
         }
 
+        /// <summary>
+        /// Deletes the selected export entry after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             if (_selectedIndex < 0 || _selectedIndex >= _entries.Count) return;
@@ -303,6 +315,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         }
 
         // TODO: HandleSave has no actual persistence — same pattern as all other config views.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             SaveCurrentToEntry();
@@ -312,6 +327,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -319,6 +337,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             RestoreSnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

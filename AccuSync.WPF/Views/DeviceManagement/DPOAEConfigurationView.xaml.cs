@@ -20,6 +20,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 {
     // NOTE: This is the third config view with near-identical undo/snapshot/restore infrastructure
     // (ABRConfigurationView, CommentsConfigView, this). Extract a generic ConfigViewBase.
+    /// <summary>
+    /// Toolbar takeover view for configuring DPOAE (Distortion Product Otoacoustic Emissions) protocols.
+    /// </summary>
     public partial class DPOAEConfigurationView : UserControl
     {
         private ObservableCollection<DPOAEProtocolEntry> _protocols = new();
@@ -44,6 +47,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // Initialization
 
+        /// <summary>
+        /// Initializes the control and populates the default DPOAE protocol once loaded.
+        /// </summary>
         public DPOAEConfigurationView()
         {
             InitializeComponent();
@@ -235,6 +241,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // Public Handlers (called by SidebarNavigation)
 
+        /// <summary>
+        /// Adds a new DPOAE protocol with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var entry = new DPOAEProtocolEntry
@@ -260,6 +269,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             ProtocolsListView.SelectedItem = entry;
         }
 
+        /// <summary>
+        /// Deletes the selected DPOAE protocol after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             if (ProtocolsListView.SelectedItem is not DPOAEProtocolEntry protocol) return;
@@ -287,6 +299,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
         }
 
         // TODO: HandleSave has no actual persistence — same pattern as all other config views.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = CaptureSnapshot();
@@ -294,6 +309,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             AppDialog.Show(Strings.DPOAEConfigurationView_ProtocolSaved, Strings.DPOAEConfigurationView_Save, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -301,6 +319,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             _undoStack.Clear();
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

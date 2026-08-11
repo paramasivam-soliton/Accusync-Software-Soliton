@@ -28,8 +28,14 @@ namespace AccuSync.WPF.Views.PatientsTests
     public partial class FacesheetReview : UserControl
     {
         // Raised to parent (ImportWorkspace or PatientsView)
+
+        /// <summary>Raised when the user clicks Back to return to file selection.</summary>
         public event EventHandler BackRequested;
+
+        /// <summary>Raised when the user cancels the review.</summary>
         public event EventHandler CancelRequested;
+
+        /// <summary>Raised when the user clicks Import Patient, carrying the edited patient data.</summary>
         public event EventHandler<PatientData> ImportRequested;
 
         private PatientData _patient;
@@ -49,6 +55,9 @@ namespace AccuSync.WPF.Views.PatientsTests
         private static readonly SolidColorBrush _defaultFg = new(Color.FromRgb(0x6B, 0x72, 0x80));
         private static readonly SolidColorBrush _defaultBorder = new(Color.FromRgb(0xD1, 0xD5, 0xDB));
 
+        /// <summary>
+        /// Initializes the control.
+        /// </summary>
         public FacesheetReview()
         {
             InitializeComponent();

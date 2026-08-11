@@ -40,6 +40,9 @@ namespace AccuSync.Presentation.ViewModels
         private Dictionary<string, string> _validationErrors = new Dictionary<string, string>();
         private BitmapImage _qrCodeImage;
 
+        /// <summary>
+        /// True when at least one property differs from the snapshot taken by <see cref="BeginEdit"/>.
+        /// </summary>
         public bool IsDirty
         {
             get => _isDirty;
@@ -53,6 +56,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True when any field currently fails required-field validation.</summary>
         public bool HasValidationErrors => _validationErrors.Any();
 
         /// <summary>
@@ -63,6 +67,7 @@ namespace AccuSync.Presentation.ViewModels
         /// </summary>
         public bool CanUndo => _undoStack.Count > 0;
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Backing fields — patient
@@ -160,12 +165,16 @@ namespace AccuSync.Presentation.ViewModels
         private string _leftEarResult;
         private string _rightEarResult;
 
+        /// <summary>QR code image encoding the current patient's identifying details.</summary>
         public BitmapImage QRCodeImage
         {
             get => _qrCodeImage;
             private set => SetProperty(ref _qrCodeImage, value);
         }
 
+        /// <summary>
+        /// Builds <see cref="QRCodeImage"/> from the current patient identity fields.
+        /// </summary>
         public void GenerateQRCode()
         {
             string qrContent = QRCodeHelper.FormatPatientData(
@@ -187,6 +196,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Mother phone
         private string _motherPhoneDialCode = "+1";
+        /// <summary>Country dial code for <see cref="MotherPhoneNumber"/>, e.g. "+1".</summary>
         public string MotherPhoneDialCode
         {
             get => _motherPhoneDialCode;
@@ -201,6 +211,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _motherPhoneNumber = string.Empty;
+        /// <summary>Mother's phone number, unformatted digits as entered.</summary>
         public string MotherPhoneNumber
         {
             get => _motherPhoneNumber;
@@ -214,11 +225,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Mother's phone number formatted for display.</summary>
         public string MotherPhoneFormatted
         {
             get => PhoneNumberFormatter.Format(MotherPhoneNumber, MotherPhoneDialCode);
         }
 
+        /// <summary>Mother's phone number with dial code, formatted for reports.</summary>
         public string MotherPhoneFull
         {
             get => string.IsNullOrEmpty(MotherPhoneNumber)
@@ -228,6 +241,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Mother mobile
         private string _motherMobilePhoneDialCode = "+1";
+        /// <summary>Country dial code for <see cref="MotherMobilePhoneNumber"/>, e.g. "+1".</summary>
         public string MotherMobilePhoneDialCode
         {
             get => _motherMobilePhoneDialCode;
@@ -242,6 +256,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _motherMobilePhoneNumber = string.Empty;
+        /// <summary>Mother's mobile number, unformatted digits as entered.</summary>
         public string MotherMobilePhoneNumber
         {
             get => _motherMobilePhoneNumber;
@@ -255,11 +270,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Mother's mobile number formatted for display.</summary>
         public string MotherMobilePhoneFormatted
         {
             get => PhoneNumberFormatter.Format(MotherMobilePhoneNumber, MotherMobilePhoneDialCode);
         }
 
+        /// <summary>Mother's mobile number with dial code, formatted for reports.</summary>
         public string MotherMobilePhoneFull
         {
             get => string.IsNullOrEmpty(MotherMobilePhoneNumber)
@@ -269,6 +286,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Caregiver phone
         private string _caregiverPhoneDialCode = "+1";
+        /// <summary>Country dial code for <see cref="CaregiverPhoneNumber"/>, e.g. "+1".</summary>
         public string CaregiverPhoneDialCode
         {
             get => _caregiverPhoneDialCode;
@@ -283,6 +301,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _caregiverPhoneNumber = string.Empty;
+        /// <summary>Caregiver's phone number, unformatted digits as entered.</summary>
         public string CaregiverPhoneNumber
         {
             get => _caregiverPhoneNumber;
@@ -296,11 +315,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Caregiver's phone number formatted for display.</summary>
         public string CaregiverPhoneFormatted
         {
             get => PhoneNumberFormatter.Format(CaregiverPhoneNumber, CaregiverPhoneDialCode);
         }
 
+        /// <summary>Caregiver's phone number with dial code, formatted for reports.</summary>
         public string CaregiverPhoneFull
         {
             get => string.IsNullOrEmpty(CaregiverPhoneNumber)
@@ -310,6 +331,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Caregiver mobile
         private string _caregiverMobilePhoneDialCode = "+1";
+        /// <summary>Country dial code for <see cref="CaregiverMobilePhoneNumber"/>, e.g. "+1".</summary>
         public string CaregiverMobilePhoneDialCode
         {
             get => _caregiverMobilePhoneDialCode;
@@ -324,6 +346,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _caregiverMobilePhoneNumber = string.Empty;
+        /// <summary>Caregiver's mobile number, unformatted digits as entered.</summary>
         public string CaregiverMobilePhoneNumber
         {
             get => _caregiverMobilePhoneNumber;
@@ -337,11 +360,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Caregiver's mobile number formatted for display.</summary>
         public string CaregiverMobilePhoneFormatted
         {
             get => PhoneNumberFormatter.Format(CaregiverMobilePhoneNumber, CaregiverMobilePhoneDialCode);
         }
 
+        /// <summary>Caregiver's mobile number with dial code, formatted for reports.</summary>
         public string CaregiverMobilePhoneFull
         {
             get => string.IsNullOrEmpty(CaregiverMobilePhoneNumber)
@@ -351,6 +376,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Referral phone
         private string _referralPhoneDialCode = "+1";
+        /// <summary>Country dial code for <see cref="ReferralPhoneNumber"/>, e.g. "+1".</summary>
         public string ReferralPhoneDialCode
         {
             get => _referralPhoneDialCode;
@@ -365,6 +391,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _referralPhoneNumber = string.Empty;
+        /// <summary>Referral contact's phone number, unformatted digits as entered.</summary>
         public string ReferralPhoneNumber
         {
             get => _referralPhoneNumber;
@@ -378,11 +405,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Referral contact's phone number formatted for display.</summary>
         public string ReferralPhoneFormatted
         {
             get => PhoneNumberFormatter.Format(ReferralPhoneNumber, ReferralPhoneDialCode);
         }
 
+        /// <summary>Referral contact's phone number with dial code, formatted for reports.</summary>
         public string ReferralPhoneFull
         {
             get => string.IsNullOrEmpty(ReferralPhoneNumber)
@@ -394,6 +423,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Core properties with validation
 
+        /// <summary>Required unique identifier for the patient record. Triggers validation on set.</summary>
         public string PatientId
         {
             get => _patientId;
@@ -407,6 +437,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Required identifier assigned by the hospital. Triggers validation on set.</summary>
         public string HospitalId
         {
             get => _hospitalId;
@@ -420,12 +451,14 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Patient's given name.</summary>
         public string FirstName
         {
             get => _firstName;
             set => SetProperty(ref _firstName, value);
         }
 
+        /// <summary>Required family name. Triggers validation on set.</summary>
         public string LastName
         {
             get => _lastName;
@@ -439,84 +472,98 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Patient's date of birth.</summary>
         public DateTime? DateOfBirth
         {
             get => _dateOfBirth;
             set => SetProperty(ref _dateOfBirth, value);
         }
 
+        /// <summary>Patient's recorded gender.</summary>
         public string Gender
         {
             get => _gender;
             set => SetProperty(ref _gender, value);
         }
 
+        /// <summary>Gestational age at birth.</summary>
         public string GestationalAge
         {
             get => _gestationalAge;
             set => SetProperty(ref _gestationalAge, value);
         }
 
+        /// <summary>Patient's birth weight.</summary>
         public string Weight
         {
             get => _weight;
             set => SetProperty(ref _weight, value);
         }
 
+        /// <summary>Patient's height/length at birth.</summary>
         public string Height
         {
             get => _height;
             set => SetProperty(ref _height, value);
         }
 
+        /// <summary>Facility or location where the patient was born.</summary>
         public string BirthLocation
         {
             get => _birthLocation;
             set => SetProperty(ref _birthLocation, value);
         }
 
+        /// <summary>Patient's nationality.</summary>
         public string Nationality
         {
             get => _nationality;
             set => SetProperty(ref _nationality, value);
         }
 
+        /// <summary>Consent status recorded for hearing screening.</summary>
         public string ScreeningConsent
         {
             get => _screeningConsent;
             set => SetProperty(ref _screeningConsent, value);
         }
 
+        /// <summary>State/region under which consent was obtained.</summary>
         public string ConsentState
         {
             get => _consentState;
             set => SetProperty(ref _consentState, value);
         }
 
+        /// <summary>NICU (Neonatal Intensive Care Unit) status or identifier for the patient.</summary>
         public string NICU
         {
             get => _nicu;
             set => SetProperty(ref _nicu, value);
         }
 
+        /// <summary>Date the patient was discharged, if applicable.</summary>
         public DateTime? Discharged
         {
             get => _discharged;
             set => SetProperty(ref _discharged, value);
         }
 
+        /// <summary>Date of death, if applicable.</summary>
         public DateTime? Deceased
         {
             get => _deceased;
             set => SetProperty(ref _deceased, value);
         }
 
+        /// <summary>Consent status recorded for follow-up tracking.</summary>
         public string TrackingConsent
         {
             get => _trackingConsent;
             set => SetProperty(ref _trackingConsent, value);
         }
 
+        /// <summary>Free-text notes about the patient.</summary>
         public string Comments
         {
             get => _comments;
@@ -525,102 +572,119 @@ namespace AccuSync.Presentation.ViewModels
 
         // Mother properties
 
+        /// <summary>Mother's title (e.g. Mrs., Ms., Dr.).</summary>
         public string MotherTitle
         {
             get => _motherTitle;
             set => SetProperty(ref _motherTitle, value);
         }
 
+        /// <summary>Mother's social security number.</summary>
         public string MotherSSN
         {
             get => _motherSSN;
             set => SetProperty(ref _motherSSN, value);
         }
 
+        /// <summary>Mother's identifier in the hospital system.</summary>
         public string MotherId
         {
             get => _motherId;
             set => SetProperty(ref _motherId, value);
         }
 
+        /// <summary>Mother's given name.</summary>
         public string MotherFirstName
         {
             get => _motherFirstName;
             set => SetProperty(ref _motherFirstName, value);
         }
 
+        /// <summary>Mother's family name.</summary>
         public string MotherLastName
         {
             get => _motherLastName;
             set => SetProperty(ref _motherLastName, value);
         }
 
+        /// <summary>Mother's date of birth.</summary>
         public DateTime? MotherDateOfBirth
         {
             get => _motherDateOfBirth;
             set => SetProperty(ref _motherDateOfBirth, value);
         }
 
+        /// <summary>Mother's preferred language.</summary>
         public string MotherLanguage
         {
             get => _motherLanguage;
             set => SetProperty(ref _motherLanguage, value);
         }
 
+        /// <summary>Mother's primary address line.</summary>
         public string MotherAddress1
         {
             get => _motherAddress1;
             set => SetProperty(ref _motherAddress1, value);
         }
 
+        /// <summary>Mother's secondary address line (apartment, suite, etc.).</summary>
         public string MotherAddress2
         {
             get => _motherAddress2;
             set => SetProperty(ref _motherAddress2, value);
         }
 
+        /// <summary>Mother's city of residence.</summary>
         public string MotherCity
         {
             get => _motherCity;
             set => SetProperty(ref _motherCity, value);
         }
 
+        /// <summary>Mother's state or province of residence.</summary>
         public string MotherState
         {
             get => _motherState;
             set => SetProperty(ref _motherState, value);
         }
 
+        /// <summary>Mother's postal/zip code.</summary>
         public string MotherZipCode
         {
             get => _motherZipCode;
             set => SetProperty(ref _motherZipCode, value);
         }
 
+        /// <summary>Mother's country of residence.</summary>
         public string MotherCountry
         {
             get => _motherCountry;
             set => SetProperty(ref _motherCountry, value);
         }
 
+        /// <summary>Mother's raw phone number, as stored on the patient record.</summary>
         public string MotherPhone
         {
             get => _motherPhone;
             set => SetProperty(ref _motherPhone, value);
         }
 
+        /// <summary>Mother's raw mobile number, as stored on the patient record.</summary>
         public string MotherMobilePhone
         {
             get => _motherMobilePhone;
             set => SetProperty(ref _motherMobilePhone, value);
         }
 
+        /// <summary>Mother's fax number.</summary>
         public string MotherFax
         {
             get => _motherFax;
             set => SetProperty(ref _motherFax, value);
         }
 
+        /// <summary>Mother's email address.</summary>
         public string MotherEmail
         {
             get => _motherEmail;
@@ -629,90 +693,105 @@ namespace AccuSync.Presentation.ViewModels
 
         // Caregiver properties
 
+        /// <summary>Caregiver's title (e.g. Mr., Mrs., Dr.).</summary>
         public string CaregiverTitle
         {
             get => _caregiverTitle;
             set => SetProperty(ref _caregiverTitle, value);
         }
 
+        /// <summary>Caregiver's social security number.</summary>
         public string CaregiverSSN
         {
             get => _caregiverSSN;
             set => SetProperty(ref _caregiverSSN, value);
         }
 
+        /// <summary>Caregiver's given name.</summary>
         public string CaregiverFirstName
         {
             get => _caregiverFirstName;
             set => SetProperty(ref _caregiverFirstName, value);
         }
 
+        /// <summary>Caregiver's family name.</summary>
         public string CaregiverLastName
         {
             get => _caregiverLastName;
             set => SetProperty(ref _caregiverLastName, value);
         }
 
+        /// <summary>Caregiver's preferred language.</summary>
         public string CaregiverLanguage
         {
             get => _caregiverLanguage;
             set => SetProperty(ref _caregiverLanguage, value);
         }
 
+        /// <summary>Caregiver's primary address line.</summary>
         public string CaregiverAddress1
         {
             get => _caregiverAddress1;
             set => SetProperty(ref _caregiverAddress1, value);
         }
 
+        /// <summary>Caregiver's secondary address line (apartment, suite, etc.).</summary>
         public string CaregiverAddress2
         {
             get => _caregiverAddress2;
             set => SetProperty(ref _caregiverAddress2, value);
         }
 
+        /// <summary>Caregiver's city of residence.</summary>
         public string CaregiverCity
         {
             get => _caregiverCity;
             set => SetProperty(ref _caregiverCity, value);
         }
 
+        /// <summary>Caregiver's state or province of residence.</summary>
         public string CaregiverState
         {
             get => _caregiverState;
             set => SetProperty(ref _caregiverState, value);
         }
 
+        /// <summary>Caregiver's postal/zip code.</summary>
         public string CaregiverZipCode
         {
             get => _caregiverZipCode;
             set => SetProperty(ref _caregiverZipCode, value);
         }
 
+        /// <summary>Caregiver's country of residence.</summary>
         public string CaregiverCountry
         {
             get => _caregiverCountry;
             set => SetProperty(ref _caregiverCountry, value);
         }
 
+        /// <summary>Caregiver's raw phone number, as stored on the patient record.</summary>
         public string CaregiverPhone
         {
             get => _caregiverPhone;
             set => SetProperty(ref _caregiverPhone, value);
         }
 
+        /// <summary>Caregiver's raw mobile number, as stored on the patient record.</summary>
         public string CaregiverMobilePhone
         {
             get => _caregiverMobilePhone;
             set => SetProperty(ref _caregiverMobilePhone, value);
         }
 
+        /// <summary>Caregiver's fax number.</summary>
         public string CaregiverFax
         {
             get => _caregiverFax;
             set => SetProperty(ref _caregiverFax, value);
         }
 
+        /// <summary>Caregiver's email address.</summary>
         public string CaregiverEmail
         {
             get => _caregiverEmail;
@@ -721,30 +800,35 @@ namespace AccuSync.Presentation.ViewModels
 
         // Referral properties
 
+        /// <summary>Whether the patient was referred for further audiology evaluation.</summary>
         public string AudiologyReferral
         {
             get => _audiologyReferral;
             set => SetProperty(ref _audiologyReferral, value);
         }
 
+        /// <summary>Date the audiology referral was made.</summary>
         public DateTime? ReferralDate
         {
             get => _referralDate;
             set => SetProperty(ref _referralDate, value);
         }
 
+        /// <summary>Provider or facility the patient was referred to.</summary>
         public string ReferralTo
         {
             get => _referralTo;
             set => SetProperty(ref _referralTo, value);
         }
 
+        /// <summary>Provider or facility that initiated the referral.</summary>
         public string ReferralFrom
         {
             get => _referralFrom;
             set => SetProperty(ref _referralFrom, value);
         }
 
+        /// <summary>Referral contact's raw phone number, as stored on the patient record.</summary>
         public string ReferralPhone
         {
             get => _referralPhone;
@@ -753,18 +837,21 @@ namespace AccuSync.Presentation.ViewModels
 
         // Medical properties
 
+        /// <summary>Medications currently prescribed to the patient.</summary>
         public string Medication
         {
             get => _medication;
             set => SetProperty(ref _medication, value);
         }
 
+        /// <summary>Patient's attending physician.</summary>
         public string Physician
         {
             get => _physician;
             set => SetProperty(ref _physician, value);
         }
 
+        /// <summary>Audiologist assigned to the patient's screening.</summary>
         public string Audiologist
         {
             get => _audiologist;
@@ -773,96 +860,112 @@ namespace AccuSync.Presentation.ViewModels
 
         // Risk factor properties — each setter updates summary counts
 
+        /// <summary>Perinatal risk factor: family history of hearing loss ("Yes"/"No"/"Unknown").</summary>
         public string FamilyHistory
         {
             get => _familyHistory;
             set { if (SetProperty(ref _familyHistory, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: low birth weight ("Yes"/"No"/"Unknown").</summary>
         public string LowBirthWeight
         {
             get => _lowBirthWeight;
             set { if (SetProperty(ref _lowBirthWeight, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: hyperbilirubinemia ("Yes"/"No"/"Unknown").</summary>
         public string Hyperbilirubinemia
         {
             get => _hyperbilirubinemia;
             set { if (SetProperty(ref _hyperbilirubinemia, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: asphyxia ("Yes"/"No"/"Unknown").</summary>
         public string Asphyxia
         {
             get => _asphyxia;
             set { if (SetProperty(ref _asphyxia, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: craniofacial anomalies ("Yes"/"No"/"Unknown").</summary>
         public string CraniofacialAnomalies
         {
             get => _craniofacialAnomalies;
             set { if (SetProperty(ref _craniofacialAnomalies, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: associated syndromes ("Yes"/"No"/"Unknown").</summary>
         public string Syndromes
         {
             get => _syndromes;
             set { if (SetProperty(ref _syndromes, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Perinatal risk factor: in-utero infections ("Yes"/"No"/"Unknown").</summary>
         public string InUteroInfections
         {
             get => _inUteroInfections;
             set { if (SetProperty(ref _inUteroInfections, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: bacterial meningitis ("Yes"/"No"/"Unknown").</summary>
         public string BacterialMeningitis
         {
             get => _bacterialMeningitis;
             set { if (SetProperty(ref _bacterialMeningitis, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: perinatal infection ("Yes"/"No"/"Unknown").</summary>
         public string PerinatalInfection
         {
             get => _perinatalInfection;
             set { if (SetProperty(ref _perinatalInfection, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: ototoxic medication exposure ("Yes"/"No"/"Unknown").</summary>
         public string OtotoxicMedications
         {
             get => _ototoxicMedications;
             set { if (SetProperty(ref _ototoxicMedications, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: aminoglycoside exposure ("Yes"/"No"/"Unknown").</summary>
         public string Aminoglycosides
         {
             get => _aminoglycosides;
             set { if (SetProperty(ref _aminoglycosides, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: prolonged mechanical ventilation ("Yes"/"No"/"Unknown").</summary>
         public string ProlongedVentilation
         {
             get => _prolongedVentilation;
             set { if (SetProperty(ref _prolongedVentilation, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: ECMO (extracorporeal membrane oxygenation) treatment ("Yes"/"No"/"Unknown").</summary>
         public string ECMO
         {
             get => _ecmo;
             set { if (SetProperty(ref _ecmo, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: NICU stay ("Yes"/"No"/"Unknown").</summary>
         public string NICUStay
         {
             get => _nicuStay;
             set { if (SetProperty(ref _nicuStay, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Postnatal risk factor: head trauma ("Yes"/"No"/"Unknown").</summary>
         public string HeadTrauma
         {
             get => _headTrauma;
             set { if (SetProperty(ref _headTrauma, value)) UpdateRiskFactorCounts(); }
         }
 
+        /// <summary>Other risk factor: caregiver-reported concern about hearing ("Yes"/"No"/"Unknown").</summary>
         public string CaregiverConcernRisk
         {
             get => _caregiverConcern;
@@ -879,42 +982,49 @@ namespace AccuSync.Presentation.ViewModels
         private int _postnatalYesCount;
         private int _otherYesCount;
 
+        /// <summary>Count of all risk factors answered "Yes".</summary>
         public int TotalYesCount
         {
             get => _totalYesCount;
             private set => SetProperty(ref _totalYesCount, value);
         }
 
+        /// <summary>Count of all risk factors answered "No".</summary>
         public int TotalNoCount
         {
             get => _totalNoCount;
             private set => SetProperty(ref _totalNoCount, value);
         }
 
+        /// <summary>Count of all risk factors left as "Unknown".</summary>
         public int TotalUnknownCount
         {
             get => _totalUnknownCount;
             private set => SetProperty(ref _totalUnknownCount, value);
         }
 
+        /// <summary>Count of all risk factors that have been answered (not "Unknown").</summary>
         public int TotalAnsweredCount
         {
             get => _totalAnsweredCount;
             private set => SetProperty(ref _totalAnsweredCount, value);
         }
 
+        /// <summary>Count of perinatal risk factors answered "Yes".</summary>
         public int PerinatalYesCount
         {
             get => _perinatalYesCount;
             private set => SetProperty(ref _perinatalYesCount, value);
         }
 
+        /// <summary>Count of postnatal risk factors answered "Yes".</summary>
         public int PostnatalYesCount
         {
             get => _postnatalYesCount;
             private set => SetProperty(ref _postnatalYesCount, value);
         }
 
+        /// <summary>Count of other-category risk factors answered "Yes".</summary>
         public int OtherYesCount
         {
             get => _otherYesCount;
@@ -948,6 +1058,10 @@ namespace AccuSync.Presentation.ViewModels
             OtherYesCount = CaregiverConcernRisk == "Yes" ? 1 : 0;
         }
 
+        /// <summary>
+        /// Returns how many perinatal risk factors have been answered (not "Unknown").
+        /// </summary>
+        /// <returns>The number of answered perinatal risk factors.</returns>
         public int GetPerinatalAnsweredCount()
         {
             var risks = new[] { FamilyHistory, LowBirthWeight, Hyperbilirubinemia,
@@ -955,6 +1069,10 @@ namespace AccuSync.Presentation.ViewModels
             return risks.Count(r => r != "Unknown");
         }
 
+        /// <summary>
+        /// Returns how many postnatal risk factors have been answered (not "Unknown").
+        /// </summary>
+        /// <returns>The number of answered postnatal risk factors.</returns>
         public int GetPostnatalAnsweredCount()
         {
             var risks = new[] { BacterialMeningitis, PerinatalInfection, OtotoxicMedications,
@@ -962,6 +1080,10 @@ namespace AccuSync.Presentation.ViewModels
             return risks.Count(r => r != "Unknown");
         }
 
+        /// <summary>
+        /// Returns whether the other-category risk factor has been answered (not "Unknown").
+        /// </summary>
+        /// <returns>1 if answered, otherwise 0.</returns>
         public int GetOtherAnsweredCount()
         {
             return CaregiverConcernRisk != "Unknown" ? 1 : 0;
@@ -969,12 +1091,14 @@ namespace AccuSync.Presentation.ViewModels
 
         // Screening results
 
+        /// <summary>Screening result recorded for the left ear.</summary>
         public string LeftEarResult
         {
             get => _leftEarResult;
             set => SetProperty(ref _leftEarResult, value);
         }
 
+        /// <summary>Screening result recorded for the right ear.</summary>
         public string RightEarResult
         {
             get => _rightEarResult;
@@ -984,6 +1108,7 @@ namespace AccuSync.Presentation.ViewModels
         // Required fields tracking
 
         private int _requiredFieldsCount;
+        /// <summary>Number of required fields currently left empty.</summary>
         public int RequiredFieldsCount
         {
             get => _requiredFieldsCount;
@@ -998,8 +1123,13 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True when one or more required fields are currently empty.</summary>
         public bool HasRequiredFieldsEmpty => RequiredFieldsCount > 0;
 
+        /// <summary>
+        /// Returns the display names of required fields that are currently empty.
+        /// </summary>
+        /// <returns>A list of missing required field names.</returns>
         public List<string> GetMissingRequiredFields()
         {
             var missing = new List<string>();
@@ -1270,8 +1400,10 @@ namespace AccuSync.Presentation.ViewModels
 
         // Validation (IDataErrorInfo)
 
+        /// <summary>Entity-level error message. Always <see langword="null"/> — validation is per-property.</summary>
         public string Error => null;
 
+        /// <summary>Gets the validation error message for the property named <paramref name="propertyName"/>, or <see langword="null"/> if it is valid.</summary>
         public string this[string propertyName]
         {
             get

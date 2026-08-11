@@ -19,11 +19,17 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing screenings that are pending (assigned but not yet completed).
+    /// </summary>
     public partial class PendingScreeningsDialog : Window
     {
         private List<PendingScreening> _allScreenings;
         private List<PendingScreening> _filteredScreenings;
 
+        /// <summary>
+        /// Initializes the dialog and asynchronously loads pending screening data.
+        /// </summary>
         public PendingScreeningsDialog()
         {
             InitializeComponent();

@@ -18,6 +18,10 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.PatientsTests
 {
+    /// <summary>
+    /// Multi-step import workflow: previews parsed patients (Step 2), lets the
+    /// user resolve duplicates and select records, then shows import results (Step 3).
+    /// </summary>
     public partial class ImportReview : UserControl
     {
         // State
@@ -28,13 +32,20 @@ namespace AccuSync.WPF.Views.PatientsTests
         private bool _isUpdatingDupAction;
 
         // Events for Parent Communication
+
+        /// <summary>Raised when the user clicks Back to return to file selection.</summary>
         public event EventHandler BackToFileSelect;
+
+        /// <summary>Raised when the user cancels the import.</summary>
         public event EventHandler ImportCancelled;
+
+        /// <summary>Raised when the user finishes viewing the import results.</summary>
         public event EventHandler ImportDone;
 
         // Subscribed by PatientsView; will be raised once the import-preview
         // "view patient" action is implemented. Suppress "never used" until then.
 #pragma warning disable CS0067
+        /// <summary>Raised when the user requests to view a patient from the import results.</summary>
         public event EventHandler<PatientData> ViewPatientRequested;
 #pragma warning restore CS0067
 
@@ -45,6 +56,9 @@ namespace AccuSync.WPF.Views.PatientsTests
         /// </summary>
         public Func<List<ImportRequest>, List<ImportResultItem>> ImportFunction { get; set; }
 
+        /// <summary>
+        /// Initializes the control and shows Step 2 (preview) by default.
+        /// </summary>
         public ImportReview()
         {
             InitializeComponent();

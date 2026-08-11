@@ -45,6 +45,7 @@ namespace AccuSync.Presentation.ViewModels
         private bool _passwordsMatch;
         private bool _notSameAsOld;
 
+        /// <summary>The user's current password, as entered for verification.</summary>
         public string OldPassword
         {
             get => _oldPassword;
@@ -56,6 +57,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>The password the user wants to set. Re-validates policy rules on every change.</summary>
         public string NewPassword
         {
             get => _newPassword;
@@ -67,6 +69,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Repeat entry of <see cref="NewPassword"/>, used to confirm the user typed it correctly.</summary>
         public string ConfirmPassword
         {
             get => _confirmPassword;
@@ -78,6 +81,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Error text shown to the user, or empty when there is no error.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -88,6 +92,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True while a save operation is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -98,42 +103,49 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> meets the minimum length policy.</summary>
         public bool HasMinimumLength
         {
             get => _hasMinimumLength;
             set { _hasMinimumLength = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> contains an uppercase letter.</summary>
         public bool HasUpperCase
         {
             get => _hasUpperCase;
             set { _hasUpperCase = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> contains a lowercase letter.</summary>
         public bool HasLowerCase
         {
             get => _hasLowerCase;
             set { _hasLowerCase = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> contains a digit.</summary>
         public bool HasNumber
         {
             get => _hasNumber;
             set { _hasNumber = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> contains a non-alphanumeric character.</summary>
         public bool HasSpecialChar
         {
             get => _hasSpecialChar;
             set { _hasSpecialChar = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> and <see cref="ConfirmPassword"/> are identical.</summary>
         public bool PasswordsMatch
         {
             get => _passwordsMatch;
             set { _passwordsMatch = value; OnPropertyChanged(); }
         }
 
+        /// <summary>True when <see cref="NewPassword"/> differs from <see cref="OldPassword"/> as typed.</summary>
         public bool NotSameAsOld
         {
             get => _notSameAsOld;
@@ -146,11 +158,18 @@ namespace AccuSync.Presentation.ViewModels
         public bool CanSave => HasMinimumLength && HasUpperCase && HasLowerCase &&
                                HasNumber && HasSpecialChar && PasswordsMatch && NotSameAsOld;
 
+        /// <summary>Command that validates and persists the new password.</summary>
         public ICommand SaveCommand { get; }
 
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
+        /// <summary>
+        /// Creates the view model for the given user's password change flow.
+        /// </summary>
+        /// <param name="databaseService">Service used to persist the updated user record.</param>
+        /// <param name="encryptionService">Service used to encrypt/decrypt password values.</param>
+        /// <param name="currentUser">The user whose password is being changed.</param>
         public ChangePasswordViewModel(IDatabaseService databaseService, IEncryptionService encryptionService, User currentUser)
         {
             _databaseService = databaseService;
@@ -264,6 +283,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

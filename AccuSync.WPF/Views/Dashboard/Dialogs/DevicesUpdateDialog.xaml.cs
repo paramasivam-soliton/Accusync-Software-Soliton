@@ -17,6 +17,9 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing devices that need a firmware update.
+    /// </summary>
     public partial class DevicesUpdateDialog : Window
     {
         private List<DeviceUpdateInfo> _allDevices;
@@ -26,6 +29,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         private static readonly SolidColorBrush _cardHoverBg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f0f7ff"));
         private static readonly SolidColorBrush _cardDefaultBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5E7EB"));
 
+        /// <summary>
+        /// Initializes the dialog and loads devices needing a firmware update.
+        /// </summary>
         public DevicesUpdateDialog()
         {
             InitializeComponent();

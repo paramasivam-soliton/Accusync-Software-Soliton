@@ -15,11 +15,17 @@ namespace AccuSync.Application.Models
     /// </summary>
     public class DashboardCardInfo
     {
+        /// <summary>Identifier used to distinguish the card for command binding.</summary>
         public string Tag { get; set; }
+        /// <summary>Background color for the card's icon.</summary>
         public string IconBackground { get; set; }
+        /// <summary>Geometry data for the card's icon.</summary>
         public string IconData { get; set; }
+        /// <summary>The card's label text.</summary>
         public string Label { get; set; }
+        /// <summary>The stat value shown on the card. Used by stat cards only.</summary>
         public string Value { get; set; }
+        /// <summary>Margin applied around the card.</summary>
         public Thickness CardMargin { get; set; }
     }
 }

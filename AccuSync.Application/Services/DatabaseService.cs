@@ -27,6 +27,11 @@ namespace AccuSync.Application.Services
         private readonly IEncryptionService _encryptionService;
         private readonly string _connectionString;
 
+        /// <summary>
+        /// Creates the service, resolving the SQLite database path under
+        /// <c>ProgramData\Natus\AccuSync</c> and ensuring the folder exists.
+        /// </summary>
+        /// <param name="encryptionService">Used to encrypt/decrypt sensitive fields.</param>
         public DatabaseService(IEncryptionService encryptionService)
         {
             _encryptionService = encryptionService;
@@ -156,6 +161,10 @@ namespace AccuSync.Application.Services
             }
         }
 
+        /// <summary>
+        /// Reads and decrypts every user account from the database.
+        /// </summary>
+        /// <returns>A list of all <see cref="User"/> records.</returns>
         public async Task<List<User>> GetAllUsersAsync()
         {
             var users = new List<User>();
@@ -183,6 +192,11 @@ namespace AccuSync.Application.Services
         //      so this will always be a full table scan + decrypt.
         //      Consider storing a hash of AccountName alongside the encrypted value
         //      for indexed lookups.
+        /// <summary>
+        /// Looks up a user by account name (case-insensitive).
+        /// </summary>
+        /// <param name="accountName">The account name to search for.</param>
+        /// <returns>The matching <see cref="User"/>, or <c>null</c> if none is found.</returns>
         public async Task<User> GetUserByAccountNameAsync(string accountName)
         {
             var allUsers = await GetAllUsersAsync();
@@ -190,6 +204,11 @@ namespace AccuSync.Application.Services
                 u.AccountName.Equals(accountName, StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Persists changes to an existing user, re-encrypting sensitive fields.
+        /// </summary>
+        /// <param name="user">The user to update.</param>
+        /// <returns><c>true</c> if the update succeeded; <c>false</c> if an error occurred.</returns>
         public async Task<bool> UpdateUserAsync(User user)
         {
             try
@@ -252,6 +271,11 @@ namespace AccuSync.Application.Services
         //      The caller's User object now holds the encrypted password,
         //      which can cause double-encryption if CreateUserAsync is retried
         //      or the object is reused.
+        /// <summary>
+        /// Encrypts the user's password and inserts a new account.
+        /// </summary>
+        /// <param name="user">The user to create.</param>
+        /// <returns><c>true</c> if the user was created; <c>false</c> if an error occurred.</returns>
         public async Task<bool> CreateUserAsync(User user)
         {
             try

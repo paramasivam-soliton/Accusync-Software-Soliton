@@ -36,6 +36,10 @@ namespace AccuSync.Application.Services
         private readonly byte[] _key;
         private readonly byte[] _iv;
 
+        /// <summary>
+        /// Gets a value indicating whether this is a release build. Encryption is
+        /// only active in release builds; debug builds store values as plaintext.
+        /// </summary>
         public bool IsReleaseMode
         {
             get
@@ -48,6 +52,10 @@ namespace AccuSync.Application.Services
             }
         }
 
+        /// <summary>
+        /// Derives the AES key and IV from the machine name (see class-level TODO
+        /// about moving this to a proper key store).
+        /// </summary>
         public EncryptionService()
         {
             // Key is machine-specific so encrypted data is bound to this host.

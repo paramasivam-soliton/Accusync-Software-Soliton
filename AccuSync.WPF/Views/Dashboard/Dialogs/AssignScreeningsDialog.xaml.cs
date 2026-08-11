@@ -17,6 +17,9 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog for assigning unassigned patients to a specific screener.
+    /// </summary>
     public partial class AssignScreeningsDialog : Window
     {
         private string _screenerName;
@@ -24,6 +27,10 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         private List<UnassignedPatientInfo> _filteredPatients;
         private bool _showHighPriorityOnly = true;
 
+        /// <summary>
+        /// Initializes the dialog for the given screener and loads unassigned patient data.
+        /// </summary>
+        /// <param name="screenerName">The name of the screener patients will be assigned to.</param>
         public AssignScreeningsDialog(string screenerName)
         {
             InitializeComponent();

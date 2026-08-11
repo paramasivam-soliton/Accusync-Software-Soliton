@@ -16,12 +16,22 @@ using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing patients for a specific dashboard stat category
+    /// (referred, pass, or incomplete).
+    /// </summary>
     public partial class PatientListDialog : Window
     {
+        /// <summary>
+        /// Identifies which patient category a <see cref="PatientListDialog"/> displays.
+        /// </summary>
         public enum PatientListType
         {
+            /// <summary>Patients referred within the last 7 days.</summary>
             Referred,
+            /// <summary>Patients who passed screening within the last 7 days.</summary>
             Pass,
+            /// <summary>Patients with an incomplete screening within the last 7 days.</summary>
             Incomplete
         }
 
@@ -40,6 +50,10 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         private static readonly SolidColorBrush _cardHoverBg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f0f7ff"));
         private static readonly SolidColorBrush _cardDefaultBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5E7EB"));
 
+        /// <summary>
+        /// Initializes the dialog and loads patients for the given category.
+        /// </summary>
+        /// <param name="listType">The patient category to display.</param>
         public PatientListDialog(PatientListType listType)
         {
             InitializeComponent();

@@ -43,6 +43,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
         private readonly Dictionary<int, TextBox> _customLabelBoxes = new();
         private readonly Dictionary<int, Button> _resetButtons = new();
 
+        /// <summary>
+        /// Initializes the control and builds the field table once loaded.
+        /// </summary>
         public DeviceFieldSetupView()
         {
             InitializeComponent();

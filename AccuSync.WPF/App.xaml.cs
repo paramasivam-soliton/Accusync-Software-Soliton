@@ -11,10 +11,15 @@ using AccuSync.WPF.Views.Login;
 
 namespace AccuSync.WPF
 {
+    /// <summary>
+    /// Application entry point. Wires up dependency injection and starts the app
+    /// with the splash screen, which in turn drives navigation to login or dashboard.
+    /// </summary>
     public partial class App : System.Windows.Application
     {
         private ServiceProvider _serviceProvider;
 
+        /// <summary>Builds the dependency injection container for the application.</summary>
         public App()
         {
             var services = new ServiceCollection();
@@ -160,6 +165,11 @@ namespace AccuSync.WPF
             Debug.WriteLine($"[AccuSync] Dev mode → navigated to '{screenName}' as {username} ({role})");
         }
 
+        /// <summary>
+        /// Resolves a registered service or view from the application's dependency injection container.
+        /// </summary>
+        /// <typeparam name="T">The service or view type to resolve.</typeparam>
+        /// <returns>The resolved instance.</returns>
         public static T GetService<T>()
         {
             return ((App)Current)._serviceProvider.GetRequiredService<T>();

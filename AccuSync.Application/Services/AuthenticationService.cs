@@ -27,12 +27,24 @@ namespace AccuSync.Application.Services
         private const int MaxFailedAttempts = 10;
         private const int LockoutDurationMinutes = 15;
 
+        /// <summary>
+        /// Creates the service with its required data and encryption dependencies.
+        /// </summary>
+        /// <param name="databaseService">Used to look up and update user accounts.</param>
+        /// <param name="encryptionService">Used to decrypt stored passwords for comparison.</param>
         public AuthenticationService(IDatabaseService databaseService, IEncryptionService encryptionService)
         {
             _databaseService = databaseService;
             _encryptionService = encryptionService;
         }
 
+        /// <summary>
+        /// Authenticates the given credentials, applying lockout and password
+        /// expiration checks. See the class-level remarks for details.
+        /// </summary>
+        /// <param name="accountName">The account name to authenticate.</param>
+        /// <param name="password">The plaintext password to verify.</param>
+        /// <returns>An <see cref="AuthenticationResult"/> describing the outcome.</returns>
         public async Task<AuthenticationResult> AuthenticateAsync(string accountName, string password)
         {
             if (string.IsNullOrWhiteSpace(accountName) || string.IsNullOrWhiteSpace(password))

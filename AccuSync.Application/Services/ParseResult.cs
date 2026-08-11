@@ -16,7 +16,14 @@ namespace AccuSync.Application.Services
     /// </summary>
     public class ParseResult
     {
+        /// <summary>
+        /// Patients successfully parsed from the file, each with its test previews.
+        /// </summary>
         public List<ImportPatientData> Patients { get; set; } = new();
+
+        /// <summary>
+        /// Human-readable errors encountered while parsing, for display in the import UI.
+        /// </summary>
         public List<string> ParseErrors { get; set; } = new();
 
         /// <summary>
