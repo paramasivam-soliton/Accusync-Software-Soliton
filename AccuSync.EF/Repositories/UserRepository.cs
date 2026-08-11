@@ -55,7 +55,7 @@ namespace AccuSync.EF
                 FirstName = _encryptionService.Encrypt(user.FirstName),
                 LastName = _encryptionService.Encrypt(user.LastName),
                 Status = user.Status,
-                ProfileId = _encryptionService.Encrypt(user.ProfileId),
+                ProfileId = user.ProfileId,
                 ProfilePassword = user.ProfilePassword,
                 FirstLogin = user.FirstLogin,
                 FailedLoginAttemptCount = user.FailedLoginAttemptCount,
@@ -116,7 +116,7 @@ namespace AccuSync.EF
                 tracked.FirstName = _encryptionService.Encrypt(user.FirstName);
                 tracked.LastName = _encryptionService.Encrypt(user.LastName);
                 tracked.Status = user.Status;
-                tracked.ProfileId = _encryptionService.Encrypt(user.ProfileId);
+                tracked.ProfileId = user.ProfileId;
                 tracked.ProfilePassword = user.ProfilePassword;
                 tracked.FirstLogin = user.FirstLogin;
                 tracked.FailedLoginAttemptCount = user.FailedLoginAttemptCount;
@@ -138,15 +138,15 @@ namespace AccuSync.EF
             }
         }
 
-        /// <summary>Assigns a new role to the given user. Returns false if the user no longer exists.</summary>
-        public async Task<bool> UpdateUserRoleAsync(string userId, UserRole role)
+        /// <summary>Assigns a new profile to the given user. Returns false if the user no longer exists.</summary>
+        public async Task<bool> UpdateUserProfileAsync(string userId, string profileId)
         {
             try
             {
                 var tracked = await _context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
-                tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
+                tracked.ProfileId = profileId;
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -237,7 +237,7 @@ namespace AccuSync.EF
                 FirstName = _encryptionService.Decrypt(stored.FirstName),
                 LastName = _encryptionService.Decrypt(stored.LastName),
                 Status = stored.Status,
-                ProfileId = _encryptionService.Decrypt(stored.ProfileId),
+                ProfileId = stored.ProfileId,
                 ProfilePassword = stored.ProfilePassword,
                 FirstLogin = stored.FirstLogin,
                 FailedLoginAttemptCount = stored.FailedLoginAttemptCount,

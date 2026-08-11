@@ -32,7 +32,7 @@ namespace AccuSync.Presentation.Tests.ViewModels
             _userRepositoryMock.Setup(r => r.UpdateUserAsync(It.IsAny<User>())).ReturnsAsync(true);
 
             _currentUserContextMock = new Mock<ICurrentUserContext>();
-            _currentUserContextMock.SetupGet(c => c.Role).Returns(UserRole.Screener);
+            _currentUserContextMock.SetupGet(c => c.Profile).Returns(new Profile { Id = "Screener", Name = "Screener" });
 
             _passwordHasher = new PasswordHasher();
         }
@@ -276,25 +276,25 @@ namespace AccuSync.Presentation.Tests.ViewModels
         }
 
         [Fact]
-        public async Task SaveCommand_GivenASuccessfulChange_WhenSaved_ThenRaisesPasswordChangeSucceededWithTheAccountNameAndCurrentRole()
+        public async Task SaveCommand_GivenASuccessfulChange_WhenSaved_ThenRaisesPasswordChangeSucceededWithTheAccountNameAndCurrentProfileName()
         {
             // Arrange
-            _currentUserContextMock.SetupGet(c => c.Role).Returns(UserRole.Admin);
+            _currentUserContextMock.SetupGet(c => c.Profile).Returns(new Profile { Id = "Admin", Name = "Admin" });
             var user = CreateUser();
             var sut = CreateSut(user);
             sut.OldPassword = CurrentPassword;
             sut.NewPassword = "BrandNew1!";
             sut.ConfirmPassword = "BrandNew1!";
 
-            (string AccountName, string Role)? raised = null;
-            sut.PasswordChangeSucceeded += (accountName, role) => raised = (accountName, role);
+            (string AccountName, string ProfileName)? raised = null;
+            sut.PasswordChangeSucceeded += (accountName, profileName) => raised = (accountName, profileName);
 
             // Act
             sut.SaveCommand.Execute(null);
             await Task.Delay(50);
 
             // Assert
-            Assert.Equal(("Screener", nameof(UserRole.Admin)), raised);
+            Assert.Equal(("Screener", "Admin"), raised);
         }
     }
 }
