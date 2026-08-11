@@ -11,9 +11,9 @@ namespace AccuSync.Application.Tests.Services.Authentication
 {
     public class CurrentUserContextTests
     {
-        private static User NewUser(string guid = "user-guid-1", string accountName = "Screener") => new()
+        private static User NewUser(string id = "user-guid-1", string accountName = "Screener") => new()
         {
-            Guid = guid,
+            Id = id,
             AccountName = accountName
         };
 
@@ -32,14 +32,14 @@ namespace AccuSync.Application.Tests.Services.Authentication
         {
             // Arrange
             var sut = new CurrentUserContext();
-            var user = NewUser(guid: "abc-123", accountName: "Admin");
+            var user = NewUser(id: "abc-123", accountName: "Admin");
 
             // Act
             sut.SignIn(user, UserRole.Admin);
 
             // Assert
             Assert.True(sut.IsSignedIn);
-            Assert.Equal("abc-123", sut.Guid);
+            Assert.Equal("abc-123", sut.Id);
             Assert.Equal("Admin", sut.AccountName);
             Assert.Equal(UserRole.Admin, sut.Role);
         }
@@ -57,7 +57,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
             // Assert — Screener (the least-privileged role) rather than leaving the
             // prior Admin role dangling on an otherwise-signed-out context.
             Assert.False(sut.IsSignedIn);
-            Assert.Null(sut.Guid);
+            Assert.Null(sut.Id);
             Assert.Null(sut.AccountName);
             Assert.Equal(UserRole.Screener, sut.Role);
         }
@@ -68,13 +68,13 @@ namespace AccuSync.Application.Tests.Services.Authentication
             // Arrange — simulates one user logging out and a different user logging in,
             // without a fresh CurrentUserContext instance (it's a process-lifetime singleton).
             var sut = new CurrentUserContext();
-            sut.SignIn(NewUser(guid: "admin-guid", accountName: "Admin"), UserRole.Admin);
+            sut.SignIn(NewUser(id: "admin-guid", accountName: "Admin"), UserRole.Admin);
 
             // Act
-            sut.SignIn(NewUser(guid: "screener-guid", accountName: "Screener"), UserRole.Screener);
+            sut.SignIn(NewUser(id: "screener-guid", accountName: "Screener"), UserRole.Screener);
 
             // Assert — no leftover state from the previous session.
-            Assert.Equal("screener-guid", sut.Guid);
+            Assert.Equal("screener-guid", sut.Id);
             Assert.Equal("Screener", sut.AccountName);
             Assert.Equal(UserRole.Screener, sut.Role);
         }

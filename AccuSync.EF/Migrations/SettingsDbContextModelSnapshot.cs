@@ -33,7 +33,7 @@ namespace AccuSync.EF.Migrations
 
             modelBuilder.Entity("AccuSync.Core.Entities.User", b =>
                 {
-                    b.Property<string>("Guid")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AccountName")
@@ -111,7 +111,7 @@ namespace AccuSync.EF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
                     b.HasIndex("UsernameHash")
                         .IsUnique();

@@ -11,14 +11,26 @@ namespace AccuSync.EF.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppSettings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    LockoutDurationMinutes = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 15)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Guid = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     AccountName = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0),
+                    Status = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     ProfileId = table.Column<string>(type: "TEXT", nullable: false),
                     UsernameHash = table.Column<string>(type: "TEXT", nullable: false),
                     ProfilePassword = table.Column<string>(type: "TEXT", nullable: false),
@@ -34,7 +46,7 @@ namespace AccuSync.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Guid);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -47,6 +59,9 @@ namespace AccuSync.EF.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppSettings");
+
             migrationBuilder.DropTable(
                 name: "Users");
         }

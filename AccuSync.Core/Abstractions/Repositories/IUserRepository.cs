@@ -16,10 +16,27 @@ namespace AccuSync.Core.Abstractions.Repositories
     /// </summary>
     public interface IUserRepository
     {
-        Task InitializeDatabaseAsync();
+        /// <summary>Returns every stored user account.</summary>
+        /// <returns>A list of all <see cref="User"/> records.</returns>
         Task<List<User>> GetAllUsersAsync();
+
+        /// <summary>Looks up a user by account name.</summary>
+        /// <param name="accountName">The account name to search for.</param>
+        /// <returns>The matching <see cref="User"/>, or <c>null</c> if none is found.</returns>
         Task<User> GetUserByAccountNameAsync(string accountName);
+
+        /// <summary>
+        /// Persists changes to an existing user.
+        /// </summary>
+        /// <param name="user">The user to update.</param>
+        /// <returns><c>true</c> if the update succeeded; otherwise <c>false</c>.</returns>
         Task<bool> UpdateUserAsync(User user);
+
+        /// <summary>
+        /// Creates a new user account.
+        /// </summary>
+        /// <param name="user">The user to create.</param>
+        /// <returns><c>true</c> if the user was created; otherwise <c>false</c>.</returns>
         Task<bool> CreateUserAsync(User user);
 
         /// <summary>
@@ -27,20 +44,20 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// management UI. The new role takes effect on that user's next login, not
         /// live for any session already in progress.
         /// </summary>
-        Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role);
+        Task<bool> UpdateUserRoleAsync(string userId, UserRole role);
 
         /// <summary>
         /// Activates or deactivates a user account directly, without requiring a full
         /// Users management UI. Deactivated accounts are blocked from authenticating
         /// regardless of password correctness (see <c>AuthenticationService</c>).
         /// </summary>
-        Task<bool> SetUserActiveStatusAsync(string userGuid, bool isActive);
+        Task<bool> SetUserActiveStatusAsync(string userId, bool isActive);
 
         /// <summary>
         /// Clears a lockout directly, without requiring a full Users management UI.
         /// Resets <c>FailedLoginAttemptCount</c> and <c>FirstFailedLoginTime</c> together,
         /// so the account is fully reset rather than nominally "unlocked."
         /// </summary>
-        Task<bool> UnlockUserAsync(string userGuid);
+        Task<bool> UnlockUserAsync(string userId);
     }
 }
