@@ -37,7 +37,6 @@ namespace AccuSync.EF.DependencyInjection
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
             return services;
