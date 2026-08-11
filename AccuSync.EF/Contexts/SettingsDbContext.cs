@@ -24,13 +24,8 @@ namespace AccuSync.EF.Contexts
 
         public DbSet<User> Users => Set<User>();
 
-        public DbSet<Profile> Profiles => Set<Profile>();
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Profiles must be configured (and its seed rows created) before
-            // UserConfiguration, since Users.ProfileId is a foreign key into Profiles.
-            modelBuilder.ApplyConfiguration(new ProfileConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
     }

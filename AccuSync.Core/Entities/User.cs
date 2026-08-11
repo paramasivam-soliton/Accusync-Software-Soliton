@@ -19,7 +19,7 @@ namespace AccuSync.Core.Entities
 
         /// <summary>Whether this account can authenticate. True = active, false = deactivated.</summary>
         public bool Status { get; set; }
-        /// <summary>Foreign key into <see cref="Profile"/> — the profile assigned to the user.</summary>
+        /// <summary>The identifier of the profile assigned to the user.</summary>
         public string ProfileId { get; set; }
         /// <summary>Deterministic hash of the normalized account name, used for uniqueness/lookup since <see cref="AccountName"/> is encrypted non-deterministically.</summary>
         public string UsernameHash { get; set; }
