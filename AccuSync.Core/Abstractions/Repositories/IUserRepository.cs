@@ -16,7 +16,6 @@ namespace AccuSync.Core.Abstractions.Repositories
     /// </summary>
     public interface IUserRepository
     {
-        Task InitializeDatabaseAsync();
         Task<List<User>> GetAllUsersAsync();
         Task<User> GetUserByAccountNameAsync(string accountName);
         Task<bool> UpdateUserAsync(User user);

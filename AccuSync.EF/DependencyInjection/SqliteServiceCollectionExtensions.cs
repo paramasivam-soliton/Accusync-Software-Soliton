@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.EF;
 using AccuSync.EF.Contexts;
 using AccuSync.EF.Interceptors;
@@ -36,6 +37,7 @@ namespace AccuSync.EF.DependencyInjection
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
             return services;
         }

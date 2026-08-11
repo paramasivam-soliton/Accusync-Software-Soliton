@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,92 +38,6 @@ namespace AccuSync.EF
             _context = context;
             _encryptionService = encryptionService;
             _passwordHasher = passwordHasher;
-        }
-
-        /// <summary>
-        /// Applies pending migrations — backing up the database file first and restoring it
-        /// if the migration fails — then seeds the two default accounts on first run.
-        /// Safe to call on every startup.
-        /// </summary>
-        public async Task InitializeDatabaseAsync()
-        {
-            string databasePath = _context.Database.GetDbConnection().DataSource;
-            bool databaseExisted = File.Exists(databasePath);
-            string backupPath = databasePath + ".bak";
-
-            if (databaseExisted)
-            {
-                File.Copy(databasePath, backupPath, overwrite: true);
-            }
-
-            try
-            {
-                // EF Core's migration lock (__EFMigrationsLock) exists to stop two
-                // *concurrent* instances from migrating at once. This app is single-instance
-                // desktop software, so any row found here at startup is not a live lock —
-                // it's a leftover from a previous run that was killed mid-migration (crash,
-                // force-quit, debugger stop). Left alone, MigrateAsync polls for that row to
-                // clear roughly once a second, forever, since the process that owned it is
-                // gone — bricking every future launch until someone edits the database file
-                // by hand. Clearing it first is what makes migration recoverable from a
-                // mid-migration interruption instead of a one-way failure.
-                await ClearStaleMigrationsLockAsync();
-                await _context.Database.MigrateAsync();
-            }
-            catch
-            {
-                if (databaseExisted)
-                {
-                    File.Copy(backupPath, databasePath, overwrite: true);
-                }
-
-                throw;
-            }
-
-            if (!await _context.Users.AnyAsync())
-            {
-                await CreateDefaultUsersAsync();
-            }
-        }
-
-        /// <summary>
-        /// Deletes any row in EF Core's migrations lock table. See the comment at the
-        /// InitializeDatabaseAsync call site for why this is safe and necessary here.
-        /// </summary>
-        private async Task ClearStaleMigrationsLockAsync()
-        {
-            try
-            {
-                await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
-            }
-            catch (DbException)
-            {
-                // Table doesn't exist yet — this is the very first run, nothing to clear.
-            }
-        }
-
-        // FirstLogin = 1 forces a password change on first login (see
-        // ChangePasswordViewModel), so the seeded "12345" is only ever a
-        // one-time credential.
-        private async Task CreateDefaultUsersAsync()
-        {
-            await InsertUserAsync(new User
-            {
-                AccountName = "Admin",
-                FirstName = "Admin",
-                LastName = "User",
-                ProfileId = "Admin",
-                ProfilePassword = _passwordHasher.Hash("12345")
-            });
-
-            await InsertUserAsync(new User
-            {
-                AccountName = "Screener",
-                FirstName = "Screener",
-                LastName = "User",
-                ProfileId = "Screener",
-                ProfilePassword = _passwordHasher.Hash("12345")
-            });
         }
 
         // NOTE: Encryption is applied per-field here rather than in the User model.
