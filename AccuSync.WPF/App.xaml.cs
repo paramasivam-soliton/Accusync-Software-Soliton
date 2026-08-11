@@ -17,10 +17,12 @@ using AccuSync.WPF.Views.Login;
 
 namespace AccuSync.WPF
 {
+    /// <summary>The composition root — builds the DI container and starts the splash screen.</summary>
     public partial class App : System.Windows.Application
     {
         private ServiceProvider _serviceProvider;
 
+        /// <summary>Builds the DI container.</summary>
         public App()
         {
             var services = new ServiceCollection();
@@ -238,6 +240,7 @@ namespace AccuSync.WPF
             Debug.WriteLine($"[AccuSync] Dev mode → navigated to '{screenName}' as {username} ({role})");
         }
 
+        /// <summary>Resolves a service from the app's DI container.</summary>
         public static T GetService<T>()
         {
             return ((App)Current)._serviceProvider.GetRequiredService<T>();

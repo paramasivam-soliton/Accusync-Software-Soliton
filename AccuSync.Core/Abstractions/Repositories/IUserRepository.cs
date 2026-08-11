@@ -16,9 +16,16 @@ namespace AccuSync.Core.Abstractions.Repositories
     /// </summary>
     public interface IUserRepository
     {
+        /// <summary>Returns every user account.</summary>
         Task<List<User>> GetAllUsersAsync();
+
+        /// <summary>Looks up a single user by account name (case-insensitive).</summary>
         Task<User> GetUserByAccountNameAsync(string accountName);
+
+        /// <summary>Persists changes to an existing user.</summary>
         Task<bool> UpdateUserAsync(User user);
+
+        /// <summary>Creates a new user account.</summary>
         Task<bool> CreateUserAsync(User user);
 
         /// <summary>

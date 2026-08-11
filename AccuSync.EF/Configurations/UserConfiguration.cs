@@ -16,6 +16,7 @@ namespace AccuSync.EF.Configurations
     /// </summary>
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
+        /// <summary>Applies the EF Core mapping for <see cref="User"/> to the given builder.</summary>
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users");

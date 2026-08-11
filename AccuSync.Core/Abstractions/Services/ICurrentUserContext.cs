@@ -15,12 +15,22 @@ namespace AccuSync.Core.Abstractions.Services
     /// </summary>
     public interface ICurrentUserContext
     {
+        /// <summary>The signed-in user's unique identifier, or null if no one is signed in.</summary>
         string Guid { get; }
+
+        /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
         string AccountName { get; }
+
+        /// <summary>The signed-in user's role. Undefined/least-privilege when no one is signed in.</summary>
         UserRole Role { get; }
+
+        /// <summary>Whether a user is currently signed in.</summary>
         bool IsSignedIn { get; }
 
+        /// <summary>Populates the session from a successful login.</summary>
         void SignIn(User user, UserRole role);
+
+        /// <summary>Clears the session.</summary>
         void SignOut();
     }
 }

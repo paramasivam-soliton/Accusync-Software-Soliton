@@ -33,6 +33,7 @@ namespace AccuSync.EF
         private readonly IEncryptionService _encryptionService;
         private readonly IPasswordHasher _passwordHasher;
 
+        /// <summary>Creates a repository backed by the given context, encryption, and password-hashing services.</summary>
         public UserRepository(SettingsDbContext context, IEncryptionService encryptionService, IPasswordHasher passwordHasher)
         {
             _context = context;
@@ -83,12 +84,14 @@ namespace AccuSync.EF
             return Convert.ToBase64String(hash);
         }
 
+        /// <summary>Returns every user account, decrypted.</summary>
         public async Task<List<User>> GetAllUsersAsync()
         {
             var stored = await _context.Users.AsNoTracking().ToListAsync();
             return stored.Select(Decrypt).ToList();
         }
 
+        /// <summary>Looks up a single user by account name.</summary>
         // Looked up by UsernameHash (a SQL-queryable equality match on the deterministic
         // blind index) rather than decrypting every row — AccountName's encryption is
         // non-deterministic and can't be compared directly. Only the matched row is decrypted.
@@ -100,6 +103,7 @@ namespace AccuSync.EF
             return stored == null ? null : Decrypt(stored);
         }
 
+        /// <summary>Persists changes to an existing user. Returns false if the user no longer exists.</summary>
         public async Task<bool> UpdateUserAsync(User user)
         {
             try
@@ -134,6 +138,7 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Assigns a new role to the given user. Returns false if the user no longer exists.</summary>
         public async Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role)
         {
             try
@@ -152,6 +157,7 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Creates a new user account, hashing its password on the way in.</summary>
         public async Task<bool> CreateUserAsync(User user)
         {
             try

@@ -38,8 +38,10 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isLoading;
         private bool _isPasswordVisible;
 
+        /// <summary>Account names for the dropdown, loaded once on construction.</summary>
         public ObservableCollection<string> Usernames { get; set; }
 
+        /// <summary>The username currently selected in the dropdown.</summary>
         public string SelectedUsername
         {
             get => _selectedUsername;
@@ -51,6 +53,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>The password as typed.</summary>
         public string Password
         {
             get => _password;
@@ -62,6 +65,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Message shown to the user when loading usernames or signing in fails.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -72,6 +76,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Whether a sign-in attempt is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -82,6 +87,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Whether the password field shows plaintext instead of masked characters.</summary>
         public bool IsPasswordVisible
         {
             get => _isPasswordVisible;
@@ -92,6 +98,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Command bound to the Sign In button.</summary>
         public ICommand SignInCommand { get; }
 
         /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
@@ -100,6 +107,7 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
+        /// <summary>Creates the view model and kicks off loading the username dropdown.</summary>
         public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext)
         {
             _userRepository = userRepository;
@@ -185,6 +193,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
