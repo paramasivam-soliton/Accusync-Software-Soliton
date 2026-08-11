@@ -9,7 +9,7 @@ namespace AccuSync.Core.Entities
     public class User
     {
         /// <summary>The user's unique identifier.</summary>
-        public string Guid { get; set; }
+        public string Id { get; set; }
         /// <summary>The user's login account name.</summary>
         public string AccountName { get; set; }
         /// <summary>The user's first name.</summary>
@@ -48,10 +48,10 @@ namespace AccuSync.Core.Entities
         /// <summary>The user's last three passwords.</summary>
         public string LastThreePasswords { get; set; }
 
-        /// <summary>Creates a new user with a generated <see cref="Guid"/> and default field values.</summary>
+        /// <summary>Creates a new user with a generated <see cref="Id"/> and default field values.</summary>
         public User()
         {
-            Guid = System.Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();
             AccountName = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;

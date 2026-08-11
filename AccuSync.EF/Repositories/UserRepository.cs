@@ -49,7 +49,7 @@ namespace AccuSync.EF
         {
             var entity = new User
             {
-                Guid = user.Guid,
+                Id = user.Id,
                 AccountName = _encryptionService.Encrypt(user.AccountName),
                 UsernameHash = ComputeUsernameHash(user.AccountName),
                 FirstName = _encryptionService.Encrypt(user.FirstName),
@@ -108,7 +108,7 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(user.Guid);
+                var tracked = await _context.Users.FindAsync(user.Id);
                 if (tracked == null) return false;
 
                 tracked.AccountName = _encryptionService.Encrypt(user.AccountName);
@@ -139,11 +139,11 @@ namespace AccuSync.EF
         }
 
         /// <summary>Assigns a new role to the given user. Returns false if the user no longer exists.</summary>
-        public async Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role)
+        public async Task<bool> UpdateUserRoleAsync(string userId, UserRole role)
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(userGuid);
+                var tracked = await _context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
@@ -158,11 +158,11 @@ namespace AccuSync.EF
         }
 
         /// <summary>Activates or deactivates the given user. Returns false if the user no longer exists.</summary>
-        public async Task<bool> SetUserActiveStatusAsync(string userGuid, bool isActive)
+        public async Task<bool> SetUserActiveStatusAsync(string userId, bool isActive)
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(userGuid);
+                var tracked = await _context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.Status = isActive;
@@ -183,7 +183,7 @@ namespace AccuSync.EF
             {
                 await InsertUserAsync(new User
                 {
-                    Guid = user.Guid,
+                    Id = user.Id,
                     AccountName = user.AccountName,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
@@ -211,7 +211,7 @@ namespace AccuSync.EF
         {
             return new User
             {
-                Guid = stored.Guid,
+                Id = stored.Id,
                 AccountName = _encryptionService.Decrypt(stored.AccountName),
                 UsernameHash = stored.UsernameHash,
                 FirstName = _encryptionService.Decrypt(stored.FirstName),

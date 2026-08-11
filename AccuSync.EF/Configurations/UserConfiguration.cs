@@ -21,7 +21,7 @@ namespace AccuSync.EF.Configurations
         {
             builder.ToTable("Users");
 
-            builder.HasKey(u => u.Guid);
+            builder.HasKey(u => u.Id);
 
             builder.Property(u => u.AccountName).IsRequired();
 

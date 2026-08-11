@@ -16,7 +16,7 @@ namespace AccuSync.Application.Services.Authentication
     public class CurrentUserContext : ICurrentUserContext
     {
         /// <summary>The signed-in user's unique identifier, or null if no one is signed in.</summary>
-        public string Guid { get; private set; }
+        public string Id { get; private set; }
 
         /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
         public string AccountName { get; private set; }
@@ -30,7 +30,7 @@ namespace AccuSync.Application.Services.Authentication
         /// <summary>Populates the session from a successful login.</summary>
         public void SignIn(User user, UserRole role)
         {
-            Guid = user.Guid;
+            Id = user.Id;
             AccountName = user.AccountName;
             Role = role;
             IsSignedIn = true;
@@ -39,7 +39,7 @@ namespace AccuSync.Application.Services.Authentication
         /// <summary>Clears the session.</summary>
         public void SignOut()
         {
-            Guid = null;
+            Id = null;
             AccountName = null;
             Role = UserRole.Screener;
             IsSignedIn = false;
