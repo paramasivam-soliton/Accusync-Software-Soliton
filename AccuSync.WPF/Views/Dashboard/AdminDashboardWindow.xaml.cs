@@ -10,7 +10,10 @@ using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
-    /// <summary>The admin dashboard window; hosts the sidebar-navigated shell content.</summary>
+    /// <summary>
+    /// Main admin shell window. Hosts the <see cref="SidebarNavigation"/> control
+    /// and forwards user/navigation calls to it.
+    /// </summary>
     public partial class AdminDashboardWindow : Window
     {
         /// <summary>Creates the window and applies the dev-mode title suffix if active.</summary>
@@ -22,7 +25,10 @@ namespace AccuSync.WPF.Views.Dashboard
                 Title += DevModeConfig.GetDevModeLabel();
         }
 
-        /// <summary>Displays the signed-in user's name in the shell.</summary>
+        /// <summary>
+        /// Forwards the current username to the sidebar shell.
+        /// </summary>
+        /// <param name="username">The logged-in user's display name.</param>
         public void SetCurrentUser(string username)
         {
             Shell.SetCurrentUser(username);
@@ -37,7 +43,10 @@ namespace AccuSync.WPF.Views.Dashboard
             Shell.SetPermissions(permissions);
         }
 
-        /// <summary>Navigates the shell's content area to the named screen.</summary>
+        /// <summary>
+        /// Forwards a navigation request to the sidebar shell.
+        /// </summary>
+        /// <param name="screenName">The name of the screen to navigate to.</param>
         public void NavigateToView(string screenName)
         {
             Shell.NavigateToView(screenName);

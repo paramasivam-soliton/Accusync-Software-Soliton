@@ -17,8 +17,15 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
+    /// <summary>
+    /// Dashboard landing screen showing overview stat cards, quick actions,
+    /// and a personalized greeting.
+    /// </summary>
     public partial class DashboardContentView : UserControl
     {
+        /// <summary>
+        /// Raised when a quick-action card requests navigation to another screen.
+        /// </summary>
         public event Action<string> NavigateRequested;
 
         private string _username = "Admin";
@@ -29,6 +36,10 @@ namespace AccuSync.WPF.Views.Dashboard
         private static readonly SolidColorBrush _cardHoverBg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f0f7ff"));
         private static readonly SolidColorBrush _cardHoverBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#428FEC"));
 
+        /// <summary>
+        /// Initializes the control, populates the stat/quick-action cards, and
+        /// updates the greeting once loaded.
+        /// </summary>
         public DashboardContentView()
         {
             InitializeComponent();

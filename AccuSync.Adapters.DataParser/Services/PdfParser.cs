@@ -30,6 +30,13 @@ namespace AccuSync.Adapters.DataParser.Services
     //       in production.
     public class PdfParser
     {
+        /// <summary>
+        /// Parses a hospital facesheet PDF into a <see cref="PatientData"/> record.
+        /// Falls back to best-effort field mapping even when the PDF appears to be
+        /// a scanned image with little or no extractable text.
+        /// </summary>
+        /// <param name="filePath">Path to the PDF facesheet to parse.</param>
+        /// <returns>The extracted <see cref="PatientData"/>.</returns>
         public static PatientData ParsePdfFacesheet(string filePath)
         {
             if (!File.Exists(filePath))

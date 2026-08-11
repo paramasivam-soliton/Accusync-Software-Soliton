@@ -13,7 +13,18 @@ namespace AccuSync.Core.Abstractions.Services
     /// </summary>
     public interface IEncryptionService
     {
+        /// <summary>
+        /// Encrypts the given plaintext.
+        /// </summary>
+        /// <param name="plainText">The text to encrypt.</param>
+        /// <returns>The encrypted representation of <paramref name="plainText"/>.</returns>
         string Encrypt(string plainText);
+
+        /// <summary>
+        /// Decrypts the given ciphertext.
+        /// </summary>
+        /// <param name="cipherText">The text to decrypt.</param>
+        /// <returns>The decrypted plaintext.</returns>
         string Decrypt(string cipherText);
     }
 }

@@ -13,12 +13,17 @@ namespace AccuSync.Application.Models
     /// </summary>
     public class DashboardCardInfo
     {
+        /// <summary>Identifier used to distinguish the card for command binding.</summary>
         public string Tag { get; set; }
+        /// <summary>Background color for the card's icon.</summary>
         public string IconBackground { get; set; }
+        /// <summary>Geometry data for the card's icon.</summary>
         public string IconData { get; set; }
+        /// <summary>The card's label text.</summary>
         public string Label { get; set; }
+        /// <summary>The stat value shown on the card. Used by stat cards only.</summary>
         public string Value { get; set; }
-        // "left,top,right,bottom" — parsed into a Thickness by the View (StringToThicknessConverter).
+        /// <summary>Margin applied around the card, as "left,top,right,bottom" (parsed by StringToThicknessConverter).</summary>
         public string CardMargin { get; set; }
     }
 }
