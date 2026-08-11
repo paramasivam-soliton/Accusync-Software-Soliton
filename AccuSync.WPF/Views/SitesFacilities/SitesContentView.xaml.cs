@@ -17,8 +17,18 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.SitesFacilities
 {
+    /// <summary>
+    /// Immutable snapshot of a site's editable form state, used for undo/revert.
+    /// </summary>
+    /// <param name="Name">The site name.</param>
+    /// <param name="Description">The site description.</param>
+    /// <param name="Code">The site code.</param>
     public record SiteSnapshot(string Name, string Description, string Code);
 
+    /// <summary>
+    /// Sites screen content: site list/detail form plus the Facilities and
+    /// Locations takeover views.
+    /// </summary>
     public partial class SitesContentView : UserControl
     {
         private ObservableCollection<SiteEntry> _sites;
@@ -29,9 +39,15 @@ namespace AccuSync.WPF.Views.SitesFacilities
         private SiteSnapshot _savedState;
         private Stack<SiteSnapshot> _undoStack = new();
 
+        /// <summary>Provides access to the embedded facilities view for the toolbar's takeover mode.</summary>
         public FacilitiesContentView FacilitiesView => FacilitiesContent;
+
+        /// <summary>Provides access to the embedded locations view for the toolbar's takeover mode.</summary>
         public LocationsContentView LocationsView => LocationsContent;
 
+        /// <summary>
+        /// Initializes the control and populates the site list once loaded.
+        /// </summary>
         public SitesContentView()
         {
             InitializeComponent();
@@ -124,6 +140,10 @@ namespace AccuSync.WPF.Views.SitesFacilities
         // Save / Revert / Undo — called from toolbar
 
         // NOTE: HandleSave updates the in-memory model but doesn't persist to database
+        /// <summary>
+        /// Validates the selected site's required fields and saves the current state
+        /// as the new baseline.
+        /// </summary>
         public void HandleSave()
         {
             var site = SitesListView.SelectedItem as SiteEntry;
@@ -162,6 +182,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -169,6 +192,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             ApplySnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -178,6 +204,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
 
         // Add / Delete — called from toolbar
 
+        /// <summary>
+        /// Adds a new site with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var newSite = new SiteEntry
@@ -194,6 +223,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             NameBox.SelectAll();
         }
 
+        /// <summary>
+        /// Deletes the selected site after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             var site = SitesListView.SelectedItem as SiteEntry;
@@ -222,6 +254,7 @@ namespace AccuSync.WPF.Views.SitesFacilities
 
         // Facilities Takeover
 
+        /// <summary>Switches from the normal site list/detail view into the facilities takeover.</summary>
         public void ShowFacilities()
         {
             // Sync current site names into the facilities site dropdown
@@ -232,6 +265,7 @@ namespace AccuSync.WPF.Views.SitesFacilities
             FacilitiesContent.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the facilities takeover to the normal site view.</summary>
         public void HideFacilities()
         {
             FacilitiesContent.Visibility = Visibility.Collapsed;
@@ -240,12 +274,14 @@ namespace AccuSync.WPF.Views.SitesFacilities
 
         // Locations Takeover
 
+        /// <summary>Switches from the normal site list/detail view into the locations takeover.</summary>
         public void ShowLocations()
         {
             NormalSitesGrid.Visibility = Visibility.Collapsed;
             LocationsContent.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the locations takeover to the normal site view.</summary>
         public void HideLocations()
         {
             LocationsContent.Visibility = Visibility.Collapsed;

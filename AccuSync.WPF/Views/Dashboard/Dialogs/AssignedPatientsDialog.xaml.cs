@@ -16,6 +16,9 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing patients currently assigned to a screener for today.
+    /// </summary>
     public partial class AssignedPatientsDialog : CardListDialogBase
     {
         private List<AssignedPatient> _allPatients;
@@ -27,6 +30,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         protected override TextBox SearchInput => SearchBox;
         protected override string SearchPlaceholder => Strings.AssignedPatientsDialog_SearchPlaceholder;
 
+        /// <summary>
+        /// Initializes the dialog and asynchronously loads assigned patient data.
+        /// </summary>
         public AssignedPatientsDialog()
         {
             InitializeComponent();

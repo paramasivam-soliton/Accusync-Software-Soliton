@@ -23,12 +23,24 @@ namespace AccuSync.Application.Services.Authentication
         private const int MaxFailedAttempts = 10;
         private const int LockoutDurationMinutes = 15;
 
+        /// <summary>
+        /// Creates the service with its required data and password-hashing dependencies.
+        /// </summary>
+        /// <param name="userRepository">Used to look up and update user accounts.</param>
+        /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
         public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
         }
 
+        /// <summary>
+        /// Authenticates the given credentials, applying lockout and password
+        /// expiration checks. See the class-level remarks for details.
+        /// </summary>
+        /// <param name="accountName">The account name to authenticate.</param>
+        /// <param name="password">The plaintext password to verify.</param>
+        /// <returns>An <see cref="AuthenticationResult"/> describing the outcome.</returns>
         public async Task<AuthenticationResult> AuthenticateAsync(string accountName, string password)
         {
             if (string.IsNullOrWhiteSpace(accountName) || string.IsNullOrWhiteSpace(password))
