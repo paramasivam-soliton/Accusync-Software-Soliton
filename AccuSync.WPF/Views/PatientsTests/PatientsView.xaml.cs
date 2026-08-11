@@ -26,6 +26,10 @@ using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.PatientsTests
 {
+    /// <summary>
+    /// Patients screen: searchable, sortable, paginated patient list with
+    /// selection mode, bulk actions, export, and the import/facesheet-review workflow.
+    /// </summary>
     public partial class PatientsView : UserControl, INotifyPropertyChanged
     {
         private ObservableCollection<Patient> _allPatients;
@@ -50,6 +54,9 @@ namespace AccuSync.WPF.Views.PatientsTests
         private Visibility _checkboxVisibility = Visibility.Collapsed;
         private bool _isUpdatingSelectAll = false;
 
+        /// <summary>
+        /// Controls whether per-row selection checkboxes are visible (bound to selection mode).
+        /// </summary>
         public Visibility CheckboxVisibility
         {
             get => _checkboxVisibility;
@@ -60,12 +67,17 @@ namespace AccuSync.WPF.Views.PatientsTests
             }
         }
 
+        /// <summary>Raised when a bound property value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Initializes the control, loads sample patient data, and wires up
+        /// search/filter placeholder behavior.
+        /// </summary>
         public PatientsView()
         {
             InitializeComponent();

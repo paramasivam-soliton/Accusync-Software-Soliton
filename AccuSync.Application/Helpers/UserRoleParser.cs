@@ -16,9 +16,12 @@ namespace AccuSync.Application.Helpers
     /// </summary>
     public static class UserRoleParser
     {
+        private const string AdminProfileId = "Admin";
+
+        /// <summary>Resolves a stored <see cref="User.ProfileId"/> value to a <see cref="UserRole"/>.</summary>
         public static UserRole Parse(string profileId)
         {
-            return string.Equals(profileId, "Admin", StringComparison.OrdinalIgnoreCase)
+            return string.Equals(profileId, AdminProfileId, StringComparison.OrdinalIgnoreCase)
                 ? UserRole.Admin
                 : UserRole.Screener;
         }

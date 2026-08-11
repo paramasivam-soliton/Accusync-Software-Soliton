@@ -27,6 +27,12 @@ namespace AccuSync.WPF.Converters
         private static readonly Brush ValidBrush = (Brush)System.Windows.Application.Current.Resources["ValidColorBrush"];
         private static readonly Brush InvalidBrush = (Brush)System.Windows.Application.Current.Resources["InvalidColorBrush"];
 
+        /// <summary>Converts a boolean validation state to a brush.</summary>
+        /// <param name="value">The value to convert; expected to be a <see cref="bool"/>.</param>
+        /// <param name="targetType">The binding target type. Unused.</param>
+        /// <param name="parameter">The converter parameter. Unused.</param>
+        /// <param name="culture">The culture to use. Unused.</param>
+        /// <returns><see cref="ValidBrush"/> when <paramref name="value"/> is <see langword="true"/>; otherwise <see cref="InvalidBrush"/>.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
@@ -43,6 +49,12 @@ namespace AccuSync.WPF.Converters
             }
         }
 
+        /// <summary>Not supported for this one-way converter.</summary>
+        /// <param name="value">Unused.</param>
+        /// <param name="targetType">Unused.</param>
+        /// <param name="parameter">Unused.</param>
+        /// <param name="culture">Unused.</param>
+        /// <returns>Never returns; always throws.</returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

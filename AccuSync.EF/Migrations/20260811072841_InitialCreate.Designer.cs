@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(SettingsDbContext))]
-    [Migration("20260810085959_InitialCreate")]
+    [Migration("20260811072841_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,9 +19,24 @@ namespace AccuSync.EF.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
+            modelBuilder.Entity("AccuSync.Core.Entities.AppSettings", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LockoutDurationMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(15);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppSettings", (string)null);
+                });
+
             modelBuilder.Entity("AccuSync.Core.Entities.User", b =>
                 {
-                    b.Property<string>("Guid")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AccountName")
@@ -90,16 +105,16 @@ namespace AccuSync.EF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Status")
+                    b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(true);
 
                     b.Property<string>("UsernameHash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
                     b.HasIndex("UsernameHash")
                         .IsUnique();

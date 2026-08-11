@@ -7,7 +7,10 @@ namespace AccuSync.Core.Entities
     /// </summary>
     public enum UserRole
     {
+        /// <summary>Least-privileged role; sees only screening features.</summary>
         Screener = 0,
+
+        /// <summary>Full access, including user and system administration.</summary>
         Admin = 1
     }
 }

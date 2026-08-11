@@ -47,6 +47,7 @@ namespace AccuSync.Presentation.ViewModels
         private bool _passwordsMatch;
         private bool _notSameAsOld;
 
+        /// <summary>The user's current password, as typed for verification.</summary>
         public string OldPassword
         {
             get => _oldPassword;
@@ -58,6 +59,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>The password being set.</summary>
         public string NewPassword
         {
             get => _newPassword;
@@ -69,6 +71,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Re-entry of <see cref="NewPassword"/>, used to confirm it was typed correctly.</summary>
         public string ConfirmPassword
         {
             get => _confirmPassword;
@@ -80,6 +83,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Message shown to the user when validation or save fails.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -90,6 +94,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Whether a save is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -100,42 +105,49 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> meets the minimum length rule.</summary>
         public bool HasMinimumLength
         {
             get => _hasMinimumLength;
             set { _hasMinimumLength = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> contains an uppercase letter.</summary>
         public bool HasUpperCase
         {
             get => _hasUpperCase;
             set { _hasUpperCase = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> contains a lowercase letter.</summary>
         public bool HasLowerCase
         {
             get => _hasLowerCase;
             set { _hasLowerCase = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> contains a digit.</summary>
         public bool HasNumber
         {
             get => _hasNumber;
             set { _hasNumber = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> contains a non-alphanumeric character.</summary>
         public bool HasSpecialChar
         {
             get => _hasSpecialChar;
             set { _hasSpecialChar = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> and <see cref="ConfirmPassword"/> match.</summary>
         public bool PasswordsMatch
         {
             get => _passwordsMatch;
             set { _passwordsMatch = value; OnPropertyChanged(); }
         }
 
+        /// <summary>Whether <see cref="NewPassword"/> differs from <see cref="OldPassword"/>.</summary>
         public bool NotSameAsOld
         {
             get => _notSameAsOld;
@@ -148,11 +160,13 @@ namespace AccuSync.Presentation.ViewModels
         public bool CanSave => HasMinimumLength && HasUpperCase && HasLowerCase &&
                                HasNumber && HasSpecialChar && PasswordsMatch && NotSameAsOld;
 
+        /// <summary>Command bound to the Save button; validates and persists the new password.</summary>
         public ICommand SaveCommand { get; }
 
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
+        /// <summary>Creates the view model for the given signed-in user.</summary>
         public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext, User currentUser)
         {
             _userRepository = userRepository;
@@ -260,6 +274,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
