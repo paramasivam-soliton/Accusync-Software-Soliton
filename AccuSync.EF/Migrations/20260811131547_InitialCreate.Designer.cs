@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(SettingsDbContext))]
-    [Migration("20260811131735_InitialCreate")]
+    [Migration("20260811131547_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
