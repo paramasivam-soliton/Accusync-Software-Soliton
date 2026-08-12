@@ -166,9 +166,22 @@ issues) is left to a dedicated future story.
    and forcing all three through one shape would carry unneeded overhead into the list view. A
    shared mapper is used instead so the conversion logic exists in one place without collapsing
    the types themselves.
-5. **A general-purpose mapping library (e.g. AutoMapper)** — considered and rejected. Nothing
-   comparable is used anywhere else in the solution, and introducing one for a single entity would
-   be disproportionate to the problem being solved.
+5. **A general-purpose mapping library (e.g. AutoMapper)** — considered and rejected, both for
+   this story and for the codebase's broader future mapping needs. Looking ahead at the SRS's
+   remaining screens: the future work that resembles simple, name-matching field copies (Device,
+   Site, Facility, Location, ABR/DPOAE Protocol, Risk Factor, and Comment configuration screens —
+   GID-254877) is real but modest, and no harder to hand-write than this story's `PatientMapper`.
+   The larger share of upcoming work — Import (5.4) and Export (5.5) file-format conversions, and
+   OAE/ABR test-result blob parsing (5.6/5.7) — involves fixed-width text layouts and binary blob
+   deserialization, not property-name matching, so a name-matching mapping library provides no
+   benefit there regardless of scale. Combined with the fact that no mapping library is used
+   anywhere else in the solution today, despite four prior stories (Login/RBAC/Lockout/Logout)
+   already having shipped without one, introducing a third-party dependency now — in a codebase
+   where every dependency carries review and patching weight — is not justified by a benefit that
+   applies only to a smaller, easier slice of future work. If a future story with many
+   near-identical simple CRUD screens makes hand-written mapping genuinely repetitive in practice,
+   that is the point to revisit this decision, based on observed friction rather than prediction
+   now.
 
 # 5. Open issues
 
@@ -178,13 +191,14 @@ issues) is left to a dedicated future story.
 - **Patient comment configuration (GID-254889, 5.17):** predefined/comment management screens are
   out of scope here; this story only persists whatever value is written to the existing
   `PredefinedComments` column.
-- **Deleted-patient visibility:** whether a soft-deleted patient should remain visible to Admins
-  via a toggle, or disappear from every view entirely, is pending a client decision. The default
-  list query excludes soft-deleted patients regardless of the outcome.
-- **Test entry deletion retention:** whether deleting an individual test entry should retain the
-  underlying data for a period, or a hard delete is acceptable, is pending a client decision. This
-  story implements a hard delete, matching the current schema (`TestRecords` has no `IsDeleted`
-  column).
+- **Deleted-patient visibility:** confirmed by the client — soft delete is sufficient; no
+  "Show Deleted" toggle or Admin-facing visibility of deleted patients is required. A
+  soft-deleted patient is excluded from every list view.
+- **Test entry deletion retention:** confirmed by the client — a hard delete is acceptable for
+  now. Deleting an individual test entry (`ITestRepository.DeleteTestRecordAsync`) removes the
+  row permanently, matching the current schema (`TestRecords` has no `IsDeleted` column). If
+  retention is required later, that becomes a follow-on migration adding the column, not a
+  rework of this story.
 - **Database encryption at rest (GID-256510):** not implemented by this story. The requirement is
   file-based encryption of the database file itself, not per-field/per-record encryption of
   individual columns; no implementation approach is assumed here.
