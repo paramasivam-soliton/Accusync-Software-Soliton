@@ -21,16 +21,17 @@ namespace AccuSync.EF
     {
         private const string SettingsRowId = "Default";
 
-        private readonly SettingsDbContext _context;
+        private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
 
-        public AppSettingsRepository(SettingsDbContext context)
+        public AppSettingsRepository(IDbContextFactory<SettingsDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<int> GetLockoutDurationMinutesAsync()
         {
-            var settings = await GetOrCreateSettingsAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var settings = await GetOrCreateSettingsAsync(context);
             return settings.LockoutDurationMinutes;
         }
 
@@ -38,9 +39,10 @@ namespace AccuSync.EF
         {
             try
             {
-                var settings = await GetOrCreateSettingsAsync();
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var settings = await GetOrCreateSettingsAsync(context);
                 settings.LockoutDurationMinutes = minutes;
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -49,14 +51,14 @@ namespace AccuSync.EF
             }
         }
 
-        private async Task<AppSettings> GetOrCreateSettingsAsync()
+        private async Task<AppSettings> GetOrCreateSettingsAsync(SettingsDbContext context)
         {
-            var settings = await _context.AppSettings.FirstOrDefaultAsync(s => s.Id == SettingsRowId);
+            var settings = await context.AppSettings.FirstOrDefaultAsync(s => s.Id == SettingsRowId);
             if (settings != null) return settings;
 
             settings = new AppSettings();
-            _context.AppSettings.Add(settings);
-            await _context.SaveChangesAsync();
+            context.AppSettings.Add(settings);
+            await context.SaveChangesAsync();
             return settings;
         }
     }

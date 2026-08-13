@@ -29,14 +29,14 @@ namespace AccuSync.EF
     /// </summary>
     public class UserRepository : IUserRepository
     {
-        private readonly SettingsDbContext _context;
+        private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
         private readonly IEncryptionService _encryptionService;
         private readonly IPasswordHasher _passwordHasher;
 
-        /// <summary>Creates a repository backed by the given context, encryption, and password-hashing services.</summary>
-        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService, IPasswordHasher passwordHasher)
+        /// <summary>Creates a repository backed by the given context factory, encryption, and password-hashing services.</summary>
+        public UserRepository(IDbContextFactory<SettingsDbContext> contextFactory, IEncryptionService encryptionService, IPasswordHasher passwordHasher)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _encryptionService = encryptionService;
             _passwordHasher = passwordHasher;
         }
@@ -67,8 +67,9 @@ namespace AccuSync.EF
                 // CreationDate/ModificationDate are set by TimestampInterceptor on save.
             };
 
-            _context.Users.Add(entity);
-            await _context.SaveChangesAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            context.Users.Add(entity);
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -87,7 +88,8 @@ namespace AccuSync.EF
         /// <summary>Returns every user account, decrypted.</summary>
         public async Task<List<User>> GetAllUsersAsync()
         {
-            var stored = await _context.Users.AsNoTracking().ToListAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var stored = await context.Users.AsNoTracking().ToListAsync();
             return stored.Select(Decrypt).ToList();
         }
 
@@ -98,7 +100,8 @@ namespace AccuSync.EF
         public async Task<User> GetUserByAccountNameAsync(string accountName)
         {
             string usernameHash = ComputeUsernameHash(accountName);
-            var stored = await _context.Users.AsNoTracking()
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var stored = await context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UsernameHash == usernameHash);
             return stored == null ? null : Decrypt(stored);
         }
@@ -108,7 +111,8 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(user.Id);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(user.Id);
                 if (tracked == null) return false;
 
                 tracked.AccountName = _encryptionService.Encrypt(user.AccountName);
@@ -127,7 +131,7 @@ namespace AccuSync.EF
                 tracked.LastThreePasswords = user.LastThreePasswords;
                 // ModificationDate is set by TimestampInterceptor, not here — see class TODO history.
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -143,12 +147,13 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(userId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -162,12 +167,13 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(userId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.Status = isActive;
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -181,13 +187,14 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(userId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.FailedLoginAttemptCount = 0;
                 tracked.FirstFailedLoginTime = 0L;
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
