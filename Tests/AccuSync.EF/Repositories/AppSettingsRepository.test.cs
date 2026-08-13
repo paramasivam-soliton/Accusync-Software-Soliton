@@ -18,6 +18,18 @@ namespace AccuSync.EF.Tests.Repositories
     /// </summary>
     public class AppSettingsRepositoryTests : IDisposable
     {
+        // Hands out a fresh SettingsDbContext per call, all sharing the one open in-memory
+        // connection below — mirrors IDbContextFactory's real per-call-context contract
+        // (see AppSettingsRepository) without needing a DI container in this test.
+        private class TestDbContextFactory : IDbContextFactory<SettingsDbContext>
+        {
+            private readonly DbContextOptions<SettingsDbContext> _options;
+
+            public TestDbContextFactory(DbContextOptions<SettingsDbContext> options) => _options = options;
+
+            public SettingsDbContext CreateDbContext() => new(_options);
+        }
+
         private readonly SqliteConnection _connection;
         private readonly SettingsDbContext _context;
         private readonly AppSettingsRepository _sut;
@@ -33,7 +45,7 @@ namespace AccuSync.EF.Tests.Repositories
             _context = new SettingsDbContext(options);
             _context.Database.EnsureCreated();
 
-            _sut = new AppSettingsRepository(_context);
+            _sut = new AppSettingsRepository(new TestDbContextFactory(options));
         }
 
         [Fact]
