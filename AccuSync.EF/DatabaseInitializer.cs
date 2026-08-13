@@ -22,13 +22,13 @@ namespace AccuSync.EF
     /// </summary>
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly SettingsDbContext _context;
+        private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
         private readonly IUserRepository _userRepository;
 
-        /// <summary>Creates the initializer backed by the given context and user repository.</summary>
-        public DatabaseInitializer(SettingsDbContext context, IUserRepository userRepository)
+        /// <summary>Creates the initializer backed by the given context factory and user repository.</summary>
+        public DatabaseInitializer(IDbContextFactory<SettingsDbContext> contextFactory, IUserRepository userRepository)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _userRepository = userRepository;
         }
 
@@ -39,7 +39,9 @@ namespace AccuSync.EF
         /// </summary>
         public async Task InitializeAsync()
         {
-            string databasePath = _context.Database.GetDbConnection().DataSource;
+            using var context = await _contextFactory.CreateDbContextAsync();
+
+            string databasePath = context.Database.GetDbConnection().DataSource;
             bool databaseExisted = File.Exists(databasePath);
             string backupPath = databasePath + ".bak";
 
@@ -59,8 +61,8 @@ namespace AccuSync.EF
                 // gone — bricking every future launch until someone edits the database file
                 // by hand. Clearing it first is what makes migration recoverable from a
                 // mid-migration interruption instead of a one-way failure.
-                await ClearStaleMigrationsLockAsync();
-                await _context.Database.MigrateAsync();
+                await ClearStaleMigrationsLockAsync(context);
+                await context.Database.MigrateAsync();
             }
             catch
             {
@@ -72,7 +74,7 @@ namespace AccuSync.EF
                 throw;
             }
 
-            if (!await _context.Users.AnyAsync())
+            if (!await context.Users.AnyAsync())
             {
                 await CreateDefaultUsersAsync();
             }
@@ -82,11 +84,11 @@ namespace AccuSync.EF
         /// Deletes any row in EF Core's migrations lock table. See the comment at the
         /// InitializeAsync call site for why this is safe and necessary here.
         /// </summary>
-        private async Task ClearStaleMigrationsLockAsync()
+        private async Task ClearStaleMigrationsLockAsync(SettingsDbContext context)
         {
             try
             {
-                await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
             }
             catch (DbException)
             {
