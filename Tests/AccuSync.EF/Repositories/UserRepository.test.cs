@@ -24,6 +24,18 @@ namespace AccuSync.EF.Tests.Repositories
     /// </summary>
     public class UserRepositoryTests : IDisposable
     {
+        // Hands out a fresh SettingsDbContext per call, all sharing the one open in-memory
+        // connection below — mirrors IDbContextFactory's real per-call-context contract
+        // (see UserRepository) without needing a DI container in this test.
+        private class TestDbContextFactory : IDbContextFactory<SettingsDbContext>
+        {
+            private readonly DbContextOptions<SettingsDbContext> _options;
+
+            public TestDbContextFactory(DbContextOptions<SettingsDbContext> options) => _options = options;
+
+            public SettingsDbContext CreateDbContext() => new(_options);
+        }
+
         private readonly SqliteConnection _connection;
         private readonly SettingsDbContext _context;
         private readonly string _keyRingPath;
@@ -43,7 +55,7 @@ namespace AccuSync.EF.Tests.Repositories
             _keyRingPath = Path.Combine(Path.GetTempPath(), "AccuSyncUserRepositoryTests_" + Guid.NewGuid());
             var dataProtectionProvider = DataProtectionProvider.Create(new DirectoryInfo(_keyRingPath));
 
-            _sut = new UserRepository(_context, new EncryptionService(dataProtectionProvider), new PasswordHasher());
+            _sut = new UserRepository(new TestDbContextFactory(options), new EncryptionService(dataProtectionProvider), new PasswordHasher());
         }
 
         private static User NewUser(string accountName, string plainTextPassword = "Password@123") => new()
