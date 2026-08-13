@@ -19,16 +19,17 @@ namespace AccuSync.EF
     /// </summary>
     public class TestRepository : ITestRepository
     {
-        private readonly PatientDbContext _context;
+        private readonly IDbContextFactory<PatientDbContext> _contextFactory;
 
-        public TestRepository(PatientDbContext context)
+        public TestRepository(IDbContextFactory<PatientDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<List<TestRecord>> GetTestsForPatientAsync(int patientId)
         {
-            return await _context.TestRecords
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.TestRecords
                 .AsNoTracking()
                 .Where(r => r.PatientId == patientId)
                 .ToListAsync();
@@ -39,11 +40,12 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.TestRecords.FindAsync(testRecordId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.TestRecords.FindAsync(testRecordId);
                 if (tracked == null) return false;
 
-                _context.TestRecords.Remove(tracked);
-                await _context.SaveChangesAsync();
+                context.TestRecords.Remove(tracked);
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -57,14 +59,15 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.TestRecords.FindAsync(testRecordId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.TestRecords.FindAsync(testRecordId);
                 if (tracked == null) return false;
 
-                bool targetPatientExists = await _context.Patients.AnyAsync(p => p.PatientId == newPatientId);
+                bool targetPatientExists = await context.Patients.AnyAsync(p => p.PatientId == newPatientId);
                 if (!targetPatientExists) return false;
 
                 tracked.PatientId = newPatientId;
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch

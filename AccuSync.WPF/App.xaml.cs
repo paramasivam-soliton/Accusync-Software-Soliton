@@ -11,6 +11,7 @@ using AccuSync.Application.Services.Authentication;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.Adapters.DataParser.DependencyInjection;
 using AccuSync.EF.DependencyInjection;
+using AccuSync.WPF.Services;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
@@ -63,6 +64,8 @@ namespace AccuSync.WPF
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<ICurrentUserContext, CurrentUserContext>();
+            services.AddSingleton<InactivityPolicy>();
+            services.AddSingleton<InactivityMonitor>();
 
             // ViewModels
             services.AddTransient<SplashViewModel>();
@@ -115,6 +118,8 @@ namespace AccuSync.WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            _serviceProvider.GetRequiredService<InactivityMonitor>().Start();
 
             // Log dev mode status on startup
             if (DevModeConfig.IsAnyDevMode)

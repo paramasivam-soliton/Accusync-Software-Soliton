@@ -25,15 +25,18 @@ namespace AccuSync.EF
     /// </summary>
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly SettingsDbContext _settingsContext;
-        private readonly PatientDbContext _patientContext;
+        private readonly IDbContextFactory<SettingsDbContext> _settingsContextFactory;
+        private readonly IDbContextFactory<PatientDbContext> _patientContextFactory;
         private readonly IUserRepository _userRepository;
 
-        /// <summary>Creates the initializer backed by the given contexts and user repository.</summary>
-        public DatabaseInitializer(SettingsDbContext settingsContext, PatientDbContext patientContext, IUserRepository userRepository)
+        /// <summary>Creates the initializer backed by the given context factories and user repository.</summary>
+        public DatabaseInitializer(
+            IDbContextFactory<SettingsDbContext> settingsContextFactory,
+            IDbContextFactory<PatientDbContext> patientContextFactory,
+            IUserRepository userRepository)
         {
-            _settingsContext = settingsContext;
-            _patientContext = patientContext;
+            _settingsContextFactory = settingsContextFactory;
+            _patientContextFactory = patientContextFactory;
             _userRepository = userRepository;
         }
 
@@ -44,10 +47,13 @@ namespace AccuSync.EF
         /// </summary>
         public async Task InitializeAsync()
         {
-            await MigrateWithBackupAsync(_settingsContext);
-            await MigrateWithBackupAsync(_patientContext);
+            using var settingsContext = await _settingsContextFactory.CreateDbContextAsync();
+            using var patientContext = await _patientContextFactory.CreateDbContextAsync();
 
-            if (!await _settingsContext.Users.AnyAsync())
+            await MigrateWithBackupAsync(settingsContext);
+            await MigrateWithBackupAsync(patientContext);
+
+            if (!await settingsContext.Users.AnyAsync())
             {
                 await CreateDefaultUsersAsync();
             }

@@ -31,7 +31,13 @@ namespace AccuSync.EF.DependencyInjection
         {
             services.AddSingleton<TimestampInterceptor>();
 
-            services.AddDbContext<SettingsDbContext>((provider, options) =>
+            // A DbContext factory, not the DbContext itself, is registered here: WPF has no
+            // per-request scope boundary the way ASP.NET Core does, so an AddDbContext-registered
+            // (scoped) DbContext resolved from the root container lives for the whole app process
+            // — effectively a singleton DbContext, which is not thread-safe and accumulates
+            // tracked entities for the app's entire lifetime. IDbContextFactory<T> is itself
+            // singleton-safe and hands out a short-lived DbContext per unit of work instead.
+            services.AddDbContextFactory<SettingsDbContext>((provider, options) =>
             {
                 // Default Timeout: seconds SQLite will retry before giving up on a locked
                 // file, instead of failing immediately — covers the brief window where a
@@ -40,17 +46,19 @@ namespace AccuSync.EF.DependencyInjection
                 options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
             });
 
-            services.AddDbContext<PatientDbContext>((provider, options) =>
+            // Same reasoning as SettingsDbContext above — a factory, not the context itself,
+            // since WPF has no scope boundary to bound a scoped PatientDbContext's lifetime.
+            services.AddDbContextFactory<PatientDbContext>((provider, options) =>
             {
                 options.UseSqlite($"Data Source={patientDatabasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
                 options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
             });
 
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
-            services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<ITestRepository, TestRepository>();
-            services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IAppSettingsRepository, AppSettingsRepository>();
+            services.AddSingleton<IPatientRepository, PatientRepository>();
+            services.AddSingleton<ITestRepository, TestRepository>();
+            services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();
 
             return services;
         }

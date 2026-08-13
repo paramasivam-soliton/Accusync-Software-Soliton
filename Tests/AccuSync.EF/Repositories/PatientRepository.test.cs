@@ -20,6 +20,18 @@ namespace AccuSync.EF.Tests.Repositories
     /// </summary>
     public class PatientRepositoryTests : IDisposable
     {
+        // Hands out a fresh PatientDbContext per call, all sharing the one open in-memory
+        // connection below — mirrors IDbContextFactory's real per-call-context contract
+        // (see PatientRepository) without needing a DI container in this test.
+        private class TestDbContextFactory : IDbContextFactory<PatientDbContext>
+        {
+            private readonly DbContextOptions<PatientDbContext> _options;
+
+            public TestDbContextFactory(DbContextOptions<PatientDbContext> options) => _options = options;
+
+            public PatientDbContext CreateDbContext() => new(_options);
+        }
+
         private readonly SqliteConnection _connection;
         private readonly PatientDbContext _context;
         private readonly PatientRepository _sut;
@@ -35,7 +47,7 @@ namespace AccuSync.EF.Tests.Repositories
             _context = new PatientDbContext(options);
             _context.Database.EnsureCreated();
 
-            _sut = new PatientRepository(_context);
+            _sut = new PatientRepository(new TestDbContextFactory(options));
         }
 
         private static Patient NewPatient(string recordNumber, string firstName, string lastName) => new()
@@ -218,7 +230,7 @@ namespace AccuSync.EF.Tests.Repositories
                 .Options;
             using var context = new PatientDbContext(options);
             context.Database.EnsureCreated();
-            var repository = new PatientRepository(context);
+            var repository = new PatientRepository(new TestDbContextFactory(options));
             var patient = NewPatient("REC-8", "Nora", "Kim");
 
             // Act

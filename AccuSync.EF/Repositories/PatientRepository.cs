@@ -19,11 +19,11 @@ namespace AccuSync.EF
     /// </summary>
     public class PatientRepository : IPatientRepository
     {
-        private readonly PatientDbContext _context;
+        private readonly IDbContextFactory<PatientDbContext> _contextFactory;
 
-        public PatientRepository(PatientDbContext context)
+        public PatientRepository(IDbContextFactory<PatientDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         /// <summary>
@@ -33,7 +33,8 @@ namespace AccuSync.EF
         /// </summary>
         public async Task<PagedResult<Patient>> GetPagedAsync(int pageNumber, int pageSize, string? searchTerm = null, bool includeDeleted = false)
         {
-            var query = _context.Patients.Include(p => p.Contacts).AsNoTracking().AsQueryable();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var query = context.Patients.Include(p => p.Contacts).AsNoTracking().AsQueryable();
 
             if (!includeDeleted)
             {
@@ -63,7 +64,8 @@ namespace AccuSync.EF
 
         public async Task<Patient?> GetByIdAsync(int patientId)
         {
-            return await _context.Patients
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Patients
                 .Include(p => p.Contacts)
                 .Include(p => p.TestSessions).ThenInclude(s => s.TestRecords)
                 .AsNoTracking()
@@ -74,8 +76,9 @@ namespace AccuSync.EF
         {
             try
             {
-                _context.Patients.Add(patient);
-                await _context.SaveChangesAsync();
+                using var context = await _contextFactory.CreateDbContextAsync();
+                context.Patients.Add(patient);
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -89,7 +92,8 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Patients.FindAsync(patient.PatientId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Patients.FindAsync(patient.PatientId);
                 if (tracked == null) return false;
 
                 tracked.SourceId = patient.SourceId;
@@ -127,7 +131,7 @@ namespace AccuSync.EF
                 // PatientId/CreatedAt/ModifiedAt are never overwritten here — ModifiedAt is
                 // set by TimestampInterceptor, not by the caller.
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -140,12 +144,13 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Patients.FindAsync(patientId);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Patients.FindAsync(patientId);
                 if (tracked == null) return false;
 
                 tracked.IsDeleted = true;
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
