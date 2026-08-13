@@ -40,12 +40,13 @@ namespace AccuSync.WPF
                 .AddJsonFile("appsettings.json", optional: true)
                 .Build();
 
-            string databasePath = ResolveDatabasePath(configuration);
+            string databasePath = ResolveDatabasePath(configuration, "Persistence:DatabasePath", "SettingsDatabase.db");
+            string patientDatabasePath = ResolveDatabasePath(configuration, "Persistence:PatientDatabasePath", "PatientDatabase.db");
 
             // Persistence — provider selection happens right here: swapping database
             // engines later means calling a different sibling adapter project's
             // equivalent method instead of AddSqlitePersistence.
-            services.AddSqlitePersistence(databasePath);
+            services.AddSqlitePersistence(databasePath, patientDatabasePath);
 
             // File-format exchange — import parsing, QR generation. Same "provider
             // selection happens here" pattern as AddSqlitePersistence above.
@@ -77,18 +78,19 @@ namespace AccuSync.WPF
         }
 
         /// <summary>
-        /// Reads Persistence:DatabasePath from appsettings.json. Falls back to the
-        /// existing %ProgramData%\Natus\AccuSync\SettingsDatabase.db location when the
-        /// setting is absent or blank, so the app works out of the box with zero config.
+        /// Reads <paramref name="configKey"/> from appsettings.json. Falls back to
+        /// %ProgramData%\Natus\AccuSync\<paramref name="defaultFileName"/> when the setting
+        /// is absent or blank, so the app works out of the box with zero config. Shared by
+        /// both SettingsDatabase.db and PatientDatabase.db, each with its own key/default.
         /// </summary>
-        private static string ResolveDatabasePath(IConfiguration configuration)
+        private static string ResolveDatabasePath(IConfiguration configuration, string configKey, string defaultFileName)
         {
-            string configuredPath = configuration["Persistence:DatabasePath"];
+            string configuredPath = configuration[configKey];
 
             string databasePath = string.IsNullOrWhiteSpace(configuredPath)
                 ? Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                    "Natus", "AccuSync", "SettingsDatabase.db")
+                    "Natus", "AccuSync", defaultFileName)
                 : configuredPath;
 
             Directory.CreateDirectory(Path.GetDirectoryName(databasePath));

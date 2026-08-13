@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,9 +21,13 @@ using System.Windows.Media;
 using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Abstractions.Parsing;
+using AccuSync.Application.Helpers;
 using AccuSync.Application.Models;
+using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Entities;
+using AccuSync.Presentation.Mapping;
 using AccuSync.WPF.Resources;
+using PatientEntities = AccuSync.Core.Entities.Patients;
 
 namespace AccuSync.WPF.Views.PatientsTests
 {
@@ -37,6 +42,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         private ObservableCollection<Patient> _pagedPatients;
         private HashSet<string> _selectedFilters = new HashSet<string>();
         private readonly IImportService _importService = App.GetService<IImportService>();
+        private readonly IPatientRepository _patientRepository = App.GetService<IPatientRepository>();
         private string _importFormat;   // track format for Back navigation
         private string _importFilePath; // track file path for Back navigation
         private bool _isCompactView = false;
@@ -82,7 +88,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         {
             InitializeComponent();
             DataContext = this;
-            LoadDummyPatients();
+            _ = LoadPatientsFromRepositoryAsync();
 
             FilterPopup.Visibility = Visibility.Collapsed;
             PatientsListView.SelectionChanged += PatientsListView_SelectionChanged;
@@ -112,171 +118,58 @@ namespace AccuSync.WPF.Views.PatientsTests
             PatientInfoPanel.NewPatient();
         }
 
-        // TODO: Replace with real data from DatabaseService
-        private void LoadDummyPatients()
+        /// <summary>
+        /// Loads the patient list from <see cref="IPatientRepository"/>, replacing the removed
+        /// LoadDummyPatients()/AddDummyTestData() in-memory fixtures.
+        /// </summary>
+        private async Task LoadPatientsFromRepositoryAsync()
         {
-            _allPatients = new ObservableCollection<Patient>
+            if (DevModeConfig.IsAnyDevMode)
             {
-                new Patient {
-                    FirstName = "John", LastName = "Smith", BirthDate = new DateTime(2026, 1, 10),
-                    PatientId = "1234567890", Gender = "Male", LeftEarResult = "Pass", RightEarResult = "Pass",
-                    DateOfScreen = new DateTime(2026, 1, 12), HospitalId = "HOSP-001",
-                    BirthLocation = "Memorial Hospital", GestationalAge = "40 weeks"
-                },
-                new Patient { FirstName = "Sarah", LastName = "Johnson", BirthDate = new DateTime(2026, 1, 15),
-                    PatientId = "2345678901", Gender = "Female", LeftEarResult = "Pass", RightEarResult = "Refer",
-                    DateOfScreen = new DateTime(2026, 1, 17) },
-                new Patient { FirstName = "Michael", LastName = "Williams", BirthDate = new DateTime(2026, 2, 3),
-                    PatientId = "3456789012", Gender = "Male", LeftEarResult = "Incomplete", RightEarResult = "Incomplete",
-                    DateOfScreen = null },
-                new Patient { FirstName = "Emily", LastName = "Brown", BirthDate = new DateTime(2026, 2, 8),
-                    PatientId = "4567890123", Gender = "Female", LeftEarResult = "Pass", RightEarResult = "Pass",
-                    DateOfScreen = new DateTime(2026, 2, 10) },
-                new Patient { FirstName = "David", LastName = "Jones", BirthDate = new DateTime(2026, 2, 14),
-                    PatientId = "5678901234", Gender = "Male", LeftEarResult = "Refer", RightEarResult = "Refer",
-                    DateOfScreen = new DateTime(2026, 2, 16) },
-                new Patient { FirstName = "Jessica", LastName = "Garcia", BirthDate = new DateTime(2026, 2, 20),
-                    PatientId = "6789012345", Gender = "Female", LeftEarResult = "Pass", RightEarResult = "Pass",
-                    DateOfScreen = new DateTime(2026, 2, 23) },
-                new Patient { FirstName = "Daniel", LastName = "Miller", BirthDate = new DateTime(2026, 3, 1),
-                    PatientId = "7890123456", Gender = "Male", LeftEarResult = "Refer", RightEarResult = "Pass",
-                    DateOfScreen = new DateTime(2026, 3, 3) },
-                new Patient { FirstName = "Ashley", LastName = "Davis", BirthDate = new DateTime(2026, 3, 5),
-                    PatientId = "8901234567", Gender = "Female", LeftEarResult = "Pass", RightEarResult = "Refer",
-                    DateOfScreen = new DateTime(2026, 3, 7) },
-                new Patient { FirstName = "Matthew", LastName = "Rodriguez", BirthDate = new DateTime(2026, 3, 12),
-                    PatientId = "9012345678", Gender = "Male", LeftEarResult = "Pass", RightEarResult = "Pass",
-                    DateOfScreen = new DateTime(2026, 3, 14) },
-                new Patient { FirstName = "Amanda", LastName = "Martinez", BirthDate = new DateTime(2026, 3, 18),
-                    PatientId = "0123456789", Gender = "Female", LeftEarResult = "Incomplete", RightEarResult = "Pass",
-                    DateOfScreen = null }
-            };
+                await SeedDevPatientsIfEmptyAsync();
+            }
 
+            var page = await _patientRepository.GetPagedAsync(pageNumber: 1, pageSize: int.MaxValue);
+
+            _allPatients = new ObservableCollection<Patient>(page.Items.Select(p => p.ToListRow()));
             _filteredPatients = new ObservableCollection<Patient>(_allPatients);
             ApplyCurrentSort();
             UpdatePagination();
-            AddDummyTestData();
         }
 
-        private void AddDummyTestData()
+        /// <summary>
+        /// Dev-only convenience so dev/QA still sees populated data without a manual import,
+        /// gated behind the same <see cref="DevModeConfig.IsAnyDevMode"/> flag as the existing
+        /// login/dashboard bypass — no new flag file is introduced. Seeds through the real
+        /// repository rather than an in-memory collection.
+        /// </summary>
+        private async Task SeedDevPatientsIfEmptyAsync()
         {
-            var john = _allPatients.FirstOrDefault(p => p.PatientId == "1234567890");
-            if (john != null)
-            {
-                john.Tests = new List<TestRecord>
-                {
-                    new TestRecord {
-                        Id = "t1", TestType = "TEOAE", Ear = "Right Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 12, 9, 15, 0), DurationMs = 12000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        TestFacility = "Main Hospital", TestLocation = "Nursery", Examiner = "J. Smith"
-                    },
-                    new TestRecord {
-                        Id = "t2", TestType = "TEOAE", Ear = "Left Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 12, 9, 15, 0), DurationMs = 8000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        TestFacility = "Main Hospital", TestLocation = "Nursery", Examiner = "J. Smith"
-                    },
-                    new TestRecord {
-                        Id = "t3", TestType = "ABR", Ear = "Right Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 12, 14, 30, 0), DurationMs = 250000,
-                        EegNoisePercent = 38, ImpedanceWhite = 0, ImpedanceRed = 0,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "37623", ProbeType = "Bast2",
-                        ProbeCalibrationDate = new DateTime(2025, 8, 6),
-                        ProbeNextCalibrationDate = new DateTime(2026, 8, 6),
-                        TestFacility = "Main Hospital", TestLocation = "NICU", Examiner = "M. Lee"
-                    },
-                    new TestRecord {
-                        Id = "t4", TestType = "ABR", Ear = "Left Ear", TestResult = "Refer",
-                        TestDate = new DateTime(2026, 1, 12, 13, 16, 0), DurationMs = 268000,
-                        EegNoisePercent = 38, ImpedanceWhite = 0, ImpedanceRed = 0,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "37623", ProbeType = "Bast2",
-                        ProbeCalibrationDate = new DateTime(2025, 8, 6),
-                        ProbeNextCalibrationDate = new DateTime(2026, 8, 6),
-                        TestFacility = "Main Hospital", TestLocation = "NICU", Examiner = "M. Lee"
-                    },
-                    new TestRecord {
-                        Id = "t5", TestType = "DPOAE", Ear = "Right Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 12, 12, 44, 0), DurationMs = 12000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        TestFacility = "Main Hospital", TestLocation = "Nursery", Examiner = "J. Smith"
-                    },
-                    new TestRecord {
-                        Id = "t6", TestType = "DPOAE", Ear = "Left Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 12, 12, 49, 0), DurationMs = 35000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        TestFacility = "Main Hospital", TestLocation = "Nursery", Examiner = "J. Smith"
-                    }
-                };
-            }
+            var existing = await _patientRepository.GetPagedAsync(pageNumber: 1, pageSize: 1, includeDeleted: true);
+            if (existing.TotalCount > 0) return;
 
-            var sarah = _allPatients.FirstOrDefault(p => p.PatientId == "2345678901");
-            if (sarah != null)
-            {
-                sarah.Tests = new List<TestRecord>
-                {
-                    new TestRecord {
-                        Id = "t7", TestType = "TEOAE", Ear = "Right Ear", TestResult = "Refer",
-                        TestDate = new DateTime(2026, 1, 17, 10, 30, 0), DurationMs = 22000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        Examiner = "J. Smith"
-                    },
-                    new TestRecord {
-                        Id = "t8", TestType = "TEOAE", Ear = "Left Ear", TestResult = "Pass",
-                        TestDate = new DateTime(2026, 1, 17, 10, 33, 0), DurationMs = 57000,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "1008821", ProbeType = "DP (Newborn)",
-                        ProbeCalibrationDate = new DateTime(2025, 11, 3),
-                        ProbeNextCalibrationDate = new DateTime(2026, 6, 16),
-                        Examiner = "J. Smith"
-                    }
-                };
-            }
+            await _patientRepository.CreateAsync(BuildSeedPatient("John", "Smith", "1234567890", "HOSP-001", new DateTime(2026, 1, 10)));
+            await _patientRepository.CreateAsync(BuildSeedPatient("Sarah", "Johnson", "2345678901", "HOSP-002", new DateTime(2026, 1, 15)));
+            await _patientRepository.CreateAsync(BuildSeedPatient("David", "Jones", "5678901234", "HOSP-003", new DateTime(2026, 2, 14)));
+        }
 
-            var david = _allPatients.FirstOrDefault(p => p.PatientId == "5678901234");
-            if (david != null)
+        private static PatientEntities.Patient BuildSeedPatient(string firstName, string lastName, string recordNumber, string hospitalId, DateTime birthDate)
+        {
+            var patient = new PatientEntities.Patient
             {
-                david.Tests = new List<TestRecord>
-                {
-                    new TestRecord {
-                        Id = "t9", TestType = "ABR", Ear = "Right Ear", TestResult = "Refer",
-                        TestDate = new DateTime(2026, 2, 16, 12, 48, 0), DurationMs = 265000,
-                        EegNoisePercent = 39, ImpedanceWhite = 0, ImpedanceRed = 0,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "37623", ProbeType = "Bast2",
-                        ProbeCalibrationDate = new DateTime(2025, 8, 6),
-                        ProbeNextCalibrationDate = new DateTime(2026, 8, 6),
-                        Examiner = "M. Lee"
-                    },
-                    new TestRecord {
-                        Id = "t10", TestType = "ABR", Ear = "Left Ear", TestResult = "Refer",
-                        TestDate = new DateTime(2026, 2, 16, 12, 52, 0), DurationMs = 248000,
-                        EegNoisePercent = 38, ImpedanceWhite = 0, ImpedanceRed = 0,
-                        DeviceSerial = "3077519", DeviceName = "AccuScreen",
-                        ProbeSerial = "37623", ProbeType = "Bast2",
-                        ProbeCalibrationDate = new DateTime(2025, 8, 6),
-                        ProbeNextCalibrationDate = new DateTime(2026, 8, 6),
-                        Examiner = "M. Lee"
-                    }
-                };
-            }
+                PatientRecordNumber = recordNumber,
+                HospitalId = hospitalId
+            };
+
+            patient.Contacts.Add(new PatientEntities.PatientContact
+            {
+                ContactType = "Patient",
+                Forename1 = firstName,
+                Surname = lastName,
+                DateOfBirth = birthDate
+            });
+
+            return patient;
         }
         // Sorting
 
@@ -1056,10 +949,9 @@ namespace AccuSync.WPF.Views.PatientsTests
 
         // Misc
 
-        private void RefreshPatients_Click(object sender, RoutedEventArgs e)
+        private async void RefreshPatients_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Replace with real data reload when DB is implemented
-            LoadDummyPatients();
+            await LoadPatientsFromRepositoryAsync();
             AppDialog.Show(Strings.PatientsView_RefreshSuccess, Strings.PatientsView_Refresh, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -1081,26 +973,22 @@ namespace AccuSync.WPF.Views.PatientsTests
             }
         }
 
-        private void PatientsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void PatientsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_isSelectionModeEnabled)
                 return;
 
-            if (PatientsListView.SelectedItem is Patient selectedPatient)
+            if (PatientsListView.SelectedItem is Patient selectedPatient && int.TryParse(selectedPatient.PatientId, out int patientId))
             {
-                var viewModel = new PatientViewModel(App.GetService<IQrCodeGenerator>())
+                var entity = await _patientRepository.GetByIdAsync(patientId);
+                if (entity == null)
                 {
-                    PatientId = selectedPatient.PatientId,
-                    HospitalId = selectedPatient.HospitalId ?? "HOSP-001",
-                    FirstName = selectedPatient.FirstName,
-                    LastName = selectedPatient.LastName,
-                    DateOfBirth = selectedPatient.BirthDate,
-                    Gender = selectedPatient.Gender,
-                    LeftEarResult = selectedPatient.LeftEarResult ?? "Incomplete",
-                    RightEarResult = selectedPatient.RightEarResult ?? "Incomplete",
-                    BirthLocation = selectedPatient.BirthLocation ?? "Labor & Delivery",
-                    GestationalAge = selectedPatient.GestationalAge ?? "Unknown"
-                };
+                    PatientInfoPanel.LoadPatient(null);
+                    TestResultsPanel.Clear();
+                    return;
+                }
+
+                var viewModel = entity.ToViewModel(App.GetService<IQrCodeGenerator>());
                 PatientInfoPanel.LoadPatient(viewModel);
                 TestResultsPanel.LoadTests(selectedPatient.Tests);
             }

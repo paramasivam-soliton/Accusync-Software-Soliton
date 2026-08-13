@@ -23,10 +23,11 @@ namespace AccuSync.EF.DependencyInjection
     /// </summary>
     public static class SqliteServiceCollectionExtensions
     {
-        /// <summary>Registers the SQLite-backed persistence services, including the DbContext, repositories, and database initializer.</summary>
-        /// <param name="databasePath">Path to the SQLite database file.</param>
+        /// <summary>Registers the SQLite-backed persistence services, including both DbContexts, repositories, and the database initializer.</summary>
+        /// <param name="settingsDatabasePath">Path to the SettingsDatabase.db SQLite file.</param>
+        /// <param name="patientDatabasePath">Path to the PatientDatabase.db SQLite file.</param>
         /// <returns>The same <paramref name="services"/> collection, for chaining.</returns>
-        public static IServiceCollection AddSqlitePersistence(this IServiceCollection services, string databasePath)
+        public static IServiceCollection AddSqlitePersistence(this IServiceCollection services, string settingsDatabasePath, string patientDatabasePath)
         {
             services.AddSingleton<TimestampInterceptor>();
 
@@ -35,12 +36,20 @@ namespace AccuSync.EF.DependencyInjection
                 // Default Timeout: seconds SQLite will retry before giving up on a locked
                 // file, instead of failing immediately — covers the brief window where a
                 // previous process instance hasn't fully released the file yet.
-                options.UseSqlite($"Data Source={databasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
+                options.UseSqlite($"Data Source={settingsDatabasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
+                options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
+            });
+
+            services.AddDbContext<PatientDbContext>((provider, options) =>
+            {
+                options.UseSqlite($"Data Source={patientDatabasePath};Default Timeout=5", b => b.MigrationsAssembly("AccuSync.EF"));
                 options.AddInterceptors(provider.GetRequiredService<TimestampInterceptor>());
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
             return services;

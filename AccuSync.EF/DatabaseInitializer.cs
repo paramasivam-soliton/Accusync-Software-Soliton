@@ -16,30 +16,50 @@ using Microsoft.EntityFrameworkCore;
 namespace AccuSync.EF
 {
     /// <summary>
-    /// EF Core-backed <see cref="IDatabaseInitializer"/> for SettingsDatabase.db — applies
-    /// pending migrations and seeds the two default accounts on first run. The general
-    /// connector for this database; individual repositories only read/write their entities.
+    /// EF Core-backed <see cref="IDatabaseInitializer"/> for both SettingsDatabase.db and
+    /// PatientDatabase.db — applies pending migrations to each, backing up and restoring on
+    /// failure, then seeds the two default accounts on first run. The general connector for
+    /// these databases; individual repositories only read/write their entities. Registered as
+    /// a single instance so <c>SplashViewModel</c>'s one "Initializing database…" step covers
+    /// both databases, per the acceptance criteria.
     /// </summary>
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly SettingsDbContext _context;
+        private readonly SettingsDbContext _settingsContext;
+        private readonly PatientDbContext _patientContext;
         private readonly IUserRepository _userRepository;
 
-        /// <summary>Creates the initializer backed by the given context and user repository.</summary>
-        public DatabaseInitializer(SettingsDbContext context, IUserRepository userRepository)
+        /// <summary>Creates the initializer backed by the given contexts and user repository.</summary>
+        public DatabaseInitializer(SettingsDbContext settingsContext, PatientDbContext patientContext, IUserRepository userRepository)
         {
-            _context = context;
+            _settingsContext = settingsContext;
+            _patientContext = patientContext;
             _userRepository = userRepository;
         }
 
         /// <summary>
-        /// Applies pending migrations — backing up the database file first and restoring it
-        /// if the migration fails — then seeds the two default accounts on first run.
-        /// Safe to call on every startup.
+        /// Applies pending migrations to both databases — backing up each database file first
+        /// and restoring it if its migration fails — then seeds the two default accounts on
+        /// first run. Safe to call on every startup.
         /// </summary>
         public async Task InitializeAsync()
         {
-            string databasePath = _context.Database.GetDbConnection().DataSource;
+            await MigrateWithBackupAsync(_settingsContext);
+            await MigrateWithBackupAsync(_patientContext);
+
+            if (!await _settingsContext.Users.AnyAsync())
+            {
+                await CreateDefaultUsersAsync();
+            }
+        }
+
+        /// <summary>
+        /// Applies pending migrations for the given context — backing up the database file
+        /// first and restoring it if the migration fails.
+        /// </summary>
+        private static async Task MigrateWithBackupAsync(DbContext context)
+        {
+            string databasePath = context.Database.GetDbConnection().DataSource;
             bool databaseExisted = File.Exists(databasePath);
             string backupPath = databasePath + ".bak";
 
@@ -59,8 +79,8 @@ namespace AccuSync.EF
                 // gone — bricking every future launch until someone edits the database file
                 // by hand. Clearing it first is what makes migration recoverable from a
                 // mid-migration interruption instead of a one-way failure.
-                await ClearStaleMigrationsLockAsync();
-                await _context.Database.MigrateAsync();
+                await ClearStaleMigrationsLockAsync(context);
+                await context.Database.MigrateAsync();
             }
             catch
             {
@@ -71,22 +91,17 @@ namespace AccuSync.EF
 
                 throw;
             }
-
-            if (!await _context.Users.AnyAsync())
-            {
-                await CreateDefaultUsersAsync();
-            }
         }
 
         /// <summary>
         /// Deletes any row in EF Core's migrations lock table. See the comment at the
-        /// InitializeAsync call site for why this is safe and necessary here.
+        /// MigrateWithBackupAsync call site for why this is safe and necessary here.
         /// </summary>
-        private async Task ClearStaleMigrationsLockAsync()
+        private static async Task ClearStaleMigrationsLockAsync(DbContext context)
         {
             try
             {
-                await _context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
             }
             catch (DbException)
             {
