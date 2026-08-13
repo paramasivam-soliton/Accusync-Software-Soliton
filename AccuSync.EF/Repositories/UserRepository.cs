@@ -24,12 +24,12 @@ namespace AccuSync.EF
     /// </summary>
     public class UserRepository : IUserRepository
     {
-        private readonly SettingsDbContext _context;
+        private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
         private readonly IEncryptionService _encryptionService;
 
-        public UserRepository(SettingsDbContext context, IEncryptionService encryptionService)
+        public UserRepository(IDbContextFactory<SettingsDbContext> contextFactory, IEncryptionService encryptionService)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _encryptionService = encryptionService;
         }
 
@@ -58,13 +58,15 @@ namespace AccuSync.EF
                 // CreationDate/ModificationDate are set by TimestampInterceptor on save.
             };
 
-            _context.Users.Add(entity);
-            await _context.SaveChangesAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            context.Users.Add(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            var stored = await _context.Users.AsNoTracking().ToListAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var stored = await context.Users.AsNoTracking().ToListAsync();
             return stored.Select(Decrypt).ToList();
         }
 
@@ -84,7 +86,8 @@ namespace AccuSync.EF
         {
             try
             {
-                var tracked = await _context.Users.FindAsync(user.Guid);
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(user.Guid);
                 if (tracked == null) return false;
 
                 tracked.AccountName = _encryptionService.Encrypt(user.AccountName);
@@ -102,7 +105,7 @@ namespace AccuSync.EF
                 tracked.LastThreePasswords = _encryptionService.Encrypt(user.LastThreePasswords);
                 // ModificationDate is set by TimestampInterceptor, not here — see class TODO history.
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 return true;
             }
             catch
