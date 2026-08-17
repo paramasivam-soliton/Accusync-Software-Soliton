@@ -295,7 +295,7 @@ namespace AccuSync.EF.Tests.Repositories
             // Assert
             Assert.True(success);
             var result = await _sut.GetUserByAccountNameAsync("Admin");
-            Assert.False(result!.Status);
+            Assert.False(result!.IsActive);
             Assert.Equal("Admin", result.AccountName);
         }
 
