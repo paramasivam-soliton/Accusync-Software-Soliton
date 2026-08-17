@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------
-// <copyright file="IPatientRepository.cs" company="Natus Sensory">
+// <copyright file="IPatientService.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
@@ -7,21 +7,17 @@
 using System.Threading.Tasks;
 using AccuSync.Core.Entities.Patients;
 
-namespace AccuSync.Core.Abstractions.Repositories
+namespace AccuSync.Core.Abstractions.Services
 {
     /// <summary>
-    /// Persistence contract for patients, their contacts, and their risk-factor values.
-    /// Implemented by AccuSync.EF (EF Core, SQLite-backed). Follows the same conventions
-    /// as <see cref="IUserRepository"/>: <c>Task&lt;bool&gt;</c> for mutations, <c>Task&lt;T?&gt;</c>/
-    /// <c>Task&lt;List&lt;T&gt;&gt;</c> for reads, no Result-wrapper type.
+    /// The layer screens talk to for patient data — sits above
+    /// <see cref="Repositories.IPatientRepository"/> so no screen depends on the persistence
+    /// layer directly. Mirrors the repository's method shapes for now; grows real
+    /// orchestration/validation only once something actually needs it.
     /// </summary>
-    public interface IPatientRepository
+    public interface IPatientService
     {
-        /// <summary>
-        /// Returns one page of non-deleted patients (unless <paramref name="includeDeleted"/> is set),
-        /// optionally filtered by <paramref name="searchTerm"/> against patient ID, hospital ID, or
-        /// the associated "Patient" contact's name.
-        /// </summary>
+        /// <summary>Returns one page of non-deleted patients (unless <paramref name="includeDeleted"/> is set), optionally filtered by <paramref name="searchTerm"/>.</summary>
         Task<PagedResult<Patient>> GetPagedAsync(int pageNumber, int pageSize, string? searchTerm = null, bool includeDeleted = false);
 
         /// <summary>Returns the patient with its contacts and test history, or <c>null</c> if not found or soft-deleted.</summary>
@@ -33,7 +29,7 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// <summary>Persists changes to an existing patient's scalar fields. Returns false if the patient no longer exists.</summary>
         Task<bool> UpdateAsync(Patient patient);
 
-        /// <summary>Marks a patient as deleted (<see cref="Patient.IsDeleted"/>) without removing the row. Returns false if the patient no longer exists.</summary>
+        /// <summary>Marks a patient as deleted without removing the row. Returns false if the patient no longer exists.</summary>
         Task<bool> SoftDeleteAsync(int patientId);
     }
 }

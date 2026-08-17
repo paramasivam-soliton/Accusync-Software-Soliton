@@ -31,6 +31,7 @@ namespace AccuSync.Core.Entities.Patients
 
         public DateTime? DateOfBirth { get; set; }
         public DateTime? CalculatedDateOfBirth { get; set; }
+        public DateTime? TimeOfBirth { get; set; }
         public string? Gender { get; set; }
         public double? Height { get; set; }
         public double? Weight { get; set; }
@@ -39,6 +40,7 @@ namespace AccuSync.Core.Entities.Patients
         public string? NationalityCode { get; set; }
 
         public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
         public string? Zip { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
@@ -56,5 +58,13 @@ namespace AccuSync.Core.Entities.Patients
         public DateTime ModifiedAt { get; set; }
 
         public Patient? Patient { get; set; }
+
+        /// <summary>
+        /// Deliberately excludes <see cref="SocialSecurityNumber"/> — a guard against it ever
+        /// reaching a log line through string interpolation (e.g. <c>$"{contact}"</c>) or a
+        /// message-template logger call. Does not protect against a serializer that reflects
+        /// over every public property instead of calling this method.
+        /// </summary>
+        public override string ToString() => $"PatientContact(ContactId={ContactId}, PatientId={PatientId}, ContactType={ContactType})";
     }
 }

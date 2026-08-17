@@ -114,6 +114,39 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
+        public async Task GivenAPatientWithOnlyABabyContact_WhenReadById_ThenNoMotherOrCaregiverContactIsPresent()
+        {
+            // Arrange
+            var patient = NewPatient("REC-9", "Mia", "Nolan");
+
+            // Act
+            await _sut.CreateAsync(patient);
+            var result = await _sut.GetByIdAsync(patient.PatientId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result!.Contacts);
+            Assert.Equal(PatientContactType.Patient, result.Contacts[0].ContactType);
+            Assert.DoesNotContain(result.Contacts, c => c.ContactType == PatientContactType.Mother);
+            Assert.DoesNotContain(result.Contacts, c => c.ContactType == PatientContactType.Caregiver);
+        }
+
+        [Fact]
+        public async Task GivenASoftDeletedPatient_WhenReadById_ThenReturnsNull()
+        {
+            // Arrange
+            var patient = NewPatient("REC-10", "Leo", "Grant");
+            await _sut.CreateAsync(patient);
+            await _sut.SoftDeleteAsync(patient.PatientId);
+
+            // Act
+            var result = await _sut.GetByIdAsync(patient.PatientId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async Task GivenAnExistingPatient_WhenUpdated_ThenTheChangeIsPersisted()
         {
             // Arrange

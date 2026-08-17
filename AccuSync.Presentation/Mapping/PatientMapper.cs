@@ -35,7 +35,7 @@ namespace AccuSync.Presentation.Mapping
 
         public static PatientListRow ToListRow(this CoreEntities.Patient entity)
         {
-            var patientContact = entity.Contacts.FirstOrDefault(c => c.ContactType == "Patient");
+            var patientContact = entity.Contacts.FirstOrDefault(c => c.ContactType == CoreEntities.PatientContactType.Patient);
             var (leftEarResult, rightEarResult, dateOfScreen) = LatestScreeningSummary(entity);
 
             return new PatientListRow
@@ -68,9 +68,9 @@ namespace AccuSync.Presentation.Mapping
 
         public static PatientViewModel ToViewModel(this CoreEntities.Patient entity, IQrCodeGenerator qrGenerator)
         {
-            var patientContact = entity.Contacts.FirstOrDefault(c => c.ContactType == "Patient");
-            var mother = entity.Contacts.FirstOrDefault(c => c.ContactType == "Mother");
-            var caregiver = entity.Contacts.FirstOrDefault(c => c.ContactType == "Caregiver");
+            var patientContact = entity.Contacts.FirstOrDefault(c => c.ContactType == CoreEntities.PatientContactType.Patient);
+            var mother = entity.Contacts.FirstOrDefault(c => c.ContactType == CoreEntities.PatientContactType.Mother);
+            var caregiver = entity.Contacts.FirstOrDefault(c => c.ContactType == CoreEntities.PatientContactType.Caregiver);
             var riskFactors = DeserializeRiskFactors(entity.PatientRiskFactors);
             var (leftEarResult, rightEarResult, _) = LatestScreeningSummary(entity);
 
@@ -186,7 +186,7 @@ namespace AccuSync.Presentation.Mapping
 
             entity.PatientRiskFactors = SerializeRiskFactors(viewModel);
 
-            UpsertContact(entity, "Patient", c =>
+            UpsertContact(entity, CoreEntities.PatientContactType.Patient, c =>
             {
                 c.Forename1 = viewModel.FirstName;
                 c.Surname = viewModel.LastName;
@@ -200,7 +200,7 @@ namespace AccuSync.Presentation.Mapping
                 c.Height = height == 0 ? null : height;
             });
 
-            UpsertContact(entity, "Mother", c =>
+            UpsertContact(entity, CoreEntities.PatientContactType.Mother, c =>
             {
                 c.Title = viewModel.MotherTitle;
                 c.SocialSecurityNumber = viewModel.MotherSSN;
@@ -220,7 +220,7 @@ namespace AccuSync.Presentation.Mapping
                 c.Email = viewModel.MotherEmail;
             });
 
-            UpsertContact(entity, "Caregiver", c =>
+            UpsertContact(entity, CoreEntities.PatientContactType.Caregiver, c =>
             {
                 c.Title = viewModel.CaregiverTitle;
                 c.SocialSecurityNumber = viewModel.CaregiverSSN;
@@ -262,7 +262,7 @@ namespace AccuSync.Presentation.Mapping
 
             entity.Contacts.Add(new CoreEntities.PatientContact
             {
-                ContactType = "Patient",
+                ContactType = CoreEntities.PatientContactType.Patient,
                 Forename1 = importData.FirstName,
                 Surname = importData.LastName,
                 Gender = importData.Gender,
@@ -276,7 +276,7 @@ namespace AccuSync.Presentation.Mapping
             {
                 entity.Contacts.Add(new CoreEntities.PatientContact
                 {
-                    ContactType = "Mother",
+                    ContactType = CoreEntities.PatientContactType.Mother,
                     Title = importData.MotherTitle,
                     SocialSecurityNumber = importData.MotherSSN,
                     IdNumber = importData.MotherId,
@@ -299,7 +299,7 @@ namespace AccuSync.Presentation.Mapping
             {
                 entity.Contacts.Add(new CoreEntities.PatientContact
                 {
-                    ContactType = "Caregiver",
+                    ContactType = CoreEntities.PatientContactType.Caregiver,
                     Title = importData.CaregiverTitle,
                     SocialSecurityNumber = importData.CaregiverSSN,
                     Forename1 = importData.CaregiverFirstName,
