@@ -22,29 +22,14 @@ namespace AccuSync.Application.Services.Authentication
     /// overriding the timer for that one account. There is no special case for Admin
     /// accounts — the same mandatory lock/duration applies to every role.
     /// </summary>
-    public class AuthenticationService : IAuthenticationService
+    /// <param name="userRepository">Used to look up and update user accounts.</param>
+    /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
+    /// <param name="appSettingsRepository">Used to read the admin-configurable lockout duration.</param>
+    public class AuthenticationService(
+        IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
+        IAppSettingsRepository appSettingsRepository) : IAuthenticationService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IAppSettingsRepository _appSettingsRepository;
-        private const int MaxFailedAttempts = 5;
-
-        /// <summary>
-        /// Creates the service with its required data, password-hashing, and settings dependencies.
-        /// </summary>
-        /// <param name="userRepository">Used to look up and update user accounts.</param>
-        /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
-        /// <param name="appSettingsRepository">Used to read the admin-configurable lockout duration.</param>
-        public AuthenticationService(
-            IUserRepository userRepository,
-            IPasswordHasher passwordHasher,
-            IAppSettingsRepository appSettingsRepository)
-        {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-            _appSettingsRepository = appSettingsRepository;
-        }
-
         /// <summary>
         /// Authenticates the given credentials, applying lockout and password
         /// expiration checks. See the class-level remarks for details.
@@ -63,7 +48,7 @@ namespace AccuSync.Application.Services.Authentication
                 };
             }
 
-            var user = await _userRepository.GetUserByAccountNameAsync(accountName);
+            var user = await userRepository.GetUserByAccountNameAsync(accountName);
             if (user == null)
             {
                 return new AuthenticationResult
@@ -86,9 +71,9 @@ namespace AccuSync.Application.Services.Authentication
 
             // Lockout check — auto-unlocks once the configured duration has elapsed since
             // the lockout started, OR earlier if an Admin explicitly called UnlockUserAsync.
-            if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
+            if (user.FailedLoginAttemptCount >= AuthenticationConstants.MaxFailedAttempts)
             {
-                int lockoutDurationMinutes = await _appSettingsRepository.GetLockoutDurationMinutesAsync();
+                int lockoutDurationMinutes = await appSettingsRepository.GetLockoutDurationMinutesAsync();
                 long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 long lockoutEndTime = user.FirstFailedLoginTime + (lockoutDurationMinutes * 60);
 
@@ -107,11 +92,11 @@ namespace AccuSync.Application.Services.Authentication
                 // Duration elapsed — auto-unlock and let this attempt proceed normally.
                 user.FailedLoginAttemptCount = 0;
                 user.FirstFailedLoginTime = 0L;
-                await _userRepository.UpdateUserAsync(user);
+                await userRepository.UpdateUserAsync(user);
             }
 
             // Password verification — hash-to-hash only, never decrypt/compare plaintext.
-            if (!_passwordHasher.Verify(password, user.ProfilePassword))
+            if (!passwordHasher.Verify(password, user.ProfilePassword))
             {
                 // Track the timestamp of the first failure in a streak so the
                 // lockout window is measured from when failures started.
@@ -121,18 +106,18 @@ namespace AccuSync.Application.Services.Authentication
                 }
 
                 user.FailedLoginAttemptCount++;
-                await _userRepository.UpdateUserAsync(user);
+                await userRepository.UpdateUserAsync(user);
 
-                int attemptsRemaining = MaxFailedAttempts - user.FailedLoginAttemptCount;
+                int attemptsRemaining = AuthenticationConstants.MaxFailedAttempts - user.FailedLoginAttemptCount;
 
-                if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
+                if (user.FailedLoginAttemptCount >= AuthenticationConstants.MaxFailedAttempts)
                 {
-                    int lockoutDurationMinutes = await _appSettingsRepository.GetLockoutDurationMinutesAsync();
+                    int lockoutDurationMinutes = await appSettingsRepository.GetLockoutDurationMinutesAsync();
                     return new AuthenticationResult
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountNowLockedFormat, MaxFailedAttempts, lockoutDurationMinutes)
+                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountNowLockedFormat, AuthenticationConstants.MaxFailedAttempts, lockoutDurationMinutes)
                     };
                 }
 
@@ -166,7 +151,7 @@ namespace AccuSync.Application.Services.Authentication
             // Success — reset the failure streak
             user.FailedLoginAttemptCount = 0;
             user.FirstFailedLoginTime = 0L;
-            await _userRepository.UpdateUserAsync(user);
+            await userRepository.UpdateUserAsync(user);
 
             return new AuthenticationResult
             {
