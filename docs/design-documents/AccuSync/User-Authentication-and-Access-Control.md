@@ -105,7 +105,7 @@ merely to search it.
 | `AccountName` | `string` | Encrypted username (Data Protection API). |
 | `UsernameHash` | `string` | Deterministic hash of the normalized username; carries the unique index and drives lookup. |
 | `FirstName`, `LastName` | `string` | Encrypted display name fields. |
-| `Status` | `bool` | Whether the account can authenticate. `false` (deactivated) is rejected at login regardless of credential correctness. |
+| `IsActive` | `bool` | Whether the account can authenticate. `false` (deactivated) is rejected at login regardless of credential correctness. |
 | `ProfileId` | `string` | Holds the account's role (`"Admin"` / `"Screener"`), interpreted in application code — see Role-based access control below. |
 | `ProfilePassword` | `string` | One-way password hash (§ Password storage). Column name is retained from the prior schema; only its contents change. |
 | `LastThreePasswords` | `string` | Pipe-delimited history of the three most recent password hashes, used for reuse rejection. |
@@ -145,7 +145,7 @@ The signed-in user's role determines:
 
 ### Login
 
-The login screen presents a dropdown populated only with active (`Status = true`) account names,
+The login screen presents a dropdown populated only with active (`IsActive = true`) account names,
 alongside a password field. On submission, authentication proceeds through the following checks,
 in order, for the supplied account name and password:
 
@@ -153,7 +153,7 @@ in order, for the supplied account name and password:
 2. Look up the account by its username hash; an unmatched account name returns the same generic
    invalid-credentials message used for a wrong password, so a caller cannot distinguish "account
    does not exist" from "wrong password" (prevents account enumeration).
-3. Reject a deactivated account (`Status = false`) with the same generic invalid-credentials
+3. Reject a deactivated account (`IsActive = false`) with the same generic invalid-credentials
    message, regardless of whether the supplied password is correct.
 4. Evaluate lockout state (see Account lockout, below); a locked account is rejected with a
    message stating the remaining wait time.
@@ -220,7 +220,8 @@ corresponding UI being built.
 - `AccuSync.Application` — password hasher, encryption service, authentication service,
   current-user-context implementation, role-parsing helper.
 - `AccuSync.EF` — user and app-settings repositories and EF configurations; schema migrations
-  for the username blind index, the `Status` column type change, and the new `AppSettings` table.
+  for the username blind index, the `Status`→`IsActive` column (type and rename), and the new
+  `AppSettings` table.
 - `AccuSync.Presentation` — login, change-password, and permissions view models.
 - `AccuSync.WPF` — login and change-password windows, dashboard shells, application startup and
   navigation/logout wiring, dependency-injection registration.

@@ -13,14 +13,13 @@ using Microsoft.EntityFrameworkCore;
 namespace AccuSync.EF
 {
     /// <summary>
-    /// EF Core-backed data access for app-wide configuration values (single row,
-    /// identified by <see cref="AppSettings.Id"/>). Nothing here is sensitive, so
-    /// unlike <see cref="UserRepository"/> there's no encryption/hashing involved.
+    /// EF Core-backed data access for app-wide configuration values (a single row —
+    /// see <see cref="AppSettings"/> for why it has no exposed identifier to query by).
+    /// Nothing here is sensitive, so unlike <see cref="UserRepository"/> there's no
+    /// encryption/hashing involved.
     /// </summary>
     public class AppSettingsRepository : IAppSettingsRepository
     {
-        private const string SettingsRowId = "Default";
-
         private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
 
         public AppSettingsRepository(IDbContextFactory<SettingsDbContext> contextFactory)
@@ -53,7 +52,7 @@ namespace AccuSync.EF
 
         private async Task<AppSettings> GetOrCreateSettingsAsync(SettingsDbContext context)
         {
-            var settings = await context.AppSettings.FirstOrDefaultAsync(s => s.Id == SettingsRowId);
+            var settings = await context.AppSettings.FirstOrDefaultAsync();
             if (settings != null) return settings;
 
             settings = new AppSettings();

@@ -18,7 +18,7 @@ namespace AccuSync.Core.Entities
         public string LastName { get; set; }
 
         /// <summary>Whether this account can authenticate. True = active, false = deactivated.</summary>
-        public bool Status { get; set; }
+        public bool IsActive { get; set; }
         /// <summary>The identifier of the profile assigned to the user.</summary>
         public string ProfileId { get; set; }
         /// <summary>Deterministic hash of the normalized account name, used for uniqueness/lookup since <see cref="AccountName"/> is encrypted non-deterministically.</summary>
@@ -55,7 +55,7 @@ namespace AccuSync.Core.Entities
             AccountName = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;
-            Status = true;
+            IsActive = true;
             ProfileId = string.Empty;
             UsernameHash = string.Empty;
             ProfilePassword = string.Empty;

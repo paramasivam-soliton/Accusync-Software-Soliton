@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using AccuSync.Application.Resources;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
@@ -58,30 +59,28 @@ namespace AccuSync.Application.Services.Authentication
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Username and password are required."
+                    ErrorMessage = Strings.AuthenticationService_ErrorCredentialsRequired
                 };
             }
 
             var user = await _userRepository.GetUserByAccountNameAsync(accountName);
             if (user == null)
             {
-                // Same error message whether the user exists or not,
-                // so attackers can't enumerate valid account names.
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Invalid username or password."
+                    ErrorMessage = Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
             // Deactivated accounts are blocked regardless of password correctness.
             // Same generic message as a bad password — active status isn't leaked either.
-            if (!user.Status)
+            if (!user.IsActive)
             {
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Invalid username or password."
+                    ErrorMessage = Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
@@ -101,7 +100,7 @@ namespace AccuSync.Application.Services.Authentication
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = $"Account locked. Try again in {remainingMinutes} minute(s), or contact your administrator."
+                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountLockedFormat, remainingMinutes)
                     };
                 }
 
@@ -133,7 +132,7 @@ namespace AccuSync.Application.Services.Authentication
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = $"Account is now locked due to {MaxFailedAttempts} failed attempts. Try again in {lockoutDurationMinutes} minute(s), or contact your administrator."
+                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountNowLockedFormat, MaxFailedAttempts, lockoutDurationMinutes)
                     };
                 }
 
@@ -141,8 +140,8 @@ namespace AccuSync.Application.Services.Authentication
                 {
                     Success = false,
                     ErrorMessage = attemptsRemaining > 0
-                        ? $"Invalid username or password. {attemptsRemaining} attempt(s) remaining."
-                        : "Invalid username or password."
+                        ? string.Format(Strings.AuthenticationService_ErrorInvalidCredentialsWithAttemptsFormat, attemptsRemaining)
+                        : Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
@@ -160,7 +159,7 @@ namespace AccuSync.Application.Services.Authentication
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Your password has expired. Please contact your administrator."
+                    ErrorMessage = Strings.AuthenticationService_ErrorPasswordExpired
                 };
             }
 

@@ -16,10 +16,10 @@ namespace AccuSync.Application.Services.Authentication
     public class CurrentUserContext : ICurrentUserContext
     {
         /// <summary>The signed-in user's unique identifier, or null if no one is signed in.</summary>
-        public string Id { get; private set; }
+        public string? Id { get; private set; }
 
         /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
-        public string AccountName { get; private set; }
+        public string? AccountName { get; private set; }
 
         /// <summary>The signed-in user's role. Screener (least-privilege) when no one is signed in.</summary>
         public UserRole Role { get; private set; }

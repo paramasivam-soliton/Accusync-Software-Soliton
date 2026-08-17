@@ -45,7 +45,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
             int failedLoginAttemptCount = 0,
             long firstFailedLoginTime = 0L,
             long? passwordModificationDate = null,
-            bool status = true)
+            bool isActive = true)
         {
             return new User
             {
@@ -54,7 +54,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
                 FailedLoginAttemptCount = failedLoginAttemptCount,
                 FirstFailedLoginTime = firstFailedLoginTime,
                 PasswordModificationDate = passwordModificationDate ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Status = status
+                IsActive = isActive
             };
         }
 
@@ -128,7 +128,7 @@ namespace AccuSync.Application.Tests.Services.Authentication
         public async Task GivenADeactivatedAccount_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
         {
             // Arrange
-            var user = CreateUser(CorrectPassword, status: false);
+            var user = CreateUser(CorrectPassword, isActive: false);
             GivenUserExists(user);
 
             // Act

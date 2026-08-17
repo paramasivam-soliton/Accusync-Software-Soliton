@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(SettingsDbContext))]
-    [Migration("20260811131358_InitialCreate")]
+    [Migration("20260817104847_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -21,15 +21,16 @@ namespace AccuSync.EF.Migrations
 
             modelBuilder.Entity("AccuSync.Core.Entities.AppSettings", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SettingsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("LockoutDurationMinutes")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(15);
 
-                    b.HasKey("Id");
+                    b.HasKey("SettingsId");
 
                     b.ToTable("AppSettings", (string)null);
                 });
@@ -77,6 +78,11 @@ namespace AccuSync.EF.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0L);
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -104,11 +110,6 @@ namespace AccuSync.EF.Migrations
                     b.Property<string>("ProfilePassword")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(true);
 
                     b.Property<string>("UsernameHash")
                         .IsRequired()
