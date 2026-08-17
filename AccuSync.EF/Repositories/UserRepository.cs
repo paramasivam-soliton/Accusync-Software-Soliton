@@ -54,7 +54,7 @@ namespace AccuSync.EF
                 UsernameHash = ComputeUsernameHash(user.AccountName),
                 FirstName = _encryptionService.Encrypt(user.FirstName),
                 LastName = _encryptionService.Encrypt(user.LastName),
-                Status = user.Status,
+                IsActive = user.IsActive,
                 ProfileId = _encryptionService.Encrypt(user.ProfileId),
                 ProfilePassword = user.ProfilePassword,
                 FirstLogin = user.FirstLogin,
@@ -119,7 +119,7 @@ namespace AccuSync.EF
                 tracked.UsernameHash = ComputeUsernameHash(user.AccountName);
                 tracked.FirstName = _encryptionService.Encrypt(user.FirstName);
                 tracked.LastName = _encryptionService.Encrypt(user.LastName);
-                tracked.Status = user.Status;
+                tracked.IsActive = user.IsActive;
                 tracked.ProfileId = _encryptionService.Encrypt(user.ProfileId);
                 tracked.ProfilePassword = user.ProfilePassword;
                 tracked.FirstLogin = user.FirstLogin;
@@ -171,7 +171,7 @@ namespace AccuSync.EF
                 var tracked = await context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
-                tracked.Status = isActive;
+                tracked.IsActive = isActive;
 
                 await context.SaveChangesAsync();
                 return true;
@@ -214,7 +214,7 @@ namespace AccuSync.EF
                     AccountName = user.AccountName,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Status = user.Status,
+                    IsActive = user.IsActive,
                     ProfileId = user.ProfileId,
                     ProfilePassword = _passwordHasher.Hash(user.ProfilePassword),
                     FirstLogin = user.FirstLogin,
@@ -243,7 +243,7 @@ namespace AccuSync.EF
                 UsernameHash = stored.UsernameHash,
                 FirstName = _encryptionService.Decrypt(stored.FirstName),
                 LastName = _encryptionService.Decrypt(stored.LastName),
-                Status = stored.Status,
+                IsActive = stored.IsActive,
                 ProfileId = _encryptionService.Decrypt(stored.ProfileId),
                 ProfilePassword = stored.ProfilePassword,
                 FirstLogin = stored.FirstLogin,

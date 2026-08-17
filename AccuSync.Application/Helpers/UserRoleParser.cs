@@ -16,6 +16,10 @@ namespace AccuSync.Application.Helpers
     /// </summary>
     public static class UserRoleParser
     {
+        // Not a placeholder — reusing ProfileId as the role signal (rather than adding a
+        // dedicated Role column) is deliberate: see UserRole's remarks for why. Comparing
+        // against "Admin" here just mirrors that existing string; if a real Role column
+        // is ever added, it changes here and in UserRole's remarks together.
         private const string AdminProfileId = "Admin";
 
         /// <summary>Resolves a stored <see cref="User.ProfileId"/> value to a <see cref="UserRole"/>.</summary>
