@@ -131,7 +131,7 @@ namespace AccuSync.Presentation.ViewModels
             try
             {
                 var users = await _userRepository.GetAllUsersAsync();
-                foreach (var user in users.Where(u => u.Status))
+                foreach (var user in users.Where(u => u.IsActive))
                 {
                     Usernames.Add(user.AccountName);
                 }
