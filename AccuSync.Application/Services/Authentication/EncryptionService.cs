@@ -23,7 +23,7 @@ namespace AccuSync.Application.Services.Authentication
 
         public EncryptionService(IDataProtectionProvider dataProtectionProvider)
         {
-            _protector = dataProtectionProvider.CreateProtector("AccuSync.Users.EncryptedFields");
+            _protector = dataProtectionProvider.CreateProtector(AuthenticationConstants.EncryptionProtectorPurpose);
         }
 
         public string Encrypt(string plainText)

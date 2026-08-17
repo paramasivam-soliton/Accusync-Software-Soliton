@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Reserved for the future AccuSync.DeviceCommunication extraction —
-         not yet used by any code in this project. -->
-    <PackageReference Include="System.IO.Ports" />
     <!-- Standalone reversible encryption for usernames (EncryptionService) — no web
          server/hosting involved, just the Data Protection crypto/key-management library. -->
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
