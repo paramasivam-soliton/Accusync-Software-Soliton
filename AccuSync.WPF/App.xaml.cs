@@ -1,16 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Windows;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
-using AccuSync.Application.Services.Authentication;
-using AccuSync.Presentation.ViewModels;
-using AccuSync.Adapters.DataParser.DependencyInjection;
-using AccuSync.EF.DependencyInjection;
+using AccuSync.WPF.DependencyInjection;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
@@ -29,84 +21,8 @@ namespace AccuSync.WPF
         public App()
         {
             var services = new ServiceCollection();
-            ConfigureServices(services);
+            services.AddWpfServices();
             _serviceProvider = services.BuildServiceProvider();
-        }
-
-        private void ConfigureServices(IServiceCollection services)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: true)
-                .Build();
-
-            string databasePath = ResolveDatabasePath(configuration);
-
-            // Persistence — provider selection happens right here: swapping database
-            // engines later means calling a different sibling adapter project's
-            // equivalent method instead of AddSqlitePersistence.
-            services.AddSqlitePersistence(databasePath);
-
-            // File-format exchange — import parsing, QR generation. Same "provider
-            // selection happens here" pattern as AddSqlitePersistence above.
-            services.AddDataParserServices();
-
-            // Data Protection key ring lives alongside the database so it travels with
-            // it if the DB file is ever backed up/restored onto another machine.
-            // Standalone use only; no web server/hosting involved.
-            string keysPath = ResolveDataProtectionKeysPath(configuration, databasePath);
-            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
-
-            // Services
-            services.AddSingleton<IEncryptionService, EncryptionService>();
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-            // ViewModels
-            services.AddTransient<SplashViewModel>();
-            services.AddTransient<LoginViewModel>();
-            services.AddTransient<ChangePasswordViewModel>();
-
-            // Views
-            services.AddTransient<SplashWindow>();
-            services.AddTransient<LoginWindow>();
-            services.AddTransient<ChangePasswordWindow>();
-            services.AddTransient<AdminDashboardWindow>();
-            services.AddTransient<ScreenerDashboardWindow>();
-        }
-
-        /// <summary>
-        /// Reads Persistence:DatabasePath from appsettings.json. Falls back to the
-        /// existing %ProgramData%\Natus\AccuSync\SettingsDatabase.db location when the
-        /// setting is absent or blank, so the app works out of the box with zero config.
-        /// </summary>
-        private static string ResolveDatabasePath(IConfiguration configuration)
-        {
-            string configuredPath = configuration["Persistence:DatabasePath"];
-
-            string databasePath = string.IsNullOrWhiteSpace(configuredPath)
-                ? Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                    "Natus", "AccuSync", "SettingsDatabase.db")
-                : configuredPath;
-
-            Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
-            return databasePath;
-        }
-
-        /// <summary>
-        /// Reads Persistence:DataProtectionKeysPath from appsettings.json. Falls back to a
-        /// "DataProtectionKeys" folder alongside the database when the setting is absent
-        /// or blank, so the key ring travels with the database if it's ever backed up or
-        /// restored onto another machine.
-        /// </summary>
-        private static string ResolveDataProtectionKeysPath(IConfiguration configuration, string databasePath)
-        {
-            string configuredPath = configuration["Persistence:DataProtectionKeysPath"];
-
-            return string.IsNullOrWhiteSpace(configuredPath)
-                ? Path.Combine(Path.GetDirectoryName(databasePath), "DataProtectionKeys")
-                : configuredPath;
         }
 
         protected override void OnStartup(StartupEventArgs e)

@@ -38,17 +38,26 @@ namespace AccuSync.Application.Services.Authentication
         {
             if (string.IsNullOrEmpty(hash)) return false;
 
-            string[] parts = hash.Split('.');
-            if (parts.Length != 3) return false;
+            try
+            {
+                string[] parts = hash.Split('.');
+                if (parts.Length != 3) return false;
 
-            if (!int.TryParse(parts[0], out int iterations)) return false;
+                if (!int.TryParse(parts[0], out int iterations)) return false;
 
-            byte[] salt = Convert.FromBase64String(parts[1]);
-            byte[] expectedHash = Convert.FromBase64String(parts[2]);
+                byte[] salt = Convert.FromBase64String(parts[1]);
+                byte[] expectedHash = Convert.FromBase64String(parts[2]);
 
-            byte[] actualHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expectedHash.Length);
+                byte[] actualHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expectedHash.Length);
 
-            return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
+                return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
+            }
+            catch
+            {
+                // A malformed/corrupted stored hash (bad base64, non-numeric iteration
+                // count, etc.) must fail verification, not throw out of a login attempt.
+                return false;
+            }
         }
     }
 }
