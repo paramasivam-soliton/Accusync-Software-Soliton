@@ -20,7 +20,12 @@ namespace AccuSync.EF.Configurations
         {
             builder.ToTable("AppSettings");
 
-            builder.HasKey(s => s.Id);
+            // A genuine singleton row has nothing meaningful to identify it by, so this
+            // key exists purely to satisfy EF/SQLite's requirement that every table have
+            // one — it's a shadow property (no corresponding property on AppSettings
+            // itself), auto-assigned on insert, and AppSettingsRepository never queries by it.
+            builder.Property<int>("SettingsId").ValueGeneratedOnAdd();
+            builder.HasKey("SettingsId");
 
             builder.Property(s => s.LockoutDurationMinutes).HasDefaultValue(15);
         }
