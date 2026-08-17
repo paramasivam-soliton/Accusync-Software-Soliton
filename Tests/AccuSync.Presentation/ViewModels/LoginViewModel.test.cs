@@ -42,12 +42,12 @@ namespace AccuSync.Presentation.Tests.ViewModels
             _passwordHasherMock.Object,
             _currentUserContextMock.Object);
 
-        private static User NewUser(string profileId, int firstLogin = 0, string accountName = "SomeUser", bool status = true) => new()
+        private static User NewUser(string profileId, int firstLogin = 0, string accountName = "SomeUser", bool isActive = true) => new()
         {
             AccountName = accountName,
             ProfileId = profileId,
             FirstLogin = firstLogin,
-            Status = status
+            IsActive = isActive
         };
 
         [Fact]
@@ -57,9 +57,9 @@ namespace AccuSync.Presentation.Tests.ViewModels
             // mock must be set up beforehand.
             _userRepositoryMock.Setup(r => r.GetAllUsersAsync()).ReturnsAsync(new List<User>
             {
-                NewUser(profileId: "Admin", accountName: "ActiveAdmin", status: true),
-                NewUser(profileId: "Screener", accountName: "DeactivatedScreener", status: false),
-                NewUser(profileId: "Screener", accountName: "ActiveScreener", status: true)
+                NewUser(profileId: "Admin", accountName: "ActiveAdmin", isActive: true),
+                NewUser(profileId: "Screener", accountName: "DeactivatedScreener", isActive: false),
+                NewUser(profileId: "Screener", accountName: "ActiveScreener", isActive: true)
             });
 
             // Act
