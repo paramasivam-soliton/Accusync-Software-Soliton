@@ -8,6 +8,7 @@ using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Services;
 using AccuSync.Presentation.ViewModels;
+using AccuSync.Adapters.DataParser.DependencyInjection;
 using AccuSync.EF.DependencyInjection;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
@@ -34,6 +35,10 @@ namespace AccuSync.WPF
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddSqlitePersistence(ResolveDatabasePath());
+
+            // File-format exchange — import parsing, QR generation. Same "provider
+            // selection happens here" pattern as AddSqlitePersistence above.
+            services.AddDataParserServices();
 
             // Services
             services.AddSingleton<IEncryptionService, EncryptionService>();

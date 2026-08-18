@@ -1,12 +1,11 @@
 ﻿// --------------------------------------------------------------------------------
-// <copyright file="DocxParser.cs" company="Natus Sensory">
+// <copyright file="PdfParser.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Models;
 using AccuSync.Core.Entities;
-using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,141 +13,103 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
-    /// Extracts patient data from Word (.docx) facesheet documents using
-    /// OpenXml for text extraction and regex-based field mapping.
-    /// Supports the same hospital formats as <see cref="PdfParser"/> and
-    /// <see cref="OcrParser"/>, plus Markdown-formatted DOCX variations.
+    /// Extracts patient data from hospital facesheet PDFs using PdfPig (Apache 2.0)
+    /// for text extraction and regex-based field mapping.
+    /// Supports multiple hospital formats — each extraction method tries several
+    /// patterns in priority order and returns the first match.
     /// </summary>
-    /// <summary>
-    /// Extracts patient data from Word (.docx) facesheet documents using
-    /// OpenXml for text extraction and regex-based field mapping.
-    /// Supports the same hospital formats as <see cref="PdfParser"/> and
-    /// <see cref="OcrParser"/>, plus Markdown-formatted DOCX variations.
-    /// </summary>
-    // TODO: This is the third copy of the facesheet extraction logic (alongside
-    //       PdfParser and OcrParser). Only the text-extraction step differs.
-    //       Extract a shared FacesheetFieldExtractor and have each parser call it.
-    // TODO: Same PII-in-debug-output concern as PdfParser and OcrParser.
-    public class DocxParser
+    // TODO: Debug.WriteLine calls throughout this file are useful during development
+    //       but should be behind a verbose/trace flag or removed before release.
+    //       Patient PII (names, DOB, SSN) should never be written to debug output
+    //       in production.
+    public class PdfParser
     {
         /// <summary>
-        /// Parses a Word (.docx) facesheet into a <see cref="PatientData"/> record.
+        /// Parses a hospital facesheet PDF into a <see cref="PatientData"/> record.
+        /// Falls back to best-effort field mapping even when the PDF appears to be
+        /// a scanned image with little or no extractable text.
         /// </summary>
-        /// <param name="filePath">Path to the DOCX facesheet to parse.</param>
+        /// <param name="filePath">Path to the PDF facesheet to parse.</param>
         /// <returns>The extracted <see cref="PatientData"/>.</returns>
-        public static PatientData ParseDocxFacesheet(string filePath)
+        public static PatientData ParsePdfFacesheet(string filePath)
         {
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"File not found: {filePath}");
 
             try
             {
-                string text = ExtractTextFromDocx(filePath);
+                string text = ExtractTextFromPdf(filePath);
 
-                Debug.WriteLine("=== EXTRACTED DOCX TEXT ===");
+                Debug.WriteLine("=== EXTRACTED PDF TEXT ===");
                 Debug.WriteLine(text);
                 Debug.WriteLine("=== END EXTRACTED TEXT ===");
 
+                // BUG: Both branches call MapTextToPatientData with the same input.
+                // The scanned-PDF path should either return an empty PatientData with
+                // a warning, or throw — right now it silently processes empty/garbage text.
                 if (IsTextMeaningful(text))
                 {
-                    Debug.WriteLine("DOCX: Successfully extracted text from Word document");
+                    Debug.WriteLine("PDF: Using direct text extraction (text-based PDF)");
                     return MapTextToPatientData(text);
                 }
                 else
                 {
-                    Debug.WriteLine("DOCX: No meaningful text found in document");
-                    throw new Exception("Document appears to be empty or unreadable");
+                    Debug.WriteLine("PDF: No text found. This appears to be a scanned PDF.");
+                    Debug.WriteLine("PDF: For scanned PDFs, use Image (OCR) import instead.");
+                    return MapTextToPatientData(text);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error parsing DOCX file: {ex.Message}", ex);
+                throw new Exception($"Error parsing PDF file: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// Extracts text from both paragraphs and tables. Table cells are joined
-        /// with spaces per row so labeled fields ("Weight: 3200g") stay on one line
-        /// for the regex patterns to match.
-        /// </summary>
-        private static string ExtractTextFromDocx(string filePath)
+        private static string ExtractTextFromPdf(string filePath)
         {
             var textBuilder = new StringBuilder();
 
             try
             {
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+                using (PdfDocument document = PdfDocument.Open(filePath))
                 {
-                    var body = wordDoc.MainDocumentPart?.Document?.Body;
-                    if (body == null)
+                    foreach (Page page in document.GetPages())
                     {
-                        Debug.WriteLine("DOCX: Document body is null");
-                        return string.Empty;
+                        textBuilder.AppendLine(page.Text);
                     }
-
-                    var paragraphs = body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>();
-                    foreach (var para in paragraphs)
-                    {
-                        string paraText = para.InnerText;
-                        if (!string.IsNullOrWhiteSpace(paraText))
-                        {
-                            textBuilder.AppendLine(paraText);
-                        }
-                    }
-
-                    // Table content is extracted separately because InnerText on
-                    // paragraphs alone misses text inside table cells.
-                    var tables = body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Table>();
-                    foreach (var table in tables)
-                    {
-                        var rows = table.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>();
-                        foreach (var row in rows)
-                        {
-                            var cells = row.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>();
-                            var cellTexts = cells.Select(c => c.InnerText.Trim()).Where(t => !string.IsNullOrWhiteSpace(t));
-                            textBuilder.AppendLine(string.Join(" ", cellTexts));
-                        }
-                    }
-
-                    Debug.WriteLine($"DOCX: Extracted {textBuilder.Length} characters from document");
                 }
+
+                Debug.WriteLine($"PDF: Extracted {textBuilder.Length} characters from document");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"DOCX: Text extraction failed - {ex.Message}");
-                throw;
+                Debug.WriteLine($"PDF: Text extraction failed - {ex.Message}");
+                return string.Empty;
             }
 
             return textBuilder.ToString();
         }
 
         /// <summary>
-        /// Quick heuristic to detect empty or image-only documents.
-        /// Same thresholds as <see cref="PdfParser.IsTextMeaningful"/>.
+        /// Quick heuristic to distinguish text-based PDFs from scanned images.
+        /// Requires at least 50 characters with 20+ alphanumeric to count as meaningful.
         /// </summary>
         private static bool IsTextMeaningful(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
-            {
-                Debug.WriteLine("DOCX: Text is null or whitespace");
                 return false;
-            }
 
             if (text.Length < 50)
-            {
-                Debug.WriteLine($"DOCX: Text too short ({text.Length} chars)");
                 return false;
-            }
 
             int alphanumericCount = text.Count(c => char.IsLetterOrDigit(c));
-            bool meaningful = alphanumericCount > 20;
-
-            Debug.WriteLine($"DOCX: Text has {alphanumericCount} alphanumeric chars - Meaningful: {meaningful}");
-            return meaningful;
+            return alphanumericCount > 20;
         }
 
         private static PatientData MapTextToPatientData(string text)
@@ -196,64 +157,43 @@ namespace AccuSync.Application.Services
         }
 
         #region Field Extraction Methods
-        // All extraction methods below are duplicated across PdfParser, OcrParser,
-        // and DocxParser. DocxParser adds Markdown-aware patterns (** delimiters)
-        // because some DOCX facesheets contain Markdown formatting.
-        // See the class-level TODO about extracting a shared helper.
+
+        // Each Extract* method tries patterns in priority order (most specific first)
+        // and returns the first successful match.
 
         private static string ExtractPatientId(string text)
         {
             var patterns = new[]
             {
-                @"Medical\s+Record\s+#?\s*([A-Z]\d+)",
-                @"Medical\s+Record[:\s*]+\*\*([A-Z0-9\-]+)\*\*",
-                @"\*\*Medical\s+Record\*\*\s+\*\*([A-Z0-9\-]+)",
-                @"Chart\s+ID\s+#?\s*([A-Z0-9\-]+)",
+                @"Medical\s+Record\s+#?([A-Z0-9\-]+)",
                 @"Medical\s+Record[:\s]+([A-Z0-9\-]+)",
                 @"Patient\s*ID[:\s]+([A-Z0-9\-]+)",
-                @"MRN[:\s]+([A-Z0-9\-]+)"
+                @"MRN[:\s]+([A-Z0-9\-]+)",
+                @"Chart\s+ID\s+([A-Z0-9\-]+)",
+                @"(?:^|\n)\s*(\d{3}-\d{2}-\d{2}-\d{3})\s*$"
             };
 
             string id = ExtractFirstMatch(text, patterns);
 
+            // Strip hospital-specific suffixes (e.g., "E2626262-svmc" → "E2626262")
             if (!string.IsNullOrEmpty(id) && id.Contains("-"))
                 id = id.Split('-')[0];
 
-            Debug.WriteLine($"DEBUG: Patient ID extracted = '{id}'");
+            Debug.WriteLine($"DEBUG: Patient ID = '{id}'");
             return id;
         }
 
-        // Patient name extraction handles both Markdown and plain-text formats.
-        // Markdown patterns (Formats 1–2) come first since they're more specific.
-        // See PdfParser.ExtractPatientName for format documentation.
+        // NOTE: Patient name extraction is the most complex part of the parser.
+        //       Hospital facesheets vary wildly in format. Patterns are ordered from
+        //       most specific (all-caps newborn) to most generic (labeled fields).
+        //       When adding new hospital formats, add patterns before the labeled
+        //       fallback (Format 4) and include a sample in the comment.
         private static (string firstName, string lastName) ExtractPatientName(string text)
         {
-            string topSection = text.Length > 400 ? text.Substring(0, 400) : text;
+            string topSection = text.Length > 500 ? text.Substring(0, 500) : text;
 
-            // Format 1: "**Garcia-Mendez, Girl A Sophia P**" (Markdown bold newborn)
-            var markdownComplexMatch = Regex.Match(topSection,
-                @"\*\*([A-Z][a-z]+(?:-[A-Z][a-z]+)?),\s+(?:Girl|Boy)\s+[A-Z]\s+[A-Z][a-z]+",
-                RegexOptions.Multiline);
-            if (markdownComplexMatch.Success)
-            {
-                string lastName = markdownComplexMatch.Groups[1].Value.Trim();
-                Debug.WriteLine($"DEBUG: Markdown complex format - Last: '{lastName}', First: 'Baby'");
-                return ("Baby", lastName);
-            }
-
-            // Format 2: "**Smith, Boy A Crystal**" (Markdown newborn)
-            var markdownBoyGirlMatch = Regex.Match(topSection,
-                @"\*\*([A-Z][a-z]+),\s+(?:Boy|Girl)\s+[A-Z]",
-                RegexOptions.Multiline);
-            if (markdownBoyGirlMatch.Success)
-            {
-                string lastName = markdownBoyGirlMatch.Groups[1].Value.Trim();
-                Debug.WriteLine($"DEBUG: Markdown Boy/Girl format - Last: '{lastName}', First: 'Baby'");
-                return ("Baby", lastName);
-            }
-
-            // Format 3: "BAKER, BABY" (all-caps newborn)
-            var allCapsMatch = Regex.Match(topSection, @"([A-Z]+),\s+(BABY|Baby)", RegexOptions.Multiline);
+            // Format 1: "BAKER, BABY" (all-caps newborn)
+            var allCapsMatch = Regex.Match(topSection, @"([A-Z]{2,}),\s+(BABY|Baby)", RegexOptions.Multiline);
             if (allCapsMatch.Success)
             {
                 string lastName = allCapsMatch.Groups[1].Value.Trim();
@@ -264,7 +204,7 @@ namespace AccuSync.Application.Services
                 return (firstName, lastName);
             }
 
-            // Format 4: "Garcia-Mendez, Girl A Sophia P" (plain text)
+            // Format 2: "Garcia-Mendez, Girl A Sophia P" (complex newborn naming)
             var complexMatch = Regex.Match(topSection,
                 @"([A-Z][a-z]+(?:-[A-Z][a-z]+)?),\s+(?:Girl|Boy)\s+[A-Z]\s+",
                 RegexOptions.Multiline);
@@ -275,9 +215,11 @@ namespace AccuSync.Application.Services
                 return ("Baby", lastName);
             }
 
-            // Format 5: "Clemence, Baby 1 day old"
+            // Format 3: "Clemence, Baby 1 day old"
             string veryTop = text.Length > 200 ? text.Substring(0, 200) : text;
-            var simpleMatch = Regex.Match(veryTop, @"([A-Z][a-z]+),\s+([A-Z][a-z]+)\s+\d+\s+day", RegexOptions.Multiline);
+            var simpleMatch = Regex.Match(veryTop,
+                @"([A-Z][a-z]+),\s+([A-Z][a-z]+)\s+\d+\s+day",
+                RegexOptions.Multiline);
             if (simpleMatch.Success)
             {
                 string lastName = simpleMatch.Groups[1].Value.Trim();
@@ -286,23 +228,20 @@ namespace AccuSync.Application.Services
                 return (firstName, lastName);
             }
 
-            // Format 6: Standard labeled fields
-            string firstName6 = ExtractFirstMatch(text, new[] {
+            // Format 4: Standard labeled fields ("First Name: ...", "Last Name: ...")
+            string firstName4 = ExtractFirstMatch(text, new[] {
                 @"First\s*Name[:\s]+([A-Z][a-z]+)",
-                @"Given\s*Name[:\s]+([A-Z][a-z]+)",
-                @"Patient\s+First\s*Name[:\s]+([A-Z][a-z]+)"
+                @"Given\s*Name[:\s]+([A-Z][a-z]+)"
             });
-
-            string lastName6 = ExtractFirstMatch(text, new[] {
+            string lastName4 = ExtractFirstMatch(text, new[] {
                 @"Last\s*Name[:\s]+([A-Z][a-z]+)",
-                @"Surname[:\s]+([A-Z][a-z]+)",
-                @"Patient\s+Last\s*Name[:\s]+([A-Z][a-z]+)"
+                @"Surname[:\s]+([A-Z][a-z]+)"
             });
 
-            if (!string.IsNullOrEmpty(firstName6) || !string.IsNullOrEmpty(lastName6))
+            if (!string.IsNullOrEmpty(firstName4) || !string.IsNullOrEmpty(lastName4))
             {
-                Debug.WriteLine($"DEBUG: Labeled format - Last: '{lastName6}', First: '{firstName6}'");
-                return (firstName6, lastName6);
+                Debug.WriteLine($"DEBUG: Labeled format - Last: '{lastName4}', First: '{firstName4}'");
+                return (firstName4, lastName4);
             }
 
             Debug.WriteLine("DEBUG: No name pattern matched");
@@ -314,8 +253,8 @@ namespace AccuSync.Application.Services
             var patterns = new[]
             {
                 @"\(DOB:\s*(\d{1,2}/\d{1,2}/\d{4})\)",
-                @"DOB[:\s]+(\d{1,2}/\d{1,2}/\d{4})",
-                @"(?:Date\s*of\s*Birth|Birth\s*Date)[:\s]+(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})",
+                @"DOB\s+(\d{1,2}/\d{1,2}/\d{4})",
+                @"(?:DOB|Date\s*of\s*Birth|Birth\s*Date)[:\s]+(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})",
                 @"(?:DOB|Date\s*of\s*Birth|Birth\s*Date)[:\s]+((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4})",
                 @"(?:DOB|Date\s*of\s*Birth|Birth\s*Date)[:\s]+(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4})"
             };
@@ -328,12 +267,13 @@ namespace AccuSync.Application.Services
                     string dob = match.Groups[1].Value.Trim();
                     int dobIndex = match.Index;
 
-                    // Skip "Subscriber DOB" matches (insurance section)
+                    // Avoid matching "Subscriber DOB" (insurance section) instead
+                    // of the patient's own DOB.
                     int subscriberIndex = text.IndexOf("Subscriber DOB", StringComparison.OrdinalIgnoreCase);
 
                     if (subscriberIndex == -1 || dobIndex < subscriberIndex)
                     {
-                        Debug.WriteLine($"DEBUG: Patient DOB extracted = '{dob}'");
+                        Debug.WriteLine($"DEBUG: Patient DOB (found) = '{dob}'");
                         return dob;
                     }
                 }
@@ -349,7 +289,7 @@ namespace AccuSync.Application.Services
             {
                 @"\d+\s+days?\s+old\s+(male|female)",
                 @"\d+\s+days?\s+(male|female)",
-                @"Sex[:\s]+(Male|Female|M|F)",
+                @"Sex\s+(Male|Female|M|F)",
                 @"(?:Gender|Sex)[:\s]+(Male|Female|M|F)",
                 @"(?:^|\s)(Male|Female)(?:\s|$)"
             };
@@ -365,17 +305,16 @@ namespace AccuSync.Application.Services
                     "F" or "FEMALE" => "Female",
                     _ => match
                 };
-                Debug.WriteLine($"DEBUG: Gender extracted = '{result}'");
+                Debug.WriteLine($"DEBUG: Gender = '{result}'");
                 return result;
             }
 
-            Debug.WriteLine("DEBUG: No gender found");
             return string.Empty;
         }
 
         /// <summary>
-        /// Extracts birth weight with false-positive guards.
-        /// See <see cref="PdfParser.ExtractWeight"/> for detailed documentation.
+        /// Extracts birth weight with heuristic guards against false positives.
+        /// Rejects values that look like years, ZIP codes, or unrealistic weights.
         /// </summary>
         private static string ExtractWeight(string text)
         {
@@ -390,6 +329,8 @@ namespace AccuSync.Application.Services
 
             if (!string.IsNullOrEmpty(weight))
             {
+                // Facesheet text is unstructured, so weight patterns can match
+                // unrelated numbers. These guards reject common false positives.
                 if (weight.Length == 4 && int.TryParse(weight, out int year) && year >= 1900 && year <= 2100)
                 {
                     Debug.WriteLine($"DEBUG: Rejecting weight '{weight}' - appears to be a year");
@@ -408,22 +349,17 @@ namespace AccuSync.Application.Services
                     return string.Empty;
                 }
 
-                if (int.TryParse(weight, out int weightValue))
+                if (int.TryParse(weight, out int val))
                 {
-                    if (weightValue > 10000 || (weightValue > 50 && weightValue < 200))
+                    if (val > 10000 || (val > 50 && val < 200))
                     {
                         Debug.WriteLine($"DEBUG: Rejecting weight '{weight}' - unrealistic value");
                         return string.Empty;
                     }
                 }
-
-                Debug.WriteLine($"DEBUG: Weight extracted = '{weight}'");
-            }
-            else
-            {
-                Debug.WriteLine("DEBUG: No weight found");
             }
 
+            Debug.WriteLine($"DEBUG: Weight extracted = '{weight}'");
             return weight;
         }
 
@@ -434,47 +370,18 @@ namespace AccuSync.Application.Services
                 @"(?:Birth\s*)?(?:Height|Length)[:\s]+(\d+\.?\d*)\s*(?:cm|in|inches)?",
                 @"(?:Height|Length)[:\s]+(\d+\.?\d*)",
             };
-
-            string height = ExtractFirstMatch(text, patterns);
-
-            if (!string.IsNullOrEmpty(height))
-                Debug.WriteLine($"DEBUG: Height extracted = '{height}'");
-            else
-                Debug.WriteLine("DEBUG: No height found");
-
-            return height;
+            return ExtractFirstMatch(text, patterns);
         }
 
-        // Mother name extraction adds Markdown patterns (Formats 1–2, 6) on top of
-        // the shared formats in PdfParser/OcrParser.
+        // Mother name uses the same pattern-priority approach as patient name.
+        // Formats 1–2 handle all-caps layouts, 3–5 handle mixed-case and
+        // guarantor-section variations, 6 is the labeled fallback.
         private static (string firstName, string lastName) ExtractMotherName(string text)
         {
-            // Format 1: "**Crystal Smith (Mother) - 789-999-4444**"
-            var markdownParenMatch = Regex.Match(text,
-                @"\*\*([A-Z][a-z]+)\s+([A-Z][a-z]+(?:-[A-Z][a-z]+)?)\s+\(Mother\)",
+            // Format 1: "BAKER, JILL            MOTHER         YES"
+            var capsSpacesMatch = Regex.Match(text,
+                @"([A-Z]{2,}),\s+([A-Z]+)\s+MOTHER",
                 RegexOptions.Multiline);
-            if (markdownParenMatch.Success)
-            {
-                string firstName = markdownParenMatch.Groups[1].Value.Trim();
-                string lastName = markdownParenMatch.Groups[2].Value.Trim();
-                Debug.WriteLine($"DEBUG: Mother name (markdown paren) - Last: '{lastName}', First: '{firstName}'");
-                return (firstName, lastName);
-            }
-
-            // Format 2: "**Sophia P Garcia-Mendez (Mother) - 123-456-7890**"
-            var markdownFullMatch = Regex.Match(text,
-                @"\*\*([A-Z][a-z]+)\s+[A-Z]\s+([A-Z][a-z]+(?:-[A-Z][a-z]+)?)\s+\(Mother\)",
-                RegexOptions.Multiline);
-            if (markdownFullMatch.Success)
-            {
-                string firstName = markdownFullMatch.Groups[1].Value.Trim();
-                string lastName = markdownFullMatch.Groups[2].Value.Trim();
-                Debug.WriteLine($"DEBUG: Mother name (markdown full) - Last: '{lastName}', First: '{firstName}'");
-                return (firstName, lastName);
-            }
-
-            // Format 3: "BAKER, JILL            MOTHER         YES"
-            var capsSpacesMatch = Regex.Match(text, @"([A-Z]{2,}),\s+([A-Z]+)\s+MOTHER", RegexOptions.Multiline);
             if (capsSpacesMatch.Success)
             {
                 string lastName = capsSpacesMatch.Groups[1].Value.Trim();
@@ -485,19 +392,21 @@ namespace AccuSync.Application.Services
                 return (firstName, lastName);
             }
 
-            // Format 4: "CLEMENCE, LAURA B         MOTHER"
-            var capsMatch = Regex.Match(text, @"([A-Z]{2,}),\s+([A-Z]+)\s+[A-Z]\s+MOTHER", RegexOptions.Multiline);
+            // Format 2: "CLEMENCE, LAURA B         MOTHER"
+            var capsMatch = Regex.Match(text,
+                @"([A-Z]{2,}),\s+([A-Z]+)\s+[A-Z]\s+MOTHER",
+                RegexOptions.Multiline);
             if (capsMatch.Success)
             {
                 string lastName = capsMatch.Groups[1].Value.Trim();
                 string firstName = capsMatch.Groups[2].Value.Trim();
                 lastName = char.ToUpper(lastName[0]) + lastName.Substring(1).ToLower();
                 firstName = char.ToUpper(firstName[0]) + firstName.Substring(1).ToLower();
-                Debug.WriteLine($"DEBUG: Mother name (caps middle) - Last: '{lastName}', First: '{firstName}'");
+                Debug.WriteLine($"DEBUG: Mother name (caps format) - Last: '{lastName}', First: '{firstName}'");
                 return (firstName, lastName);
             }
 
-            // Format 5: "Sophia P Garcia-Mendez (Mother)"
+            // Format 3: "Sophia P Garcia-Mendez (Mother)"
             var parenthesesMatch = Regex.Match(text,
                 @"([A-Z][a-z]+)\s+[A-Z]\s+([A-Z][a-z]+(?:-[A-Z][a-z]+)?)\s+\(Mother\)",
                 RegexOptions.Multiline);
@@ -505,23 +414,11 @@ namespace AccuSync.Application.Services
             {
                 string firstName = parenthesesMatch.Groups[1].Value.Trim();
                 string lastName = parenthesesMatch.Groups[2].Value.Trim();
-                Debug.WriteLine($"DEBUG: Mother name (parentheses) - Last: '{lastName}', First: '{firstName}'");
+                Debug.WriteLine($"DEBUG: Mother name (parentheses format) - Last: '{lastName}', First: '{firstName}'");
                 return (firstName, lastName);
             }
 
-            // Format 6: "**Smith, Crystal**" in Guarantor section (Markdown)
-            var guarantorMarkdownMatch = Regex.Match(text,
-                @"Guarantor.*?\*\*([A-Z][a-z]+(?:-[A-Z][a-z]+)?),\s*([A-Z][a-z]+)\*\*",
-                RegexOptions.Singleline);
-            if (guarantorMarkdownMatch.Success)
-            {
-                string lastName = guarantorMarkdownMatch.Groups[1].Value.Trim();
-                string firstName = guarantorMarkdownMatch.Groups[2].Value.Trim();
-                Debug.WriteLine($"DEBUG: Mother name (guarantor markdown) - Last: '{lastName}', First: '{firstName}'");
-                return (firstName, lastName);
-            }
-
-            // Format 7: "Garcia-Mendez, Sophia P" in Guarantor section
+            // Format 4: "Garcia-Mendez, Sophia P" in Guarantor section
             var guarantorMatch = Regex.Match(text,
                 @"Guarantor.*?([A-Z][a-z]+(?:-[A-Z][a-z]+)?),\s+([A-Z][a-z]+)\s+[A-Z]",
                 RegexOptions.Singleline);
@@ -529,11 +426,11 @@ namespace AccuSync.Application.Services
             {
                 string lastName = guarantorMatch.Groups[1].Value.Trim();
                 string firstName = guarantorMatch.Groups[2].Value.Trim();
-                Debug.WriteLine($"DEBUG: Mother name (guarantor) - Last: '{lastName}', First: '{firstName}'");
+                Debug.WriteLine($"DEBUG: Mother name (guarantor format) - Last: '{lastName}', First: '{firstName}'");
                 return (firstName, lastName);
             }
 
-            // Format 8: "BAKER, JILL L 2002002" in Guarantor section
+            // Format 5: "BAKER, JILL L 2002002" in Guarantor section
             var guarantorIdMatch = Regex.Match(text,
                 @"Guarantor.*?([A-Z]{2,}),\s+([A-Z]+)\s+[A-Z]",
                 RegexOptions.Singleline);
@@ -547,55 +444,62 @@ namespace AccuSync.Application.Services
                 return (firstName, lastName);
             }
 
+            // Format 6: Standard labeled fields
+            string firstName6 = ExtractFirstMatch(text, new[] {
+                @"Mother'?s?\s*First\s*Name[:\s]+([A-Z][a-z]+)",
+                @"Mother[:\s]+([A-Z][a-z]+)\s+[A-Z][a-z]+"
+            });
+            string lastName6 = ExtractFirstMatch(text, new[] {
+                @"Mother'?s?\s*Last\s*Name[:\s]+([A-Z][a-z]+)",
+                @"Mother[:\s]+[A-Z][a-z]+\s+([A-Z][a-z]+)"
+            });
+
+            if (!string.IsNullOrEmpty(firstName6) || !string.IsNullOrEmpty(lastName6))
+            {
+                Debug.WriteLine($"DEBUG: Mother name (labeled format) - Last: '{lastName6}', First: '{firstName6}'");
+                return (firstName6, lastName6);
+            }
+
             Debug.WriteLine("DEBUG: No mother name pattern matched");
             return (string.Empty, string.Empty);
         }
 
-        // DocxParser adds Markdown-aware phone patterns on top of the shared set.
         private static string ExtractMotherPhone(string text)
         {
             var patterns = new[]
             {
-                @"\(Mother\)\s*-\s*(\d{3}-\d{3}-\d{4})",
-                @"Mother\)\s*-\s*\*\*\s*(\d{3}-\d{3}-\d{4})",
-                @"Mother.*?(\d{3}-\d{3}-\d{4})",
+                @"MOTHER\s+YES.*?(\d{3}-\d{3}-\d{4})",
                 @"(?:Mother|Emergency\s+Contact).*?(\d{3}-\d{3}-\d{4})",
-                @"Mobile\s+phone[:\s*]+\*\*(\d{3}-\d{3}-\d{4})\*\*",
-                @"Mobile\s*phone[:\s]+(\d{3}-\d{3}-\d{4})",
-                @"Mobile[:\s*]+\*\*(\d{3}-\d{3}-\d{4})\*\*",
-                @"Mobile[:\s]+(\d{3}-\d{3}-\d{4})",
-                @"(?:Mother'?s?\s*)?(?:Phone|Tel|Telephone)[:\s]+([\d\-\(\)\s]+)",
-                @"Contact[:\s]+([\d\-\(\)\s]{10,})"
+                @"Mobile\s+phone\s+(\d{3}-\d{3}-\d{4})",
+                @"Mobile\s+(\d{3}-\d{3}-\d{4})",
+                @"(?:Mother'?s?\s*)?(?:Phone|Tel|Telephone|Mobile)[:\s]+([\d\-\(\)\s]+)",
+                @"Contact[:\s]+([\d\-\(\)\s]{10,})",
+                @"Guarantor.*?Home\s+(\d{3}-\d{3}-\d{4})"
             };
 
             string phone = ExtractFirstMatch(text, patterns);
 
             if (!string.IsNullOrEmpty(phone))
             {
-                phone = phone.Trim().Replace("**", "");
+                phone = phone.Trim();
                 if (phone.Equals("None", StringComparison.OrdinalIgnoreCase))
-                {
-                    Debug.WriteLine("DEBUG: Rejecting phone 'None'");
                     return string.Empty;
-                }
-                Debug.WriteLine($"DEBUG: Mother phone extracted = '{phone}'");
-            }
-            else
-            {
-                Debug.WriteLine("DEBUG: No mother phone found");
+
+                Debug.WriteLine($"DEBUG: Mother phone = '{phone}'");
             }
 
             return phone;
         }
 
         /// <summary>
-        /// Scans the full text for known risk factor keywords. See
-        /// <see cref="PdfParser.ExtractRiskFactors"/> for detailed documentation.
+        /// Scans the full text for known risk factor keywords and determines
+        /// Yes/No/Unknown by looking at the surrounding context (±50 characters).
         /// </summary>
+        // TODO: Keyword matching against the full document text can produce false
+        //       positives (e.g., "meningitis" mentioned in an unrelated section).
+        //       Restricting matches to a risk factors section would be more reliable.
         private static void ExtractRiskFactors(string text, Dictionary<string, string> riskFactors)
         {
-            Debug.WriteLine("=== EXTRACTING RISK FACTORS ===");
-
             var riskKeywords = new Dictionary<string, string[]>
             {
                 { "Family History of Permanent Childhood Hearing Loss", new[] { "family history", "hearing loss family", "family hearing" } },
@@ -617,7 +521,6 @@ namespace AccuSync.Application.Services
             };
 
             string textLower = text.ToLower();
-            int foundCount = 0;
 
             foreach (var riskFactor in riskKeywords)
             {
@@ -629,8 +532,6 @@ namespace AccuSync.Application.Services
                         string value = DetermineRiskValue(text, keyword);
                         riskFactors[riskFactor.Key] = value;
                         found = true;
-                        foundCount++;
-                        Debug.WriteLine($"DEBUG: Risk '{riskFactor.Key}' = '{value}' (keyword: '{keyword}')");
                         break;
                     }
                 }
@@ -638,8 +539,6 @@ namespace AccuSync.Application.Services
                 if (!found)
                     riskFactors[riskFactor.Key] = "Unknown";
             }
-
-            Debug.WriteLine($"=== FOUND {foundCount} RISK FACTORS ===");
         }
 
         /// <summary>
@@ -648,34 +547,37 @@ namespace AccuSync.Application.Services
         /// </summary>
         private static string DetermineRiskValue(string text, string keyword)
         {
-            int keywordIndex = text.ToLower().IndexOf(keyword);
-            if (keywordIndex == -1) return "Unknown";
+            int idx = text.ToLower().IndexOf(keyword);
+            if (idx == -1) return "Unknown";
 
-            int start = Math.Max(0, keywordIndex - 50);
+            int start = Math.Max(0, idx - 50);
             int length = Math.Min(100, text.Length - start);
             string context = text.Substring(start, length).ToLower();
 
-            if (Regex.IsMatch(context, @"\b(yes|positive|present|confirmed|\+|✓|check|☑)\b"))
+            if (Regex.IsMatch(context, @"\b(yes|positive|present|confirmed)\b|(\+|✓|check|☑)"))
                 return "Yes";
 
-            if (Regex.IsMatch(context, @"\b(no|negative|absent|denied|none|-|✗|☐)\b"))
+            if (Regex.IsMatch(context, @"\b(no|negative|absent|denied|none)\b|(\-|✗|☐)"))
                 return "No";
 
             return "Unknown";
         }
 
+        /// <summary>
+        /// Tries each regex pattern against <paramref name="text"/> and returns
+        /// the first non-empty capture group match.
+        /// </summary>
         private static string ExtractFirstMatch(string text, string[] patterns)
         {
             foreach (string pattern in patterns)
             {
-                var match = Regex.Match(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline);
+                var match = Regex.Match(text, pattern,
+                    RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline);
                 if (match.Success && match.Groups.Count > 1)
                 {
                     string result = match.Groups[1].Value.Trim();
                     if (!string.IsNullOrWhiteSpace(result))
-                    {
                         return result;
-                    }
                 }
             }
             return string.Empty;
@@ -694,11 +596,11 @@ namespace AccuSync.Application.Services
 
             try
             {
-                return ExtractTextFromDocx(filePath);
+                return ExtractTextFromPdf(filePath);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error extracting DOCX text for preview: {ex.Message}");
+                Debug.WriteLine($"Error extracting PDF text for preview: {ex.Message}");
                 return $"[Error extracting text: {ex.Message}]";
             }
         }

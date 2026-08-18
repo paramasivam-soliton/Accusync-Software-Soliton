@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Resources;
 using System;
@@ -155,7 +156,7 @@ namespace AccuSync.WPF.Views.PatientsTests
             _isEditMode = true;
             ShowContent();
 
-            var viewModel = new PatientViewModel();
+            var viewModel = new PatientViewModel(App.GetService<IQrCodeGenerator>());
             viewModel.BeginEdit();
             DataContext = viewModel;
 

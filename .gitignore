@@ -20,6 +20,9 @@
 *.db-wal
 *.sqlite
 
+# OCR training data (large binary, not source-controlled — provide locally)
+*.traineddata
+
 # OS files
 Thumbs.db
 [Dd]esktop.ini

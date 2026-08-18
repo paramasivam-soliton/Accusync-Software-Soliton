@@ -4,20 +4,21 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
+using AccuSync.Application.Services;
 using AccuSync.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-
-namespace AccuSync.Application.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Orchestrates file parsing and import execution. Routes to format-specific
     /// parsers based on the format tag from <c>ImportFileDialog</c>.
     /// </summary>
-    public class ImportService
+    public class ImportService : IImportService
     {
         // File parsing
 
@@ -209,7 +210,7 @@ namespace AccuSync.Application.Services
         /// Returns <c>true</c> if the format requires a facesheet review step
         /// before import (so the user can verify extracted data).
         /// </summary>
-        public static bool IsFacesheetFormat(string format)
+        public bool IsFacesheetFormat(string format)
         {
             return format is "facesheet-image" or "facesheet-pdf" or "facesheet-docx";
         }
@@ -218,7 +219,7 @@ namespace AccuSync.Application.Services
         /// Returns raw extracted text for the facesheet preview panel.
         /// Returns <c>null</c> for images (the UI shows the image directly instead).
         /// </summary>
-        public static string GetFacesheetPreviewText(string filePath, string format)
+        public string GetFacesheetPreviewText(string filePath, string format)
         {
             return format switch
             {

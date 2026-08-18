@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Parses AccuLink XML export files (also used by AccuScreen devices)

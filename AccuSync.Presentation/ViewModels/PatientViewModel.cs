@@ -4,6 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Helpers;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,14 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isDirty = false;
         private Dictionary<string, string> _validationErrors = new Dictionary<string, string>();
         private BitmapImage _qrCodeImage;
+
+        private readonly IQrCodeGenerator _qrCodeGenerator;
+
+        /// <summary>Creates the view model with the given QR code generator.</summary>
+        public PatientViewModel(IQrCodeGenerator qrCodeGenerator)
+        {
+            _qrCodeGenerator = qrCodeGenerator;
+        }
 
         /// <summary>
         /// True when at least one property differs from the snapshot taken by <see cref="BeginEdit"/>.
@@ -178,7 +187,7 @@ namespace AccuSync.Presentation.ViewModels
         /// </summary>
         public void GenerateQRCode()
         {
-            string qrContent = QRCodeHelper.FormatPatientData(
+            string qrContent = _qrCodeGenerator.FormatPatientData(
                 FirstName,
                 LastName,
                 PatientId,
@@ -187,12 +196,12 @@ namespace AccuSync.Presentation.ViewModels
                 HospitalId
             );
 
-            byte[] pngBytes = QRCodeHelper.GenerateQRCode(qrContent, pixelsPerModule: 3);
+            byte[] pngBytes = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
             QRCodeImage = pngBytes == null ? null : BytesToBitmapImage(pngBytes);
         }
 
         /// <summary>
-        /// Bridges the PNG bytes <see cref="QRCodeHelper.GenerateQRCode"/> returns to a
+        /// Bridges the PNG bytes <see cref="IQrCodeGenerator.GenerateQRCode"/> returns to a
         /// WPF-bindable <see cref="BitmapImage"/>. This is the one place in the ViewModel
         /// that touches a WPF-specific type, matching the existing trade-off already made
         /// for <see cref="QRCodeImage"/> itself (see this project's csproj comment).
