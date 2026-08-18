@@ -975,7 +975,7 @@ namespace AccuSync.WPF.Views.Dashboard
 
             if (result == MessageBoxResult.Yes)
             {
-                App.NavigateAfterLogin(Window.GetWindow(this), null, null);
+                App.Logout(Window.GetWindow(this));
             }
         }
 

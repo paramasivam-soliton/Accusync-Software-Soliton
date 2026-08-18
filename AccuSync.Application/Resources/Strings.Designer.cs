@@ -8574,15 +8574,6 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Logout successful. Returning to login....
-        /// </summary>
-        public static string ScreenerDashboardWindow_LogoutSuccessMessage {
-            get {
-                return ResourceManager.GetString("ScreenerDashboardWindow_LogoutSuccessMessage", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string ScreenerDashboardWindow_NavAbout {

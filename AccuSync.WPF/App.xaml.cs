@@ -2,8 +2,10 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Application.Helpers;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.DependencyInjection;
+using AccuSync.WPF.Services;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
@@ -29,6 +31,8 @@ namespace AccuSync.WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            _serviceProvider.GetRequiredService<InactivityMonitor>().Start();
 
             // Log dev mode status on startup
             if (DevModeConfig.IsAnyDevMode)
@@ -109,6 +113,22 @@ namespace AccuSync.WPF
             {
                 NavigateToDashboard(username, role);
             }
+
+            currentWindow.Close();
+        }
+
+        /// <summary>
+        /// Ends the current session and returns to the login screen. Purpose-built for
+        /// logout rather than reusing <see cref="NavigateAfterLogin"/> — that method routes
+        /// to a dashboard based on a just-authenticated (username, role); logout has no role
+        /// to route with, it just needs to go back to login.
+        /// </summary>
+        public static void Logout(Window currentWindow)
+        {
+            GetService<ICurrentUserContext>().SignOut();
+
+            var loginWindow = GetService<LoginWindow>();
+            loginWindow.Show();
 
             currentWindow.Close();
         }

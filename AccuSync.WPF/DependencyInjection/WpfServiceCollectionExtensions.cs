@@ -12,6 +12,7 @@ using AccuSync.Application.Services.Authentication;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.EF.DependencyInjection;
 using AccuSync.Presentation.ViewModels;
+using AccuSync.WPF.Services;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Login;
 using AccuSync.WPF.Views.Splash;
@@ -73,6 +74,8 @@ namespace AccuSync.WPF.DependencyInjection
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<ICurrentUserContext, CurrentUserContext>();
+            services.AddSingleton<InactivityPolicy>();
+            services.AddSingleton<InactivityMonitor>();
 
             // ViewModels
             services.AddTransient<SplashViewModel>();

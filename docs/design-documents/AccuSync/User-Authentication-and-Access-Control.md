@@ -203,6 +203,13 @@ persistent navigation available on every dashboard screen; selecting it prompts 
 and confirming clears the session context and returns to the login screen. Any further access to
 the application requires signing in again.
 
+A session is also ended automatically after a fixed period of no mouse or keyboard activity
+anywhere in the application (15 minutes). Idle detection (`InactivityPolicy`) is a
+framework-agnostic policy in `AccuSync.Application`, decoupled from the WPF-specific code that
+reports activity and reacts to expiry (`InactivityMonitor`, `AccuSync.WPF`); on expiry, it invokes
+the same session-clearing, return-to-login path used by manual logout, without a confirmation
+prompt.
+
 ### Users and system-configuration administration
 
 Full administrative screens for managing user accounts (create/edit/deactivate, role assignment)
@@ -218,13 +225,14 @@ corresponding UI being built.
 - `AccuSync.Core` — `User` and `AppSettings` entities; `UserRole` enum; authentication,
   password-hashing, encryption, current-user-context, and repository abstractions.
 - `AccuSync.Application` — password hasher, encryption service, authentication service,
-  current-user-context implementation, role-parsing helper.
+  current-user-context implementation, role-parsing helper, inactivity policy.
 - `AccuSync.EF` — user and app-settings repositories and EF configurations; schema migrations
   for the username blind index, the `Status`→`IsActive` column (type and rename), and the new
   `AppSettings` table.
 - `AccuSync.Presentation` — login, change-password, and permissions view models.
 - `AccuSync.WPF` — login and change-password windows, dashboard shells, application startup and
-  navigation/logout wiring, dependency-injection registration.
+  navigation/logout wiring, dependency-injection registration, inactivity monitoring
+  (activity detection, reacting to session expiry).
 
 # 4. Alternative implementations and designs
 
@@ -256,6 +264,12 @@ corresponding UI being built.
 7. **A hardcoded lockout duration** — considered and rejected in favor of an
    administrator-configurable value held in a dedicated settings table, since the duration must
    be adjustable without a code change.
+8. **Inactivity detection and expiry logic implemented directly in `AccuSync.WPF`** — considered
+   and rejected in favor of a framework-agnostic policy in `AccuSync.Application`
+   (`InactivityPolicy`), with WPF limited to reporting input activity and reacting to expiry
+   (`InactivityMonitor`). This matches how other session state (`ICurrentUserContext`) is already
+   implemented in `AccuSync.Application` rather than WPF, and keeps the expiry decision
+   unit-testable without a running WPF `Application`.
 
 # 5. Open issues
 
@@ -276,3 +290,6 @@ corresponding UI being built.
   reset flow and are retained but not currently used by any implemented feature.
 - A richer, granular permission-bundle model (as opposed to the two-value Admin/Screener role
   used here) is described in broader product requirements but is not implemented by this design.
+- The automatic-logout idle timeout (15 minutes) is currently a fixed value; making it
+  administrator-configurable, matching the existing `AppSettings`-driven lockout duration, is
+  anticipated future work.

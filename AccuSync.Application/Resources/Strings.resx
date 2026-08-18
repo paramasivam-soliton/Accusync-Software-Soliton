@@ -2910,9 +2910,6 @@ Patient ID: {1}</value>
   <data name="ScreenerDashboardWindow_ImportNotImplemented" xml:space="preserve">
     <value>Import — not yet implemented.</value>
   </data>
-  <data name="ScreenerDashboardWindow_LogoutSuccessMessage" xml:space="preserve">
-    <value>Logout successful. Returning to login...</value>
-  </data>
   <data name="ScreenerDashboardWindow_NavAbout" xml:space="preserve">
     <value>About</value>
   </data>
