@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Parsing
 {
     /// <summary>
     /// Header-level metadata from the import file, stored in the

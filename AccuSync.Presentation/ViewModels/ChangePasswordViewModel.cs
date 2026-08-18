@@ -28,7 +28,7 @@ namespace AccuSync.Presentation.ViewModels
     public class ChangePasswordViewModel : INotifyPropertyChanged
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly User _currentUser;
 
         private string _oldPassword = string.Empty;
@@ -169,12 +169,12 @@ namespace AccuSync.Presentation.ViewModels
         /// Creates the view model for the given user's password change flow.
         /// </summary>
         /// <param name="userRepository">Service used to persist the updated user record.</param>
-        /// <param name="encryptionService">Service used to encrypt/decrypt password values.</param>
+        /// <param name="passwordHasher">Service used to hash and verify password values.</param>
         /// <param name="currentUser">The user whose password is being changed.</param>
-        public ChangePasswordViewModel(IUserRepository userRepository, IEncryptionService encryptionService, User currentUser)
+        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, User currentUser)
         {
             _userRepository = userRepository;
-            _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
             _currentUser = currentUser;
 
             SaveCommand = new RelayCommand(async () => await SavePasswordAsync(), () => !IsLoading);
@@ -216,43 +216,41 @@ namespace AccuSync.Presentation.ViewModels
             try
             {
                 // Verify old password against the database
-                string decryptedPassword = _encryptionService.Decrypt(_currentUser.ProfilePassword);
-                if (OldPassword != decryptedPassword)
+                if (!_passwordHasher.Verify(OldPassword, _currentUser.ProfilePassword))
                 {
                     ErrorMessage = Strings.ChangePasswordViewModel_CurrentPasswordIncorrect;
                     IsLoading = false;
                     return;
                 }
 
-                // LastThreePasswords is a pipe-delimited string of encrypted passwords.
-                // See User.cs TODO about documenting this format.
-                if (!string.IsNullOrEmpty(_currentUser.LastThreePasswords))
+                // LastThreePasswords is a pipe-delimited string of password hashes. The
+                // delimiter can't collide with a stored hash — Base64 (the hash's own
+                // encoding) never produces '|' — but entries are still filtered for
+                // empty/malformed values in case the stored string was ever hand-edited.
+                var previousHashes = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
+                    ? []
+                    : _currentUser.LastThreePasswords.Split('|').Where(h => !string.IsNullOrEmpty(h)).ToArray();
+
+                foreach (var oldHash in previousHashes)
                 {
-                    var lastPasswords = _currentUser.LastThreePasswords.Split('|');
-                    foreach (var oldPass in lastPasswords)
+                    if (_passwordHasher.Verify(NewPassword, oldHash))
                     {
-                        if (!string.IsNullOrEmpty(oldPass) && _encryptionService.Decrypt(oldPass) == NewPassword)
-                        {
-                            ErrorMessage = Strings.ChangePasswordViewModel_PasswordReused;
-                            IsLoading = false;
-                            return;
-                        }
+                        ErrorMessage = Strings.ChangePasswordViewModel_PasswordReused;
+                        IsLoading = false;
+                        return;
                     }
                 }
 
-                string encryptedNewPassword = _encryptionService.Encrypt(NewPassword);
+                string newPasswordHash = _passwordHasher.Hash(NewPassword);
 
                 // Prepend the current password to the history and keep only three.
-                var passwordList = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
-                    ? new string[0]
-                    : _currentUser.LastThreePasswords.Split('|');
-
                 var updatedPasswordList = new[] { _currentUser.ProfilePassword }
-                    .Concat(passwordList)
+                    .Concat(previousHashes)
+                    .Where(h => !string.IsNullOrEmpty(h))
                     .Take(3)
                     .ToArray();
 
-                _currentUser.ProfilePassword = encryptedNewPassword;
+                _currentUser.ProfilePassword = newPasswordHash;
                 _currentUser.LastThreePasswords = string.Join("|", updatedPasswordList);
                 _currentUser.PasswordModificationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 _currentUser.FirstLogin = 0;

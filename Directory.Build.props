@@ -5,6 +5,14 @@
        Debug/Release first so each config's full set of outputs sits in its own folder,
        instead of scattering bin/obj under each project folder. -->
   <PropertyGroup>
+    <!-- Directory.Build.props is imported before the SDK applies its default
+         Configuration=Debug, so building a .csproj directly (rather than through
+         the .sln, or without an explicit -c) sees $(Configuration) still empty here
+         and silently drops the folder segment below, e.g. build\bin\AccuSync.WPF\
+         instead of build\bin\Debug\AccuSync.WPF\ — a stale, un-rebuilt duplicate of
+         the real output. Default it explicitly so the path is always correct. -->
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+
     <!-- build\bin\<Configuration>\<ProjectName>\<TFM>\ -->
     <OutputPath>$(MSBuildThisFileDirectory)build\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
 

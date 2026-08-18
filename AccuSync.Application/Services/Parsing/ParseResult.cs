@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using AccuSync.Application.Models;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Parsing
 {
     /// <summary>
     /// Result of parsing a file — patients with optional test previews and any

@@ -28,7 +28,7 @@ namespace AccuSync.Presentation.ViewModels
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
 
         private string _selectedUsername;
         private string _password = string.Empty;
@@ -110,12 +110,12 @@ namespace AccuSync.Presentation.ViewModels
         /// </summary>
         /// <param name="userRepository">Service used to fetch the list of registered users.</param>
         /// <param name="authenticationService">Service used to verify credentials.</param>
-        /// <param name="encryptionService">Service passed through to the password-change flow.</param>
-        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IEncryptionService encryptionService)
+        /// <param name="passwordHasher">Service passed through to the password-change flow.</param>
+        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
-            _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
 
             Usernames = new ObservableCollection<string>();
             _isPasswordVisible = false;
@@ -163,7 +163,7 @@ namespace AccuSync.Presentation.ViewModels
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
                             _userRepository,
-                            _encryptionService,
+                            _passwordHasher,
                             result.User
                         );
                         FirstLoginPasswordChangeRequired?.Invoke(changePasswordViewModel);

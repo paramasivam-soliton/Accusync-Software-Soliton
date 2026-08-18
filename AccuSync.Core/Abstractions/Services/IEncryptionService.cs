@@ -7,7 +7,9 @@
 namespace AccuSync.Core.Abstractions.Services
 {
     /// <summary>
-    /// Encrypts and decrypts sensitive data at rest.
+    /// Reversible encryption for data that must be recoverable in plaintext later
+    /// (e.g., usernames, which the login dropdown needs to display). Passwords never
+    /// go through this — see <see cref="IPasswordHasher"/> for one-way hashing.
     /// </summary>
     public interface IEncryptionService
     {
@@ -24,10 +26,5 @@ namespace AccuSync.Core.Abstractions.Services
         /// <param name="cipherText">The text to decrypt.</param>
         /// <returns>The decrypted plaintext.</returns>
         string Decrypt(string cipherText);
-
-        /// <summary>
-        /// Gets a value indicating whether the application is running a release build.
-        /// </summary>
-        bool IsReleaseMode { get; }
     }
 }

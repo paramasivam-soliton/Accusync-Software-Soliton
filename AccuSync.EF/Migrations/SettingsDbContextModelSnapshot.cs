@@ -92,9 +92,13 @@ namespace AccuSync.EF.Migrations
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("UsernameHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Guid");
 
-                    b.HasIndex("AccountName")
+                    b.HasIndex("UsernameHash")
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);

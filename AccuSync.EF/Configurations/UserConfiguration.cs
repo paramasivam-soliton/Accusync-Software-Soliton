@@ -23,7 +23,13 @@ namespace AccuSync.EF.Configurations
             builder.HasKey(u => u.Guid);
 
             builder.Property(u => u.AccountName).IsRequired();
-            builder.HasIndex(u => u.AccountName).IsUnique();
+
+            // AccountName is encrypted non-deterministically (Data Protection API), so
+            // uniqueness/lookup can no longer live on it directly — UsernameHash is a
+            // deterministic hash of the normalized username and carries the unique index
+            // instead (blind index pattern, see LOGIN_EPIC_SPEC.md §2.2).
+            builder.Property(u => u.UsernameHash).IsRequired();
+            builder.HasIndex(u => u.UsernameHash).IsUnique();
 
             builder.Property(u => u.ProfilePassword).IsRequired();
 

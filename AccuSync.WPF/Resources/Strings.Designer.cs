@@ -10437,7 +10437,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Password requires a minimum of 8 characters for a password including • min. 1 uppercase (A-Z), • 1 lower case (a-z) and • one number.
+        ///   Looks up a localized string similar to Password requires a minimum of 8 characters for a password including • min. 1 uppercase (A-Z), • 1 lower case (a-z), • one number and • one special character.
         /// </summary>
         public static string UserProfileConfigView_PasswordDescComplex {
             get {

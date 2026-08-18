@@ -10,33 +10,28 @@ using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Services
+namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Handles user authentication with lockout protection (10 failed attempts,
     /// 15-minute cooldown) and 90-day password expiration.
     /// </summary>
-    // TODO: Passwords are compared by decrypting the stored value and checking
-    //       equality in plaintext. This means passwords are reversibly encrypted,
-    //       not hashed. Industry standard is to store a salted hash (e.g., bcrypt)
-    //       and compare hashes — reversible encryption means anyone with the key
-    //       can read all passwords.
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
         private const int MaxFailedAttempts = 10;
         private const int LockoutDurationMinutes = 15;
 
         /// <summary>
-        /// Creates the service with its required data and encryption dependencies.
+        /// Creates the service with its required data and password-hashing dependencies.
         /// </summary>
         /// <param name="userRepository">Used to look up and update user accounts.</param>
-        /// <param name="encryptionService">Used to decrypt stored passwords for comparison.</param>
-        public AuthenticationService(IUserRepository userRepository, IEncryptionService encryptionService)
+        /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
+        public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
-            _encryptionService = encryptionService;
+            _passwordHasher = passwordHasher;
         }
 
         /// <summary>
@@ -53,19 +48,17 @@ namespace AccuSync.Application.Services
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Username and password are required."
+                    ErrorMessage = AuthenticationConstants.ErrorCredentialsRequired
                 };
             }
 
             var user = await _userRepository.GetUserByAccountNameAsync(accountName);
             if (user == null)
             {
-                // Same error message whether the user exists or not,
-                // so attackers can't enumerate valid account names.
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Invalid username or password."
+                    ErrorMessage = AuthenticationConstants.ErrorInvalidCredentials
                 };
             }
 
@@ -83,7 +76,7 @@ namespace AccuSync.Application.Services
                         Success = false,
                         IsLocked = true,
                         RemainingLockTime = TimeSpan.FromSeconds(remainingSeconds),
-                        ErrorMessage = $"Account is locked. Please try again in {TimeSpan.FromSeconds(remainingSeconds).Minutes} minutes."
+                        ErrorMessage = string.Format(AuthenticationConstants.ErrorAccountLockedFormat, TimeSpan.FromSeconds(remainingSeconds).Minutes)
                     };
                 }
                 else
@@ -94,9 +87,8 @@ namespace AccuSync.Application.Services
                 }
             }
 
-            // Password verification — see class-level TODO about hashing vs encryption
-            string decryptedPassword = _encryptionService.Decrypt(user.ProfilePassword);
-            if (password != decryptedPassword)
+            // Password verification — hash-to-hash only, never decrypt/compare plaintext.
+            if (!_passwordHasher.Verify(password, user.ProfilePassword))
             {
                 // Track the timestamp of the first failure in a streak so the
                 // lockout window is measured from when failures started.
@@ -116,7 +108,7 @@ namespace AccuSync.Application.Services
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = $"Account is now locked due to {MaxFailedAttempts} failed attempts. Please try again in {LockoutDurationMinutes} minutes."
+                        ErrorMessage = string.Format(AuthenticationConstants.ErrorAccountNowLockedFormat, MaxFailedAttempts, LockoutDurationMinutes)
                     };
                 }
 
@@ -124,8 +116,8 @@ namespace AccuSync.Application.Services
                 {
                     Success = false,
                     ErrorMessage = attemptsRemaining > 0
-                        ? $"Invalid username or password. {attemptsRemaining} attempt(s) remaining."
-                        : "Invalid username or password."
+                        ? string.Format(AuthenticationConstants.ErrorInvalidCredentialsWithAttemptsFormat, attemptsRemaining)
+                        : AuthenticationConstants.ErrorInvalidCredentials
                 };
             }
 
@@ -143,7 +135,7 @@ namespace AccuSync.Application.Services
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Your password has expired. Please contact your administrator."
+                    ErrorMessage = AuthenticationConstants.ErrorPasswordExpired
                 };
             }
 

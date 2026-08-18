@@ -22,7 +22,9 @@ namespace AccuSync.Core.Entities
         public int Status { get; set; }
         /// <summary>The identifier of the profile assigned to the user.</summary>
         public string ProfileId { get; set; }
-        /// <summary>The user's password, as stored by the device database schema.</summary>
+        /// <summary>Deterministic hash of the normalized account name, used for uniqueness/lookup since <see cref="AccountName"/> is encrypted non-deterministically.</summary>
+        public string UsernameHash { get; set; }
+        /// <summary>The user's password, stored as a salted hash (see <see cref="AccuSync.Core.Abstractions.Services.IPasswordHasher"/>).</summary>
         public string ProfilePassword { get; set; }
         /// <summary>Whether this is the user's first login (0 = false, 1 = true).</summary>
         public int FirstLogin { get; set; }                 // 0 = false, 1 = true
@@ -56,6 +58,7 @@ namespace AccuSync.Core.Entities
             LastName = string.Empty;
             Status = 0;
             ProfileId = string.Empty;
+            UsernameHash = string.Empty;
             ProfilePassword = string.Empty;
             FirstLogin = 1; // New users haven't logged in yet
             FailedLoginAttemptCount = 0;
