@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(PatientDbContext))]
-    [Migration("20260817072638_AddReferralAndContactFields")]
-    partial class AddReferralAndContactFields
+    [Migration("20260818043933_InitialPatientCreate")]
+    partial class InitialPatientCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,6 +221,11 @@ namespace AccuSync.EF.Migrations
 
                     b.Property<string>("IdNumber")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LanguageCode")
                         .HasColumnType("TEXT");

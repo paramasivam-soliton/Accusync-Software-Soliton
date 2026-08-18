@@ -36,6 +36,10 @@ namespace AccuSync.EF.Migrations
                     ReferralFrom = table.Column<string>(type: "TEXT", nullable: true),
                     ReferralTo = table.Column<string>(type: "TEXT", nullable: true),
                     ReferralPhone = table.Column<string>(type: "TEXT", nullable: true),
+                    AudiologyReferral = table.Column<string>(type: "TEXT", nullable: true),
+                    ReferralDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Physician = table.Column<string>(type: "TEXT", nullable: true),
+                    Audiologist = table.Column<string>(type: "TEXT", nullable: true),
                     FreeText1 = table.Column<string>(type: "TEXT", nullable: true),
                     FreeText2 = table.Column<string>(type: "TEXT", nullable: true),
                     FreeText3 = table.Column<string>(type: "TEXT", nullable: true),
@@ -74,6 +78,7 @@ namespace AccuSync.EF.Migrations
                     IdNumber = table.Column<string>(type: "TEXT", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CalculatedDateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    TimeOfBirth = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Gender = table.Column<string>(type: "TEXT", nullable: true),
                     Height = table.Column<double>(type: "REAL", nullable: true),
                     Weight = table.Column<double>(type: "REAL", nullable: true),
@@ -81,6 +86,7 @@ namespace AccuSync.EF.Migrations
                     LanguageCode = table.Column<string>(type: "TEXT", nullable: true),
                     NationalityCode = table.Column<string>(type: "TEXT", nullable: true),
                     Address1 = table.Column<string>(type: "TEXT", nullable: true),
+                    Address2 = table.Column<string>(type: "TEXT", nullable: true),
                     Zip = table.Column<string>(type: "TEXT", nullable: true),
                     City = table.Column<string>(type: "TEXT", nullable: true),
                     State = table.Column<string>(type: "TEXT", nullable: true),
@@ -92,7 +98,8 @@ namespace AccuSync.EF.Migrations
                     SourceCreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     SourceModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    ModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
