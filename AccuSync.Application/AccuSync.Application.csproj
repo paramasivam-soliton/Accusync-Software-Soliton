@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- -windows (not UseWPF) is needed here: OCR parsing depends on
-         System.Drawing.Common, which has been Windows-only since .NET 7. No
-         type in this project references WPF/PresentationFramework. -->
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Application</AssemblyName>
     <RootNamespace>AccuSync.Application</RootNamespace>
@@ -35,7 +32,6 @@
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="PdfPig" Version="0.1.13" />
     <PackageReference Include="QRCoder" Version="1.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>

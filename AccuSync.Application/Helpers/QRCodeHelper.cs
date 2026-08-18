@@ -6,9 +6,6 @@
 
 using QRCoder;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace AccuSync.Application.Helpers
 {
@@ -36,20 +33,14 @@ namespace AccuSync.Application.Helpers
                 {
                     var qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.M);
 
-                    using (var qrCode = new QRCoder.QRCode(qrCodeData))
+                    using (var qrCode = new PngByteQRCode(qrCodeData))
                     {
                         // TODO: Pull this color from the NavyBrush theme resource (#003049)
                         //       so the QR code stays in sync with the rest of the UI.
-                        using (var bitmap = qrCode.GetGraphic(
+                        return qrCode.GetGraphic(
                             pixelsPerModule,
-                            Color.FromArgb(0, 48, 73),
-                            Color.White,
-                            true))
-                        using (var memory = new MemoryStream())
-                        {
-                            bitmap.Save(memory, ImageFormat.Png);
-                            return memory.ToArray();
-                        }
+                            new byte[] { 0, 48, 73, 255 },
+                            new byte[] { 255, 255, 255, 255 });
                     }
                 }
             }

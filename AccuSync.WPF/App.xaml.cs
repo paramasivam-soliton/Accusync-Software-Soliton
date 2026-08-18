@@ -33,9 +33,6 @@ namespace AccuSync.WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // Persistence — provider selection happens right here: swapping database
-            // engines later means calling a different sibling adapter project's
-            // equivalent method instead of AddSqlitePersistence.
             services.AddSqlitePersistence(ResolveDatabasePath());
 
             // Services
