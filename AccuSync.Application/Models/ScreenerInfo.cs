@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -21,7 +20,7 @@ namespace AccuSync.Application.Models
         /// <summary>Display text for the screener's last activity.</summary>
         public string LastActivity { get; set; }
         /// <summary>Color used for the screener's avatar.</summary>
-        public SolidColorBrush AvatarColor { get; set; }
+        public string AvatarColor { get; set; }
 
         /// <summary>The screener's initials, derived from <see cref="Name"/>.</summary>
         public string Initials

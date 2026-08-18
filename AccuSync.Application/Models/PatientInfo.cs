@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -26,7 +25,7 @@ namespace AccuSync.Application.Models
         /// <summary>The date of the patient's most recent screening.</summary>
         public DateTime LastScreenDate { get; set; }
         /// <summary>Accent color used for the card's left border.</summary>
-        public SolidColorBrush AccentColor { get; set; }
+        public string AccentColor { get; set; }
         /// <summary>The patient's risk factors.</summary>
         public List<RiskFactor> RiskFactors { get; set; }
     }

@@ -6,26 +6,23 @@
 
 using QRCoder;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Windows.Media.Imaging;
 
 namespace AccuSync.Application.Helpers
 {
     /// <summary>
     /// Generates QR codes for patient data.
-    /// Uses the QRCoder library and converts the output to WPF-compatible images.
+    /// Uses the QRCoder library and returns raw PNG bytes — the caller (View layer)
+    /// is responsible for turning that into whatever image type it can display.
     /// </summary>
     public static class QRCodeHelper
     {
         /// <summary>
-        /// Generates a QR code as a WPF <see cref="BitmapImage"/>.
+        /// Generates a QR code and returns it as PNG-encoded bytes.
         /// Returns <c>null</c> if <paramref name="content"/> is empty or generation fails.
         /// </summary>
         /// <param name="content">The text to encode (typically from <see cref="FormatPatientData"/>).</param>
         /// <param name="pixelsPerModule">Size of each QR module in pixels. Higher values produce a larger image.</param>
-        public static BitmapImage GenerateQRCode(string content, int pixelsPerModule = 8)
+        public static byte[] GenerateQRCode(string content, int pixelsPerModule = 8)
         {
             if (string.IsNullOrWhiteSpace(content))
                 return null;
@@ -36,18 +33,14 @@ namespace AccuSync.Application.Helpers
                 {
                     var qrCodeData = qrGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.M);
 
-                    using (var qrCode = new QRCoder.QRCode(qrCodeData))
+                    using (var qrCode = new PngByteQRCode(qrCodeData))
                     {
                         // TODO: Pull this color from the NavyBrush theme resource (#003049)
                         //       so the QR code stays in sync with the rest of the UI.
-                        using (var bitmap = qrCode.GetGraphic(
+                        return qrCode.GetGraphic(
                             pixelsPerModule,
-                            Color.FromArgb(0, 48, 73),
-                            Color.White,
-                            true))
-                        {
-                            return BitmapToBitmapImage(bitmap);
-                        }
+                            new byte[] { 0, 48, 73, 255 },
+                            new byte[] { 255, 255, 255, 255 });
                     }
                 }
             }
@@ -55,30 +48,6 @@ namespace AccuSync.Application.Helpers
             {
                 System.Diagnostics.Debug.WriteLine($"QR Code generation failed: {ex.Message}");
                 return null;
-            }
-        }
-
-        /// <summary>
-        /// Bridges System.Drawing (<see cref="Bitmap"/>) to WPF (<see cref="BitmapImage"/>)
-        /// by round-tripping through a PNG in memory.
-        /// </summary>
-        private static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
-        {
-            using (var memory = new MemoryStream())
-            {
-                bitmap.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                // OnLoad reads everything into memory before the stream is disposed.
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                // Freeze makes the image immutable so it can be used from any thread.
-                bitmapImage.Freeze();
-
-                return bitmapImage;
             }
         }
 

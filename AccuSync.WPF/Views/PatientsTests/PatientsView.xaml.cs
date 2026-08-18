@@ -20,6 +20,7 @@ using System.Windows.Media;
 using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 using AccuSync.Application.Services;
 using AccuSync.WPF.Resources;
 

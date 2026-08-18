@@ -9,7 +9,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace AccuSync.Application.Helpers
+namespace AccuSync.WPF.Helpers
 {
     /// <summary>
     /// Shared visuals and helpers for the field-setup table views

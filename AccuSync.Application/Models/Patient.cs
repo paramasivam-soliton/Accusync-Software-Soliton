@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Models
 {

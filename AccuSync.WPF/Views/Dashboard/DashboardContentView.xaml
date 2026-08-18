@@ -99,7 +99,7 @@
                                         <DataTemplate>
                                             <Border Background="White" BorderBrush="#E0E0E0"
                                                     BorderThickness="1" CornerRadius="10"
-                                                    Padding="16" Margin="{Binding CardMargin}" Cursor="Hand"
+                                                    Padding="16" Margin="{Binding CardMargin, Converter={StaticResource StringToThicknessConverter}}" Cursor="Hand"
                                                     Tag="{Binding Tag}"
                                                     MouseLeftButtonDown="StatCard_Click"
                                                     MouseEnter="ActionCard_MouseEnter"
@@ -145,7 +145,7 @@
                                         <DataTemplate>
                                             <Border Background="White" BorderBrush="#E0E0E0"
                                                     BorderThickness="1" CornerRadius="10"
-                                                    Padding="20,16" Margin="{Binding CardMargin}" Cursor="Hand"
+                                                    Padding="20,16" Margin="{Binding CardMargin, Converter={StaticResource StringToThicknessConverter}}" Cursor="Hand"
                                                     Tag="{Binding Tag}"
                                                     MouseLeftButtonDown="QuickAction_Click"
                                                     MouseEnter="ActionCard_MouseEnter"

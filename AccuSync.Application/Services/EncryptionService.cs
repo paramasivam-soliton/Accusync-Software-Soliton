@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Services;
 
 namespace AccuSync.Application.Services
 {

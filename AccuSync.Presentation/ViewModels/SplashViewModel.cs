@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
@@ -21,7 +21,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IDatabaseInitializer _databaseInitializer;
         private string _statusMessage;
 
         /// <summary>Current progress message shown on the splash screen.</summary>
@@ -35,11 +35,11 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Creates the view model with the database service used for initialization.</summary>
-        /// <param name="databaseService">Service used to initialize the application database.</param>
-        public SplashViewModel(IDatabaseService databaseService)
+        /// <summary>Creates the view model with the initializer used to bring the database up to date.</summary>
+        /// <param name="databaseInitializer">Service used to initialize the application database.</param>
+        public SplashViewModel(IDatabaseInitializer databaseInitializer)
         {
-            _databaseService = databaseService;
+            _databaseInitializer = databaseInitializer;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace AccuSync.Presentation.ViewModels
                 StatusMessage = Strings.SplashViewModel_InitializingDatabase;
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
-                await _databaseService.InitializeDatabaseAsync();
+                await _databaseInitializer.InitializeAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);

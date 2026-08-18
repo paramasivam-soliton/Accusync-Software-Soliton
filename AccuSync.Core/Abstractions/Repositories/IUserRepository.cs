@@ -1,37 +1,26 @@
 // --------------------------------------------------------------------------------
-// <copyright file="IDatabaseService.cs" company="Natus Sensory">
+// <copyright file="IUserRepository.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AccuSync.Application.Models;
+using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Abstractions.Services
+namespace AccuSync.Core.Abstractions.Repositories
 {
     /// <summary>
-    /// Persistence contract for user accounts. Implemented by
-    /// AccuSync.Application.Services.DatabaseService (currently SQLite-backed;
-    /// a future EF Core implementation only needs to satisfy this same contract).
+    /// Persistence contract for user accounts. Implemented by AccuSync.EF
+    /// (EF Core, SQLite-backed).
     /// </summary>
-    public interface IDatabaseService
+    public interface IUserRepository
     {
-        /// <summary>
-        /// Creates the underlying storage (tables, default accounts, etc.) if it
-        /// doesn't already exist. Safe to call on every startup.
-        /// </summary>
-        Task InitializeDatabaseAsync();
-
-        /// <summary>
-        /// Returns every stored user account.
-        /// </summary>
+        /// <summary>Returns every stored user account.</summary>
         /// <returns>A list of all <see cref="User"/> records.</returns>
         Task<List<User>> GetAllUsersAsync();
 
-        /// <summary>
-        /// Looks up a user by account name.
-        /// </summary>
+        /// <summary>Looks up a user by account name.</summary>
         /// <param name="accountName">The account name to search for.</param>
         /// <returns>The matching <see cref="User"/>, or <c>null</c> if none is found.</returns>
         Task<User> GetUserByAccountNameAsync(string accountName);

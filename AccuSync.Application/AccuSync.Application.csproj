@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <!-- UseWPF is needed: several Models (dashboard/dialog display models) use
-         System.Windows types (Brush, Visibility) for XAML binding, and Helpers
-         includes WPF-facing formatting utilities. Same trade-off already made
-         for AccuSync.Presentation. -->
-    <UseWPF>true</UseWPF>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Application</AssemblyName>
     <RootNamespace>AccuSync.Application</RootNamespace>
@@ -16,6 +11,11 @@
     <DefineConstants>RELEASE</DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Needs User/PatientData/TestRecord and the repository/service abstractions. -->
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Resources\OCR\tessdata\eng.traineddata" />
@@ -30,10 +30,8 @@
   <ItemGroup>
     <PackageReference Include="Docnet.Core" Version="2.6.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
     <PackageReference Include="PdfPig" Version="0.1.13" />
     <PackageReference Include="QRCoder" Version="1.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>

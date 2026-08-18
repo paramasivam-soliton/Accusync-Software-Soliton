@@ -10,9 +10,9 @@ AccuSync is structured as seven projects — one executable and six class librar
 
 | # | Project | Type | TFM | Responsibility |
 |---|---|---|---|---|
-| 1 | `AccuSync` | WPF Executable | `net10.0-windows` | Composition root and presentation shell. Hosts `App.xaml`, the .NET Generic Host bootstrap, dependency-injection wiring, and `appsettings.json`. Contains all XAML Views. The only project that references every other project in the solution. |
-| 2 | `AccuSync.Presentation` | Class Library | `net10.0` | View-Models bound to the Views hosted in `AccuSync`. **Owns the DTOs and the conversion handlers** that map entities returned through `AccuSync.Core`'s service interfaces into UI-bindable shapes — see §3, "DTO boundary". Contains the navigation and dialog contracts the View-Models depend on. Deliberately carries **no WPF reference**, so a View-Model cannot call `MessageBox.Show`, reach a control by name, or construct a `Window`. |
-| 3 | `AccuSync.Core` | Class Library | `net10.0` | The domain core. Contains domain entities, value objects, enums, validators and policies; and **every abstraction the rest of the solution depends on** — `IService` and `IRepository` interfaces, `IUnitOfWork`, and the adapter contracts (`IDataParser`, `IDeviceChannel`, `IClock`, ...). Zero dependencies on any other AccuSync project, and zero dependency on EF Core, WPF, or any technology package. |
+| 1 | `AccuSync.WPF` | WPF Executable | `net10.0-windows` | Composition root and presentation shell. Hosts `App.xaml`, the .NET Generic Host bootstrap, dependency-injection wiring, and `appsettings.json`. Contains all XAML Views. The only project that references every other project in the solution. |
+| 2 | `AccuSync.Presentation` | Class Library | `net10.0` | View-Models bound to the Views hosted in `AccuSync.WPF`. **Owns the DTOs and the conversion handlers** that map entities returned through `AccuSync.Core`'s service interfaces into UI-bindable shapes — see §3, "DTO boundary". Contains the navigation and dialog contracts the View-Models depend on. Deliberately carries **no WPF reference**, so a View-Model cannot call `MessageBox.Show`, reach a control by name, or construct a `Window`. |
+| 3 | `AccuSync.Core` | Class Library | `net10.0` | The domain core. Contains domain entities, value objects, enums, validators and policies; and **every abstraction the rest of the solution depends on** — `IService` and `IRepository` interfaces, and the adapter contracts (`IDataParser`, `IDeviceChannel`, ...). Zero dependencies on any other AccuSync project, and zero dependency on EF Core, WPF, or any technology package. |
 | 4 | `AccuSync.Application` | Class Library | `net10.0` | Use-case orchestration. Contains the concrete `IService` implementations (`PatientService`, `UserService`, ...) that coordinate repositories, validators, and policies declared in `AccuSync.Core` to satisfy a use case. References `AccuSync.Core` only — never EF Core, SQLite, or any adapter package directly. |
 | 5 | `AccuSync.EF` | Class Library | `net10.0` | Entity Framework Core data-access layer. SQLite is AccuSync's only provider, so the `DbContext` classes, entity Fluent API configurations, every repository implementation, the unit of work, `SaveChanges` interceptors, EF Core migrations, SQLite provider registration, and the design-time factory all live in **one** project rather than split behind a swappable adapter. References `AccuSync.Core` only. |
 | 6 | `AccuSync.Adapters.DataParser` | Class Library | `net10.0-windows` | File-format exchange. Import parsers for AccuLink XML, ALGO 5 XML, ALGO Pro JSON, and OCR/PDF/DOCX facesheet formats; export writers for CSV/XML/JSON/HiTrack/OZ formats; QR code generation; and printable report rendering. Windows-bound because OCR requires `System.Drawing.Common`. |
@@ -30,13 +30,13 @@ AccuSync is structured as seven projects — one executable and six class librar
 | `AccuSync.Adapters.DataParser` | `AccuSync.Core` |
 | `AccuSync.Adapters.DeviceCommunication` | `AccuSync.Core` |
 | `AccuSync.Presentation` | `AccuSync.Core` |
-| `AccuSync` (exe) | `AccuSync.Presentation`, `AccuSync.Core`, `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, `AccuSync.Adapters.DeviceCommunication` |
+| `AccuSync.WPF` (exe) | `AccuSync.Presentation`, `AccuSync.Core`, `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, `AccuSync.Adapters.DeviceCommunication` |
 
 All dependencies point inward, toward `AccuSync.Core`. `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` reference only `AccuSync.Core` and do not reference each other. `AccuSync.Presentation` references `AccuSync.Core` directly, not `AccuSync.Application` — since the interfaces a View-Model calls (`IPatientService`, `IUserService`) now live in `Core` rather than bundled together with their implementations, Presentation never needs to see a concrete service implementation, only the exe's composition root does.
 
 **Technology isolation.** `AccuSync.Core` carries no reference — direct or transitive — to Entity Framework Core, WPF, or any other ORM/UI/I-O package. It defines only the `IRepository`/`IService`/adapter abstractions, using plain domain types and collections in every method signature (never `IQueryable<T>`, `DbSet<T>`, or any other EF Core–specific type). `AccuSync.Application` inherits the same restriction — it orchestrates purely through `AccuSync.Core`'s interfaces and never references EF Core or SQLite directly. Every EF Core–specific type — `DbContext`, `DbSet<T>`, `IEntityTypeConfiguration<T>` — is confined to `AccuSync.EF`. `AccuSync.Core` and `AccuSync.Application` compile and run with no knowledge of which persistence technology is in use.
 
-**Interface ownership.** Every interface is owned by the innermost layer. `AccuSync.Core` declares both what it requires from the outside (`IRepository`, `IDataParser`, `IDeviceChannel`, `IClock`) and what it offers to the outside (`IService`). `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` all adapt to contracts declared in `AccuSync.Core` — none of them declare public interfaces that other projects depend on. The practical test: delete every project except `AccuSync.Core` and it must still compile.
+**Interface ownership.** Every interface is owned by the innermost layer. `AccuSync.Core` declares both what it requires from the outside (`IRepository`, `IDataParser`, `IDeviceChannel`) and what it offers to the outside (`IService`). `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` all adapt to contracts declared in `AccuSync.Core` — none of them declare public interfaces that other projects depend on. The practical test: delete every project except `AccuSync.Core` and it must still compile.
 
 **Persistence technology.** `AccuSync.EF` is SQLite-only by design — the connection string, the `UseSqlite(...)` call, and migrations all live together in one project rather than behind a separate swap-in adapter, since AccuSync only ever targets one database engine and EF Core's own provider abstraction already makes swapping a one-line, one-package change. If a second provider is ever genuinely required, `AccuSync.EF`'s provider-specific pieces (the `UseSqlite` call, the `Migrations/` folder, the provider package reference) are the only things that would need to change or split back out — `AccuSync.Core` and `AccuSync.Application` are unaffected either way, since neither references EF Core.
 
@@ -54,7 +54,7 @@ Without that rule a View-Model holding an entity could call its mutating methods
 
 ```mermaid
 flowchart TD
-    Exe["AccuSync (exe)<br/>─────────────<br/>App.xaml<br/>Generic Host bootstrap<br/>DI wiring<br/>appsettings.json<br/>Views (XAML)"]
+    Exe["AccuSync.WPF (exe)<br/>─────────────<br/>App.xaml<br/>Generic Host bootstrap<br/>DI wiring<br/>appsettings.json<br/>Views (XAML)"]
 
     Presentation["AccuSync.Presentation<br/>─────────────<br/>ViewModels<br/>DTOs<br/>Conversion Handlers<br/>Navigation / Dialog contracts<br/>No WPF reference"]
 
@@ -96,7 +96,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    View["AccuSync (exe)<br/>View<br/>─────────<br/>User interaction<br/>Command binding"] --> VM
+    View["AccuSync.WPF (exe)<br/>View<br/>─────────<br/>User interaction<br/>Command binding"] --> VM
 
     VM["AccuSync.Presentation<br/>ViewModel<br/>─────────<br/>Binds the View<br/>Screen state only"] --> Svc
 
@@ -123,9 +123,9 @@ flowchart LR
 
 ## 5. Low-Level Design (LLD) — Project Structure
 
-### `AccuSync` (Executable)
+### `AccuSync.WPF` (Executable)
 ```
-AccuSync/
+AccuSync.WPF/
 ├── App.xaml
 ├── App.xaml.cs
 ├── appsettings.json
@@ -207,8 +207,7 @@ AccuSync.Core/
 │   │   └── IUserService.cs
 │   ├── Repositories/
 │   │   ├── IPatientRepository.cs
-│   │   ├── IUserRepository.cs
-│   │   └── IUnitOfWork.cs
+│   │   └── IUserRepository.cs
 │   ├── Parsing/
 │   │   ├── IDataParser.cs                 implemented by AccuSync.Adapters.DataParser
 │   │   ├── IExportWriter.cs
@@ -219,7 +218,6 @@ AccuSync.Core/
 │   │   ├── IDeviceDiscovery.cs
 │   │   └── IFirmwareUpdater.cs
 │   └── System/
-│       ├── IClock.cs
 │       ├── IPasswordHasher.cs
 │       ├── IFileSystem.cs
 │       └── IAuditLogger.cs
@@ -251,13 +249,12 @@ AccuSync.EF/
 │   ├── PatientRepository.cs
 │   └── UserRepository.cs
 ├── Interceptors/
-│   └── TimestampInterceptor.cs            sets CreatedAt/ModifiedAt from IClock (§8)
+│   └── TimestampInterceptor.cs            sets CreatedAt/ModifiedAt from DateTimeOffset.UtcNow
 ├── Migrations/
 │   └── 20260101_InitialCreate.cs
 ├── SqliteDesignTimeDbContextFactory.cs
-├── UnitOfWork.cs
 └── DependencyInjection/
-    └── EfServiceCollectionExtensions.cs   AddEfPersistence() — UseSqlite, repositories, interceptors in one call
+    └── SqliteServiceCollectionExtensions.cs   AddSqlitePersistence() — UseSqlite, repositories, interceptors in one call
 ```
 
 ### `AccuSync.Adapters.DataParser`

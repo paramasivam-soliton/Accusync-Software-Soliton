@@ -1,10 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Services;
 using AccuSync.Presentation.ViewModels;
+using AccuSync.EF.DependencyInjection;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
@@ -29,8 +33,9 @@ namespace AccuSync.WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSqlitePersistence(ResolveDatabasePath());
+
             // Services
-            services.AddSingleton<IDatabaseService, DatabaseService>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
@@ -45,6 +50,30 @@ namespace AccuSync.WPF
             services.AddTransient<ChangePasswordWindow>();
             services.AddTransient<AdminDashboardWindow>();
             services.AddTransient<ScreenerDashboardWindow>();
+        }
+
+        /// <summary>
+        /// Reads Persistence:DatabasePath from appsettings.json. Falls back to the
+        /// existing %ProgramData%\Natus\AccuSync\SettingsDatabase.db location when the
+        /// setting is absent or blank, so the app works out of the box with zero config.
+        /// </summary>
+        private static string ResolveDatabasePath()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true)
+                .Build();
+
+            string configuredPath = configuration["Persistence:DatabasePath"];
+
+            string databasePath = string.IsNullOrWhiteSpace(configuredPath)
+                ? Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                    "Natus", "AccuSync", "SettingsDatabase.db")
+                : configuredPath;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(databasePath));
+            return databasePath;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -70,6 +99,19 @@ namespace AccuSync.WPF
             // The splash will call NavigateAfterSplash() when done
             var splashWindow = _serviceProvider.GetRequiredService<SplashWindow>();
             splashWindow.Show();
+        }
+
+        /// <summary>
+        /// Disposes the DI container, which closes the EF Core DbContext's SQLite
+        /// connection cleanly. Without this, the connection stays open for the whole
+        /// process lifetime and relies on the OS to release the file handle on process
+        /// exit — usually fine, but leaves a window where a fast relaunch (e.g. restarting
+        /// under a debugger) can find the file still locked by the previous process.
+        /// </summary>
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _serviceProvider?.Dispose();
+            base.OnExit(e);
         }
 
         /// <summary>

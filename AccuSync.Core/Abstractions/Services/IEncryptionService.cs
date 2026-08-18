@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-namespace AccuSync.Application.Abstractions.Services
+namespace AccuSync.Core.Abstractions.Services
 {
     /// <summary>
     /// Encrypts and decrypts sensitive data at rest.

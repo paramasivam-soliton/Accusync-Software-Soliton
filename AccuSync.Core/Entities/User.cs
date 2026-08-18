@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccuSync.Application.Models
+namespace AccuSync.Core.Entities
 {
     /// <summary>
     /// Represents a user account. Field types and conventions (Unix timestamps,

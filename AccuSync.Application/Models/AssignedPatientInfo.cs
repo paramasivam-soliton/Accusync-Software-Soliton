@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -29,7 +28,7 @@ namespace AccuSync.Application.Models
         /// <summary>Foreground color for the result badge.</summary>
         public string ResultForeground { get; set; }
         /// <summary>Left border accent color.</summary>
-        public SolidColorBrush AccentColor { get; set; }  // Left border color
+        public string AccentColor { get; set; }  // Left border color, hex
         /// <summary>Display text for when the screening was completed.</summary>
         public string CompletionTime { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AccuSync.Application.Models
+namespace AccuSync.Core.Entities
 {
     /// <summary>
     /// Flat data transfer object populated from device import files.

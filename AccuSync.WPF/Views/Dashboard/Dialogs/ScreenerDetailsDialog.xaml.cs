@@ -81,7 +81,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     ResultText = "Pass",
                     ResultBackground = "#D1FAE5",
                     ResultForeground = "#065F46",
-                    AccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#009B77")),
+                    AccentColor = "#009B77",
                     CompletionTime = "08:45 AM"
                 },
                 new AssignedPatientInfo
@@ -93,7 +93,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     ResultText = "Refer",
                     ResultBackground = "#FED7AA",
                     ResultForeground = "#9A3412",
-                    AccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F59E0B")),
+                    AccentColor = "#F59E0B",
                     CompletionTime = "09:20 AM"
                 },
                 new AssignedPatientInfo
@@ -105,7 +105,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     ResultText = "Pass",
                     ResultBackground = "#D1FAE5",
                     ResultForeground = "#065F46",
-                    AccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#009B77")),
+                    AccentColor = "#009B77",
                     CompletionTime = "10:15 AM"
                 },
                 new AssignedPatientInfo
@@ -117,7 +117,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     ResultText = "Refer",
                     ResultBackground = "#FED7AA",
                     ResultForeground = "#9A3412",
-                    AccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F59E0B")),
+                    AccentColor = "#F59E0B",
                     CompletionTime = "11:05 AM"
                 },
                 new AssignedPatientInfo
@@ -129,7 +129,7 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
                     ResultText = "Incomplete",
                     ResultBackground = "#DBEAFE",
                     ResultForeground = "#0369A1",
-                    AccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0066A1")),
+                    AccentColor = "#0066A1",
                     CompletionTime = "11:45 AM"
                 }
             };

@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Models
 {

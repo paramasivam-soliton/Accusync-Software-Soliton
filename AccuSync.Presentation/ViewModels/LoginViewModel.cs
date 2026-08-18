@@ -5,7 +5,8 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Core.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -25,7 +26,7 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class LoginViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEncryptionService _encryptionService;
 
@@ -107,12 +108,12 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>
         /// Creates the view model and begins loading available usernames.
         /// </summary>
-        /// <param name="databaseService">Service used to fetch the list of registered users.</param>
+        /// <param name="userRepository">Service used to fetch the list of registered users.</param>
         /// <param name="authenticationService">Service used to verify credentials.</param>
         /// <param name="encryptionService">Service passed through to the password-change flow.</param>
-        public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService, IEncryptionService encryptionService)
+        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IEncryptionService encryptionService)
         {
-            _databaseService = databaseService;
+            _userRepository = userRepository;
             _authenticationService = authenticationService;
             _encryptionService = encryptionService;
 
@@ -130,7 +131,7 @@ namespace AccuSync.Presentation.ViewModels
         {
             try
             {
-                var users = await _databaseService.GetAllUsersAsync();
+                var users = await _userRepository.GetAllUsersAsync();
                 foreach (var user in users)
                 {
                     Usernames.Add(user.AccountName);
@@ -161,7 +162,7 @@ namespace AccuSync.Presentation.ViewModels
                     if (result.User.FirstLogin == 1)
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
-                            _databaseService,
+                            _userRepository,
                             _encryptionService,
                             result.User
                         );

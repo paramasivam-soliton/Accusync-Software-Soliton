@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows.Media;
-
 namespace AccuSync.Application.Models
 {
     /// <summary>
@@ -42,12 +40,5 @@ namespace AccuSync.Application.Models
         public int MinLevelIndex { get; set; } = 2;         // -5 dB
         /// <summary>Selected index into the SNR (signal-to-noise ratio) ComboBox.</summary>
         public int SNRIndex { get; set; } = 1;              // 9 dB
-
-        // NOTE: Creates a new Brush per access — same as ABRProtocolEntry.
-        /// <summary>Brush reflecting <see cref="Status"/> for the status badge.</summary>
-        public SolidColorBrush StatusColor =>
-            Status == "Active"
-                ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#065F46"))
-                : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#991B1B"));
     }
 }

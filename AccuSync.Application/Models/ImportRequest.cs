@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using AccuSync.Core.Entities;
+
 namespace AccuSync.Application.Models
 {
     /// <summary>

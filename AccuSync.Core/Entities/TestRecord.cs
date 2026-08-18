@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccuSync.Application.Models
+namespace AccuSync.Core.Entities
 {
     /// <summary>
     /// A single hearing screening test result imported from a device.

@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows.Media;
-
 namespace AccuSync.Application.Models
 {
     /// <summary>
@@ -32,13 +30,5 @@ namespace AccuSync.Application.Models
         public int NotchFilterIndex { get; set; }          // 50 Hz
         /// <summary>Selected index into the stimulus-during-pause ComboBox.</summary>
         public int StimulusDuringPauseIndex { get; set; }  // Yes
-
-        // NOTE: Creates a new Brush on every access. Fine for a small list,
-        // but would need caching if protocol count grows.
-        /// <summary>Brush reflecting <see cref="Status"/> for the status badge.</summary>
-        public SolidColorBrush StatusColor =>
-            Status == "Active"
-                ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#065F46"))
-                : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#991B1B"));
     }
 }
