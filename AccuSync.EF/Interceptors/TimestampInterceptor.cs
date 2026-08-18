@@ -8,15 +8,19 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AccuSync.Core.Entities;
+using AccuSync.Core.Entities.Patients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AccuSync.EF.Interceptors
 {
     /// <summary>
-    /// Sets CreationDate/ModificationDate on tracked <see cref="User"/> entities before
-    /// every save, replacing the inline DateTimeOffset.UtcNow calls the old
-    /// hand-written UserRepository used to make at each call site.
+    /// Sets CreationDate/ModificationDate on tracked <see cref="User"/> entities, and
+    /// CreatedAt/ModifiedAt on tracked <see cref="IAuditableEntity"/> entities (Patient,
+    /// PatientContact, TestSession, TestRecord), before every save. The two passes are
+    /// independent — <see cref="User"/> uses Unix-seconds <c>long</c> and is left exactly as
+    /// it was; <see cref="IAuditableEntity"/> uses <see cref="DateTime"/>, matching the
+    /// Patient schema's ISO-text timestamp columns.
     /// </summary>
     public class TimestampInterceptor : SaveChangesInterceptor
     {
@@ -39,18 +43,33 @@ namespace AccuSync.EF.Interceptors
         {
             if (context == null) return;
 
-            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            long nowUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             foreach (var entry in context.ChangeTracker.Entries<User>())
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreationDate = now;
-                    entry.Entity.ModificationDate = now;
+                    entry.Entity.CreationDate = nowUnix;
+                    entry.Entity.ModificationDate = nowUnix;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.ModificationDate = now;
+                    entry.Entity.ModificationDate = nowUnix;
+                }
+            }
+
+            var nowUtc = DateTime.UtcNow;
+
+            foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = nowUtc;
+                    entry.Entity.ModifiedAt = nowUtc;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.ModifiedAt = nowUtc;
                 }
             }
         }

@@ -15,31 +15,55 @@ using Microsoft.EntityFrameworkCore;
 namespace AccuSync.EF
 {
     /// <summary>
-    /// EF Core-backed <see cref="IDatabaseInitializer"/> for SettingsDatabase.db — applies
-    /// pending migrations and seeds the two default accounts on first run. The general
-    /// connector for this database; individual repositories only read/write their entities.
+    /// EF Core-backed <see cref="IDatabaseInitializer"/> for both SettingsDatabase.db and
+    /// PatientDatabase.db — applies pending migrations to each, backing up and restoring on
+    /// failure, then seeds the two default accounts on first run. The general connector for
+    /// these databases; individual repositories only read/write their entities. Registered as
+    /// a single instance so <c>SplashViewModel</c>'s one "Initializing database…" step covers
+    /// both databases, per the acceptance criteria.
     /// </summary>
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
+        private readonly IDbContextFactory<SettingsDbContext> _settingsContextFactory;
+        private readonly IDbContextFactory<PatientDbContext> _patientContextFactory;
         private readonly IUserRepository _userRepository;
 
-        /// <summary>Creates the initializer backed by the given context factory and user repository.</summary>
-        public DatabaseInitializer(IDbContextFactory<SettingsDbContext> contextFactory, IUserRepository userRepository)
+        /// <summary>Creates the initializer backed by the given context factories and user repository.</summary>
+        public DatabaseInitializer(
+            IDbContextFactory<SettingsDbContext> settingsContextFactory,
+            IDbContextFactory<PatientDbContext> patientContextFactory,
+            IUserRepository userRepository)
         {
-            _contextFactory = contextFactory;
+            _settingsContextFactory = settingsContextFactory;
+            _patientContextFactory = patientContextFactory;
             _userRepository = userRepository;
         }
 
         /// <summary>
-        /// Applies pending migrations — backing up the database file first and restoring it
-        /// if the migration fails — then seeds the two default accounts on first run.
-        /// Safe to call on every startup.
+        /// Applies pending migrations to both databases — backing up each database file first
+        /// and restoring it if its migration fails — then seeds the two default accounts on
+        /// first run. Safe to call on every startup.
         /// </summary>
         public async Task InitializeAsync()
         {
-            using var context = await _contextFactory.CreateDbContextAsync();
+            using var settingsContext = await _settingsContextFactory.CreateDbContextAsync();
+            using var patientContext = await _patientContextFactory.CreateDbContextAsync();
 
+            await MigrateWithBackupAsync(settingsContext);
+            await MigrateWithBackupAsync(patientContext);
+
+            if (!await settingsContext.Users.AnyAsync())
+            {
+                await CreateDefaultUsersAsync();
+            }
+        }
+
+        /// <summary>
+        /// Applies pending migrations for the given context — backing up the database file
+        /// first and restoring it if the migration fails.
+        /// </summary>
+        private static async Task MigrateWithBackupAsync(DbContext context)
+        {
             string databasePath = context.Database.GetDbConnection().DataSource;
             bool databaseExisted = File.Exists(databasePath);
             string backupPath = databasePath + ".bak";
@@ -63,11 +87,6 @@ namespace AccuSync.EF
 
                 throw;
             }
-
-            if (!await context.Users.AnyAsync())
-            {
-                await CreateDefaultUsersAsync();
-            }
         }
 
         /// <summary>
@@ -77,7 +96,7 @@ namespace AccuSync.EF
         /// clear forever, bricking every future launch. No-ops on first run, before the table
         /// exists.
         /// </summary>
-        private async Task ClearStaleMigrationsLockAsync(SettingsDbContext context)
+        private static async Task ClearStaleMigrationsLockAsync(DbContext context)
         {
             bool tableExists = await context.Database.SqlQueryRaw<string>(
                 "SELECT name FROM sqlite_master WHERE type = 'table' AND name = '__EFMigrationsLock'")
