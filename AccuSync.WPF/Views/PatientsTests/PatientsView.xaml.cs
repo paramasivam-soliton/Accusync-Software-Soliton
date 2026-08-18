@@ -23,6 +23,7 @@ using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 using AccuSync.Presentation.Mapping;

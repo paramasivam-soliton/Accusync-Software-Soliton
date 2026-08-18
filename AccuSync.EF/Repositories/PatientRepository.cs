@@ -140,15 +140,20 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Marks the patient and every one of its contacts as deleted, in one save.</summary>
         public async Task<bool> SoftDeleteAsync(int patientId)
         {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                var tracked = await context.Patients.FindAsync(patientId);
+                var tracked = await context.Patients.Include(p => p.Contacts).FirstOrDefaultAsync(p => p.PatientId == patientId);
                 if (tracked == null) return false;
 
                 tracked.IsDeleted = true;
+                foreach (var contact in tracked.Contacts)
+                {
+                    contact.IsDeleted = true;
+                }
 
                 await context.SaveChangesAsync();
                 return true;

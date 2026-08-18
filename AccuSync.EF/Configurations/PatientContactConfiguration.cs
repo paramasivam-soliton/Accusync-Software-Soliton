@@ -23,6 +23,7 @@ namespace AccuSync.EF.Configurations
             builder.HasKey(c => c.ContactId);
 
             builder.Property(c => c.ContactType).IsRequired();
+            builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
             builder.HasIndex(c => c.PatientId).HasDatabaseName("IX_Contacts_PatientId");
             builder.HasIndex(c => c.ContactType).HasDatabaseName("IX_Contacts_Type");

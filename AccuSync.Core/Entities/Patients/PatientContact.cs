@@ -57,6 +57,9 @@ namespace AccuSync.Core.Entities.Patients
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
 
+        /// <summary>Set when the parent <see cref="Patient"/> is soft-deleted — not independently settable elsewhere.</summary>
+        public bool IsDeleted { get; set; }
+
         public Patient? Patient { get; set; }
 
         /// <summary>

@@ -12,7 +12,7 @@ using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Core.Entities;
 using AccuSync.Presentation.ViewModels;
 using CoreEntities = AccuSync.Core.Entities.Patients;
-using PatientListRow = AccuSync.Application.Models.Patient;
+using PatientListRow = AccuSync.Presentation.Models.Patient;
 
 namespace AccuSync.Presentation.Mapping
 {

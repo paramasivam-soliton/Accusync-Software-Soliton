@@ -48,33 +48,50 @@ soft-delete/hidden-records/baby-only-row.
   built ahead of scope under the earlier HLD.
 
 **Doubts for lead:**
-1. How thick should "patient service" be?
-   - **Recommended:** A thin `IPatientService` wrapping `IPatientRepository`
-     with the same method shapes — no business logic exists yet to justify
-     more, and it satisfies the AC literally.
-2. What types/nullability should the six new fields have?
-   - **Recommended:** Mirror sibling columns — `AudiologyReferral`/`Physician`/
-     `Audiologist` as `string?` (like `ReferralFrom`/`ReferralTo`),
-     `ReferralDate` as `DateTime?`, `TimeOfBirth` as `DateTime?` (paired with
-     `DateOfBirth`), `Address2` as `string?` (paired with `Address1`).
-   - **Alternative:** Check the AccuLink source XML schema directly for exact
-     types before deciding — more precise, slower.
+1. How thick should "patient service" be? — **Decided (lead confirmed the
+   recommendation):** a thin `IPatientService` wrapping `IPatientRepository`
+   with the same method shapes — no business logic exists yet to justify
+   more, and it satisfies the AC literally.
+2. What types/nullability should the six new fields have? — **Decided (lead
+   confirmed the recommendation):** mirror sibling columns —
+   `AudiologyReferral`/`Physician`/`Audiologist` as `string?` (like
+   `ReferralFrom`/`ReferralTo`), `ReferralDate` as `DateTime?`, `TimeOfBirth`
+   as `DateTime?` (paired with `DateOfBirth`), `Address2` as `string?`
+   (paired with `Address1`).
 3. Should `GetByIdAsync` filter soft-deleted records? — **Decided:** always
    exclude deleted patients, no override parameter (see cross-story decision
    under ASWD-56 below, which settles this the same way for
    `GetTestsForPatientAsync`).
-4. Should `PatientContacts` get its own `IsDeleted` cascade flag?
-   - **Recommended:** No — keep the current implicit hide-via-parent design;
-     it already satisfies "hides contacts too" with less schema complexity.
-   - **Alternative:** Add an explicit `IsDeleted` to `PatientContacts` for
-     future direct-contact queries — over-engineering for current needs.
-5. How should `SocialSecurityNumber`-never-logged be enforced?
-   - **Recommended:** Add a redacted `ToString()` override on `PatientContact`
-     as a cheap structural guardrail, rather than relying purely on convention. This will secure when logging uses contact object where we override to string method, in a way ssn is neglected. If we're using any extensive logging mechanisim in future like serilog with json etc, we need to upgrade the never logged mechanism. Since, How we are logging is unclear - paritally out of scope and implementing basing gaurd.
-6. Should `ContactType` be constrained?
-   - **Recommended:** Shared string constants (`"Patient"`/`"Mother"`/
-     `"Caregiver"`) used consistently across mapper/repository — no DB schema
-     change.
+4. Should `PatientContacts` get its own `IsDeleted` cascade flag? —
+   **Decided (lead chose the alternative) — implemented:** added an
+   explicit `IsDeleted` column to `PatientContacts` (default `false`);
+   `PatientRepository.SoftDeleteAsync` now loads a patient's contacts and
+   marks every one of them deleted in the same save, instead of relying
+   only on the implicit hide-via-parent design.
+5. How should `SocialSecurityNumber` be protected? — **Decided
+   (client-confirmed):** SSN on both mother and caregiver is established
+   AccuLink practice, not something added by mistake — it stays. It's one
+   of the 18 HIPAA Safe Harbor identifiers though, and today it's
+   unprotected, so three protections are being added:
+   - **Full on-screen display and copy stays exactly as it is today** on
+     the editable detail form — a deliberate keep, not a gap to close.
+   - **Masking** — any read-only/non-editing surface that shows SSN should
+     mask it as `•••-••-1234` rather than the full value. (No such surface
+     exists in the codebase yet beyond the editable detail form itself —
+     this applies to whatever future view introduces one.)
+   - **A logging rule** — `PatientContact.ToString()` has already been
+     overridden to redact SSN, as a first, best-effort guardrail against
+     accidental string-interpolation logging. The client wants this
+     elevated to an explicit, enforced logging rule once a real logging
+     framework is introduced, not left as just a convention.
+   - **De-identified export scrubbing** — nothing today guarantees SSN is
+     stripped from a de-identified export. No export feature exists yet to
+     scrub from, so this is new scope for whichever future story builds
+     de-identified export — flagged now so it isn't missed later.
+6. Should `ContactType` be constrained? — **Decided (lead confirmed the
+   recommendation) — implemented:** shared string constants
+   (`"Patient"`/`"Mother"`/`"Caregiver"`) used consistently across
+   mapper/repository — no DB schema change.
 
 ---
 
@@ -110,28 +127,39 @@ covering conversions both ways including empty and missing values.
 - Actual contact persistence — that's the repository work under ASWD-84/57.
 
 **Doubts for lead:**
-1. Should the list-row DTO move into `AccuSync.Presentation`?
-   - **Recommended:** Keep the current split — treat `PatientViewModel` as
-     satisfying "a DTO in Presentation," leave the list-row DTO in
-     `Application`. Moving it ripples into other consumers for no functional
-     gain.
-   - **Alternative:** Physically relocate it into `Presentation` to match the
-     AC literally — cleaner spec compliance, more refactor blast radius.
+1. Should the list-row DTO move into `AccuSync.Presentation`? —
+   **Decided (lead): yes — done.** The lead confirmed the
+   architecture doc's rule directly: `AccuSync.Presentation` owns all DTOs
+   and conversion handlers, `AccuSync.Application` should hold no models at
+   all. The earlier "keep the current split" recommendation above was based
+   on a mistaken assumption that `AccuSync.Adapters.DataParser`/
+   `AccuSync.Application` depended on this specific DTO — re-verified and
+   they don't; only `PatientsView.xaml.cs` (WPF) and `PatientMapper.cs`
+   (Presentation, via the `PatientListRow` alias) ever used it. Moved
+   `Patient.cs` from `AccuSync.Application/Models` to
+   `AccuSync.Presentation/Models`, updated both consumers, no project
+   reference changes needed, no regressions (32/32 Presentation tests,
+   36/36 EF tests still pass). The other ~40 unrelated classes still in
+   `AccuSync.Application/Models` are the same violation at a larger scale —
+   intentionally left alone as a separate, later decision, not folded into
+   this story.
 2. Should the shared Epic-0 ViewModel base class be built now? — **Decided:**
    build it now and retrofit all existing ViewModels — cheaper to do once now
    than to retrofit later as more ViewModels are added.
-3. Is the `UseWPF=true` exception acceptable?
-   - **Recommended:** Accept it as a documented, pre-existing deviation (the
-     `BitmapImage` need is legitimate) rather than re-architecting QR
-     generation right now.
-   - **Alternative:** Move `BitmapImage` construction out of `Presentation`
-     (expose `byte[]`, let WPF construct the image) — correct per the letter
-     of the AC, touches a working feature for marginal benefit.
-4. Should `ApplyTo`'s always-creates-a-blank-caregiver behavior be fixed?
-   - **Recommended:** Yes — this is a bug (inconsistent with `ToEntity`), not
-     a design choice; fix it to match `ToEntity`'s conditional logic.
-   - **Alternative:** None reasonable — the only real choice is timing (fix
-     now vs. bundle into the ASWD-57 persistence work).
+3. Is the `UseWPF=true` exception acceptable? — **Decided: no** —
+   `UseWPF` must become `false`; per this story, `Presentation` must be a
+   clean layer with no WPF reference at all. Don't delete the QR code —
+   instead hide the QR-related UI from the screens that currently show it,
+   remove/relocate whatever forces the WPF dependency (the `BitmapImage`
+   -typed property on `PatientViewModel`, per the alternative above), and
+   leave `TODO` placeholders at each spot touched, so the feature can be
+   reinstated cleanly once `Presentation` exposes something WPF-free
+   (e.g. `byte[]`/`Stream`) and the WPF-side view converts it for display.
+4. Should `ApplyTo`'s always-creates-a-blank-caregiver behavior be fixed? —
+   **Decided (client/lead-confirmed):** yes — only create a Mother/Caregiver
+   `PatientContact` row when that contact actually has a value entered;
+   otherwise no row is created at all, matching `ToEntity`'s existing
+   conditional logic.
 
 ---
 
@@ -165,17 +193,15 @@ successful save, a failed save, and saving with only mandatory fields filled.
 - Delete (ASWD-56).
 
 **Doubts for lead:**
-1. What is the canonical "mandatory fields" list referenced in the AC?
-   - **Recommended:** Treat the fields already enforced by
-     `SavePillButton_Click`'s existing check as canonical, and confirm that
-     specific list with the lead rather than guessing new ones.
-   - **Alternative:** Proactively expand mandatory fields to match what a
-     NICU workflow "should" require — risk of scope creep without sign-off.
-2. How should Add persist mother/caregiver contacts?
-   - **Recommended:** Populate `patient.Contacts` via the mapper before
-     calling `CreateAsync` — EF cascade-inserts the whole new graph
-     automatically, so no extra repository work is needed for Add
-     specifically.
+1. What is the canonical "mandatory fields" list referenced in the AC? —
+   **Decided (lead confirmed the recommendation):** the fields already
+   enforced by `SavePillButton_Click`'s existing check are canonical — no
+   new mandatory fields are being introduced.
+2. How should Add persist mother/caregiver contacts? — **Decided (lead
+   confirmed the recommendation):** populate `patient.Contacts` via the
+   mapper before calling `CreateAsync` — EF cascade-inserts the whole new
+   graph automatically, so no extra repository work is needed for Add
+   specifically.
 
 ---
 
@@ -221,10 +247,11 @@ dropdowns and the four surname formats.
    and guarantees zero mangling for any name pattern, rather than patching
    the algorithm to handle apostrophes/hyphens and still carrying residual
    edge-case risk.
-2. Was the Mother-only wiring intentional?
-   - **Recommended:** Treat it as an incomplete rollout to finish (or, given
-     the decision above, remove) as part of this story — there's no
-     plausible reason mother-only wiring would be a deliberate design choice.
+2. Was the Mother-only wiring intentional? — **Decided (lead confirmed the
+   recommendation):** no — an incomplete rollout, not a deliberate design
+   choice. Moot in practice given decision 1 above (removing the
+   capitalization handler entirely removes the inconsistent wiring along
+   with it).
 
 ---
 
@@ -267,20 +294,27 @@ succeeding, deleted patients hidden everywhere, and the row still existing.
 
 **Doubts for lead:**
 1. Should "any user can delete" be an explicit guard, or stay implicit? —
-   **Decided:** add an explicit "all authenticated users allowed" guard —
-   cheap insurance so a future change doesn't accidentally restrict delete
-   without anyone noticing this AC exists, rather than leaving it satisfied
-   only by omission.
-2. Should `GetTestsForPatientAsync`/`GetByIdAsync` always exclude deleted
+   **Final decision (supersedes the "Decided, refined" answer this doc
+   previously had):** no guard at all — leave delete open to any user, no
+   permission check of any kind. Reasoning from the lead: RBAC isn't
+   actually implemented/enforced anywhere in the app yet, so gating this one
+   button on a permission flag would be enforcing a rule the rest of the app
+   doesn't honor either — premature for where the codebase is today.
+2. `UserPermissionsViewModel.CanDeletePatient`'s Admin-only preset values are
+   left exactly as they are, for the same reason — since nothing is being
+   gated on permissions yet, there's nothing here that needs to match this
+   story right now. Revisit once RBAC is actually wired up somewhere in the
+   app.
+3. Should `GetTestsForPatientAsync`/`GetByIdAsync` always exclude deleted
    records, or take an override flag? — **Decided:** always exclude, no
    override parameter — matches the AC's "hidden everywhere" wording, and
    nothing today needs to see deleted-patient data via these paths.
-3. Should bulk-delete's confirmation name the patients individually?
-   - **Recommended:** List the patient names (or first few plus "and N
-     more") instead of just a count, to satisfy "naming the patient" for
-     every record being deleted.
-   - **Alternative:** Keep count-only wording — simpler, but the AC was
-     likely written with single-delete in mind.
+4. Should bulk-delete's confirmation name the patients individually? —
+   **Decided:** neither — use one simple, generic confirmation message (e.g.
+   "Are you sure you want to delete the selected patients?"), in the same
+   plain style as the single-delete dialog, without enumerating names or
+   stating the exact count.
+
 ---
 
 ## ASWD-57 — Save the patient's contact details
@@ -314,16 +348,10 @@ only a mother, and with neither.
 - Test-record data.
 
 **Doubts for lead:**
-1. Where should the "skip empty contact" rule live?
-   - **Recommended:** In the mapper (`ApplyTo`/`ToEntity`), consistent with
-     where `ToEntity` already implements it — the repository should stay a
-     dumb persistence layer.
-   - **Alternative:** Push it into `UpdateAsync` (e.g. delete a contact row
-     if all fields are null) — mixes business rules into persistence code.
-2. What is the "agreed contact fields" source of truth?
-   - **Recommended:** Default to the full existing `PatientContacts` column
-     list already schema-matched under ASWD-84, and let the lead flag
-     anything to exclude, rather than guessing a smaller subset.
-   - **Alternative:** Proactively narrow to a smaller "commonly used" subset
-     based on our own judgment — risks silently dropping a field the lead
-     actually wants.
+1. Where should the "skip empty contact" rule live? — **Decided (lead
+   confirmed the recommendation):** in the mapper (`ApplyTo`/`ToEntity`),
+   consistent with where `ToEntity` already implements it — the repository
+   stays a dumb persistence layer.
+2. What is the "agreed contact fields" source of truth? — **Decided (lead
+   confirmed the recommendation):** the full existing `PatientContacts`
+   column list already schema-matched under ASWD-84 — no smaller subset.

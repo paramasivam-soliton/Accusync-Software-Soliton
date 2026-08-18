@@ -33,7 +33,7 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// <summary>Persists changes to an existing patient's scalar fields. Returns false if the patient no longer exists.</summary>
         Task<bool> UpdateAsync(Patient patient);
 
-        /// <summary>Marks a patient as deleted (<see cref="Patient.IsDeleted"/>) without removing the row. Returns false if the patient no longer exists.</summary>
+        /// <summary>Marks a patient and all of its contacts as deleted, without removing any rows. Returns false if the patient no longer exists.</summary>
         Task<bool> SoftDeleteAsync(int patientId);
     }
 }
