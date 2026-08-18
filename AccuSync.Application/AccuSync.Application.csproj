@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- -windows (not UseWPF) is needed here: OCR parsing depends on
-         System.Drawing.Common, which has been Windows-only since .NET 7. No
-         type in this project references WPF/PresentationFramework. -->
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Application</AssemblyName>
     <RootNamespace>AccuSync.Application</RootNamespace>
@@ -19,6 +16,10 @@
     <!-- Standalone reversible encryption for usernames (EncryptionService) — no web
          server/hosting involved, just the Data Protection crypto/key-management library. -->
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
+
+    <!-- Reserved for the future AccuSync.DeviceCommunication extraction —
+         not yet used by any code in this project. -->
+    <PackageReference Include="System.IO.Ports" />
   </ItemGroup>
 
   <ItemGroup>
