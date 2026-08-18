@@ -15,6 +15,7 @@ namespace AccuSync.Application.Models
     {
         /// <summary>Descriptions of the patient information fields that changed.</summary>
         public List<string> InfoChanges { get; set; } = new();
+        
         /// <summary>The number of new test results included in the import.</summary>
         public int NewTests { get; set; }
     }

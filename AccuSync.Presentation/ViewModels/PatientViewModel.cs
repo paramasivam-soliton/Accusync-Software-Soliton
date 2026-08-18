@@ -9,10 +9,8 @@ using AccuSync.Application.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
 
 namespace AccuSync.Presentation.ViewModels
 {
@@ -40,7 +38,7 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isUndoing;
         private bool _isDirty = false;
         private Dictionary<string, string> _validationErrors = new Dictionary<string, string>();
-        private BitmapImage _qrCodeImage;
+        private byte[] _qrCodeImage;
 
         private readonly IQrCodeGenerator _qrCodeGenerator;
 
@@ -175,8 +173,13 @@ namespace AccuSync.Presentation.ViewModels
         private string _leftEarResult;
         private string _rightEarResult;
 
-        /// <summary>QR code image encoding the current patient's identifying details.</summary>
-        public BitmapImage QRCodeImage
+        /// <summary>
+        /// PNG-encoded QR code image data for the current patient's identifying details.
+        /// Raw bytes rather than a WPF <c>BitmapImage</c> — this project carries no WPF
+        /// reference; the WPF layer converts this for display (see
+        /// <c>AccuSync.WPF.Converters.ByteArrayToBitmapImageConverter</c>).
+        /// </summary>
+        public byte[] QRCodeImage
         {
             get => _qrCodeImage;
             private set => SetProperty(ref _qrCodeImage, value);
@@ -196,31 +199,7 @@ namespace AccuSync.Presentation.ViewModels
                 HospitalId
             );
 
-            byte[] pngBytes = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
-            QRCodeImage = pngBytes == null ? null : BytesToBitmapImage(pngBytes);
-        }
-
-        /// <summary>
-        /// Bridges the PNG bytes <see cref="IQrCodeGenerator.GenerateQRCode"/> returns to a
-        /// WPF-bindable <see cref="BitmapImage"/>. This is the one place in the ViewModel
-        /// that touches a WPF-specific type, matching the existing trade-off already made
-        /// for <see cref="QRCodeImage"/> itself (see this project's csproj comment).
-        /// </summary>
-        private static BitmapImage BytesToBitmapImage(byte[] pngBytes)
-        {
-            using (var memory = new MemoryStream(pngBytes))
-            {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                // OnLoad reads everything into memory before the stream is disposed.
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                // Freeze makes the image immutable so it can be used from any thread.
-                bitmapImage.Freeze();
-
-                return bitmapImage;
-            }
+            QRCodeImage = _qrCodeGenerator.GenerateQRCode(qrContent, pixelsPerModule: 3);
         }
 
         #region Phone Properties with Dial Codes
@@ -230,6 +209,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Mother phone
         private string _motherPhoneDialCode = "+1";
+
         /// <summary>Country dial code for <see cref="MotherPhoneNumber"/>, e.g. "+1".</summary>
         public string MotherPhoneDialCode
         {
@@ -245,6 +225,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _motherPhoneNumber = string.Empty;
+
         /// <summary>Mother's phone number, unformatted digits as entered.</summary>
         public string MotherPhoneNumber
         {
@@ -275,6 +256,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Mother mobile
         private string _motherMobilePhoneDialCode = "+1";
+
         /// <summary>Country dial code for <see cref="MotherMobilePhoneNumber"/>, e.g. "+1".</summary>
         public string MotherMobilePhoneDialCode
         {
@@ -290,6 +272,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _motherMobilePhoneNumber = string.Empty;
+
         /// <summary>Mother's mobile number, unformatted digits as entered.</summary>
         public string MotherMobilePhoneNumber
         {
@@ -320,6 +303,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Caregiver phone
         private string _caregiverPhoneDialCode = "+1";
+
         /// <summary>Country dial code for <see cref="CaregiverPhoneNumber"/>, e.g. "+1".</summary>
         public string CaregiverPhoneDialCode
         {
@@ -335,6 +319,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _caregiverPhoneNumber = string.Empty;
+
         /// <summary>Caregiver's phone number, unformatted digits as entered.</summary>
         public string CaregiverPhoneNumber
         {
@@ -365,6 +350,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Caregiver mobile
         private string _caregiverMobilePhoneDialCode = "+1";
+
         /// <summary>Country dial code for <see cref="CaregiverMobilePhoneNumber"/>, e.g. "+1".</summary>
         public string CaregiverMobilePhoneDialCode
         {
@@ -380,6 +366,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _caregiverMobilePhoneNumber = string.Empty;
+
         /// <summary>Caregiver's mobile number, unformatted digits as entered.</summary>
         public string CaregiverMobilePhoneNumber
         {
@@ -410,6 +397,7 @@ namespace AccuSync.Presentation.ViewModels
 
         // Referral phone
         private string _referralPhoneDialCode = "+1";
+
         /// <summary>Country dial code for <see cref="ReferralPhoneNumber"/>, e.g. "+1".</summary>
         public string ReferralPhoneDialCode
         {
@@ -425,6 +413,7 @@ namespace AccuSync.Presentation.ViewModels
         }
 
         private string _referralPhoneNumber = string.Empty;
+
         /// <summary>Referral contact's phone number, unformatted digits as entered.</summary>
         public string ReferralPhoneNumber
         {
@@ -1142,6 +1131,7 @@ namespace AccuSync.Presentation.ViewModels
         // Required fields tracking
 
         private int _requiredFieldsCount;
+
         /// <summary>Number of required fields currently left empty.</summary>
         public int RequiredFieldsCount
         {

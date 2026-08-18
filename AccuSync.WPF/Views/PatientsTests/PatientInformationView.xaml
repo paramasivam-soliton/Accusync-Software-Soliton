@@ -7,8 +7,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:tabs="clr-namespace:AccuSync.WPF.Views.PatientsTests.Tabs"
              xmlns:res="clr-namespace:AccuSync.WPF.Resources"
+             xmlns:converters="clr-namespace:AccuSync.WPF.Converters"
              Background="Transparent">
     <UserControl.Resources>
+
+        <converters:ByteArrayToBitmapImageConverter x:Key="ByteArrayToBitmapImageConverter"/>
 
         <!-- Shell-only styles (tabs, pills, overlay); shared styles in PatientInformationStyles -->
 
@@ -336,7 +339,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,16,0" VerticalAlignment="Center">
                         <StackPanel>
-                            <Image x:Name="PatientQRCode" Source="{Binding QRCodeImage}" Width="100" Height="100" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Image x:Name="PatientQRCode" Source="{Binding QRCodeImage, Converter={StaticResource ByteArrayToBitmapImageConverter}}" Width="100" Height="100" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                             <TextBlock Text="{x:Static res:Strings.PatientInformationView_ScanForDetails}" FontSize="8" FontWeight="SemiBold" Foreground="{StaticResource GrayBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>

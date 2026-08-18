@@ -1093,7 +1093,17 @@ namespace AccuSync.WPF.Views.PatientsTests
                     }
                 }
 
-                return results;
+                // ImportService (AccuSync.Application) returns ImportOutcome — the
+                // Application-side shape — mapped here to ImportResultItem, the
+                // UI-bound Presentation shape ImportReview actually displays.
+                return results.Select(r => new ImportResultItem
+                {
+                    Name = r.Name,
+                    PatientId = r.PatientId,
+                    Detail = r.Detail,
+                    Badge = r.Badge,
+                    Patient = r.Patient
+                }).ToList();
             };
         }
 

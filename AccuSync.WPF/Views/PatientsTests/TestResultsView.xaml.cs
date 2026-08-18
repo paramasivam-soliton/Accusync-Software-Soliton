@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 using System;

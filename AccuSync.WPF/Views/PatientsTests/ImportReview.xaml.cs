@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 using System;
@@ -46,6 +47,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         // Subscribed by PatientsView; will be raised once the import-preview
         // "view patient" action is implemented. Suppress "never used" until then.
 #pragma warning disable CS0067
+
         /// <summary>Raised when the user requests to view a patient from the import results.</summary>
         public event EventHandler<PatientData> ViewPatientRequested;
 #pragma warning restore CS0067
@@ -85,7 +87,17 @@ namespace AccuSync.WPF.Views.PatientsTests
                 PatientId = d.Patient.PatientId ?? "",
                 Status = d.Status,
                 Patient = d.Patient,
-                Tests = d.Tests ?? new(),
+                // ImportPatientData.Tests is Application's TestPreview (parsing-pipeline
+                // shape); ImportRecord.Tests is the UI-bound TestPreviewItem — mapped here.
+                Tests = d.Tests?.Select(t => new TestPreviewItem
+                {
+                    Date = t.Date,
+                    Time = t.Time,
+                    Ear = t.Ear,
+                    Type = t.Type,
+                    Result = t.Result,
+                    IsExisting = t.IsExisting
+                }).ToList() ?? new(),
                 DupInfo = d.DupInfo,
                 IsSelected = true,
                 // Only read for duplicates (see PerformImport); AddTests is the default choice.

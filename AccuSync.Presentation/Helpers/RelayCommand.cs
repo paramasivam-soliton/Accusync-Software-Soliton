@@ -10,9 +10,9 @@ using System.Windows.Input;
 namespace AccuSync.Presentation.Helpers
 {
     /// <summary>
-    /// Minimal async-aware <see cref="ICommand"/> implementation.
-    /// Relies on <see cref="CommandManager.RequerySuggested"/> for automatic
-    /// CanExecute re-evaluation.
+    /// Minimal async-aware <see cref="ICommand"/> implementation. CanExecute is
+    /// re-evaluated only when <see cref="RaiseCanExecuteChanged"/> is called explicitly —
+    /// callers must invoke it whenever a value their CanExecute depends on changes.
     /// </summary>
     public class RelayCommand : ICommand
     {
@@ -32,10 +32,9 @@ namespace AccuSync.Presentation.Helpers
         // passed to the constructor has its own try/catch (which both ViewModels do).
         public async void Execute(object parameter) => await _executeAsync();
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public event EventHandler CanExecuteChanged;
+
+        /// <summary>Raises <see cref="CanExecuteChanged"/> — call whenever a value <see cref="CanExecute"/> depends on changes.</summary>
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

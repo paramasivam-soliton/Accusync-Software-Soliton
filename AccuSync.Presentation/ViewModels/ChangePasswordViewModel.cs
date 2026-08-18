@@ -38,7 +38,7 @@ namespace AccuSync.Presentation.ViewModels
         private string _errorMessage = string.Empty;
         private bool _isLoading;
 
-        // Policy validation flags — bound to checkmark/X indicators in the view
+        // Bound to checkmark/X indicators in the view
         private bool _hasMinimumLength;
         private bool _hasUpperCase;
         private bool _hasLowerCase;
@@ -102,6 +102,7 @@ namespace AccuSync.Presentation.ViewModels
             {
                 _isLoading = value;
                 OnPropertyChanged();
+                (SaveCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -196,8 +197,7 @@ namespace AccuSync.Presentation.ViewModels
                            !string.IsNullOrEmpty(ConfirmPassword) &&
                            NewPassword == ConfirmPassword;
 
-            // Only compares against what the user typed in the Old Password field,
-            // not the stored password — the stored check happens on save.
+            // Compares against the typed Old Password, not the stored one — checked on save.
             NotSameAsOld = !string.IsNullOrEmpty(NewPassword) &&
                          !string.IsNullOrEmpty(OldPassword) &&
                          NewPassword != OldPassword;
@@ -212,7 +212,6 @@ namespace AccuSync.Presentation.ViewModels
 
             try
             {
-                // Verify old password against the database
                 if (!_passwordHasher.Verify(OldPassword, _currentUser.ProfilePassword))
                 {
                     ErrorMessage = Strings.ChangePasswordViewModel_CurrentPasswordIncorrect;
@@ -220,10 +219,8 @@ namespace AccuSync.Presentation.ViewModels
                     return;
                 }
 
-                // LastThreePasswords is a pipe-delimited string of password hashes. The
-                // delimiter can't collide with a stored hash — Base64 (the hash's own
-                // encoding) never produces '|' — but entries are still filtered for
-                // empty/malformed values in case the stored string was ever hand-edited.
+                // Pipe-delimited hashes; '|' never appears in Base64, but still filtered
+                // in case a stored entry was ever hand-edited into something malformed.
                 var previousHashes = string.IsNullOrEmpty(_currentUser.LastThreePasswords)
                     ? []
                     : _currentUser.LastThreePasswords.Split('|').Where(h => !string.IsNullOrEmpty(h)).ToArray();
@@ -240,7 +237,6 @@ namespace AccuSync.Presentation.ViewModels
 
                 string newPasswordHash = _passwordHasher.Hash(NewPassword);
 
-                // Prepend the current password to the history and keep only three.
                 var updatedPasswordList = new[] { _currentUser.ProfilePassword }
                     .Concat(previousHashes)
                     .Where(h => !string.IsNullOrEmpty(h))

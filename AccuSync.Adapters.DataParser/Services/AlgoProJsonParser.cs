@@ -16,7 +16,7 @@ namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Parses ALGO Pro JSON export files into <see cref="ImportPatientData"/>
-    /// records with per-ear <see cref="TestPreviewItem"/>s.
+    /// records with per-ear <see cref="TestPreview"/>s.
     ///
     /// Structurally similar to ALGO 5 XML but in JSON, with key differences:
     ///   - Plugin and TestResult are arrays (not repeated XML elements).
@@ -169,9 +169,9 @@ namespace AccuSync.Adapters.DataParser.Services
         /// Extracts per-ear test preview items from all Plugins.
         /// Each Plugin produces up to two items (left + right ear).
         /// </summary>
-        private static List<TestPreviewItem> ParseTests(JsonElement record)
+        private static List<TestPreview> ParseTests(JsonElement record)
         {
-            var items = new List<TestPreviewItem>();
+            var items = new List<TestPreview>();
 
             if (!record.TryGetProperty("Test", out var testEl))
                 return items;
@@ -191,7 +191,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
                 if (plugin.TryGetProperty("LeftEarAABRDetails", out var leftDetails))
                 {
-                    items.Add(new TestPreviewItem
+                    items.Add(new TestPreview
                     {
                         Date = date,
                         Time = time,
@@ -203,7 +203,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
                 if (plugin.TryGetProperty("RightEarAABRDetails", out var rightDetails))
                 {
-                    items.Add(new TestPreviewItem
+                    items.Add(new TestPreview
                     {
                         Date = date,
                         Time = time,

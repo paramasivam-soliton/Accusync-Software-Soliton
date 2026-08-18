@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 

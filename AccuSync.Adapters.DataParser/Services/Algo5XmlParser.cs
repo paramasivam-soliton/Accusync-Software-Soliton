@@ -16,7 +16,7 @@ namespace AccuSync.Adapters.DataParser.Services
 {
     /// <summary>
     /// Parses ALGO 5 XML export files into <see cref="ImportPatientData"/>
-    /// records with per-ear <see cref="TestPreviewItem"/>s.
+    /// records with per-ear <see cref="TestPreview"/>s.
     ///
     /// Tests are ABR-only. Each Plugin produces two items (left + right ear).
     /// Plugin and TestResult elements are linked via <c>TestResultId</c> ↔ <c>Id</c>.
@@ -134,9 +134,9 @@ namespace AccuSync.Adapters.DataParser.Services
         /// Extracts per-ear test preview items from all Plugins under the Test node.
         /// Each Plugin produces up to two items (left + right ear).
         /// </summary>
-        private static List<TestPreviewItem> ParseTests(XElement record)
+        private static List<TestPreview> ParseTests(XElement record)
         {
-            var items = new List<TestPreviewItem>();
+            var items = new List<TestPreview>();
             var testEl = record.Element("Test");
             if (testEl == null) return items;
 
@@ -149,7 +149,7 @@ namespace AccuSync.Adapters.DataParser.Services
                 var leftDetails = plugin.Element("LeftEarAABRDetails");
                 if (leftDetails != null)
                 {
-                    items.Add(new TestPreviewItem
+                    items.Add(new TestPreview
                     {
                         Date = date,
                         Time = time,
@@ -162,7 +162,7 @@ namespace AccuSync.Adapters.DataParser.Services
                 var rightDetails = plugin.Element("RightEarAABRDetails");
                 if (rightDetails != null)
                 {
-                    items.Add(new TestPreviewItem
+                    items.Add(new TestPreview
                     {
                         Date = date,
                         Time = time,
@@ -268,7 +268,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
         /// <summary>
         /// Maps ear-level result strings to the standard three values used by
-        /// <see cref="TestPreviewItem"/>: Pass, Refer, or Incomplete.
+        /// <see cref="TestPreview"/>: Pass, Refer, or Incomplete.
         /// "Halted" is treated as Incomplete.
         /// </summary>
         private static string NormalizeResult(string result)
