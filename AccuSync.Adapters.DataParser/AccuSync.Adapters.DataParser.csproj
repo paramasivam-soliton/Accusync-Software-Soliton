@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- -windows (not UseWPF) is needed: OCR/QR parsing depends on
-         System.Drawing.Common. No type here references WPF/PresentationFramework —
-         IQrCodeGenerator returns raw PNG bytes; the View layer converts to BitmapImage. -->
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Adapters.DataParser</AssemblyName>
     <RootNamespace>AccuSync.Adapters.DataParser</RootNamespace>
@@ -29,12 +26,11 @@
     <!-- The only project in the solution allowed to know about these
          file-format/OCR/QR libraries. -->
     <PackageReference Include="Docnet.Core" Version="2.6.0" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
-    <PackageReference Include="PdfPig" Version="0.1.13" />
-    <PackageReference Include="QRCoder" Version="1.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <PackageReference Include="PdfPig" Version="0.1.15" />
+    <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
   </ItemGroup>
 
   <ItemGroup>
