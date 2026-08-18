@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using AccuSync.Application.Helpers;
+using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.DependencyInjection;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
@@ -10,7 +11,7 @@ using AccuSync.WPF.Views.Login;
 namespace AccuSync.WPF
 {
     /// <summary>
-    /// Application entry point. Wires up dependency injection and starts the app
+    /// The composition root. Wires up dependency injection and starts the app
     /// with the splash screen, which in turn drives navigation to login or dashboard.
     /// </summary>
     public partial class App : System.Windows.Application
@@ -118,6 +119,7 @@ namespace AccuSync.WPF
             {
                 var dashboard = GetService<AdminDashboardWindow>();
                 dashboard.SetCurrentUser(username);
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
                 dashboard.Show();
             }
             else
@@ -137,6 +139,7 @@ namespace AccuSync.WPF
             if (role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase))
             {
                 dashboard = GetService<AdminDashboardWindow>();
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
             }
             else
             {

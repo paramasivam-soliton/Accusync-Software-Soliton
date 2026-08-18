@@ -38,5 +38,12 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// <param name="user">The user to create.</param>
         /// <returns><c>true</c> if the user was created; otherwise <c>false</c>.</returns>
         Task<bool> CreateUserAsync(User user);
+
+        /// <summary>
+        /// Assigns or changes a user's role directly, without requiring a full Users
+        /// management UI. The new role takes effect on that user's next login, not
+        /// live for any session already in progress.
+        /// </summary>
+        Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role);
     }
 }

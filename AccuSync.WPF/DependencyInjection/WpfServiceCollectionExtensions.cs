@@ -72,6 +72,7 @@ namespace AccuSync.WPF.DependencyInjection
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<ICurrentUserContext, CurrentUserContext>();
 
             // ViewModels
             services.AddTransient<SplashViewModel>();

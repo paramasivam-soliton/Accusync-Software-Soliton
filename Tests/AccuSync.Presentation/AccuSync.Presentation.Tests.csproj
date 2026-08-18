@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Matches AccuSync.Presentation — RelayCommand (used by LoginViewModel's
+         SignInCommand) uses WPF's CommandManager. -->
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AccuSync.Presentation.Tests</AssemblyName>
+    <RootNamespace>AccuSync.Presentation.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- System under test — this test project exercises AccuSync.Presentation's
+         view models (LoginViewModel, UserPermissionsViewModel). -->
+    <ProjectReference Include="..\..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
+using AccuSync.Application.Helpers;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using System;
@@ -29,6 +30,7 @@ namespace AccuSync.Presentation.ViewModels
         private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ICurrentUserContext _currentUserContext;
 
         private string _selectedUsername;
         private string _password = string.Empty;
@@ -36,10 +38,10 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isLoading;
         private bool _isPasswordVisible;
 
-        /// <summary>Account names available to sign in with, loaded on construction.</summary>
+        /// <summary>Account names for the dropdown, loaded once on construction.</summary>
         public ObservableCollection<string> Usernames { get; set; }
 
-        /// <summary>The username currently chosen in the dropdown.</summary>
+        /// <summary>The username currently selected in the dropdown.</summary>
         public string SelectedUsername
         {
             get => _selectedUsername;
@@ -51,7 +53,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>The password as typed by the user.</summary>
+        /// <summary>The password as typed.</summary>
         public string Password
         {
             get => _password;
@@ -63,7 +65,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Error text shown to the user, or empty when there is no error.</summary>
+        /// <summary>Message shown to the user when loading usernames or signing in fails.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -74,7 +76,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True while a sign-in attempt is in progress.</summary>
+        /// <summary>Whether a sign-in attempt is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -85,7 +87,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True when the password field should show plain text instead of masked characters.</summary>
+        /// <summary>Whether the password field shows plaintext instead of masked characters.</summary>
         public bool IsPasswordVisible
         {
             get => _isPasswordVisible;
@@ -96,7 +98,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Command that authenticates the selected username and password.</summary>
+        /// <summary>Command bound to the Sign In button.</summary>
         public ICommand SignInCommand { get; }
 
         /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
@@ -105,17 +107,13 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
-        /// <summary>
-        /// Creates the view model and begins loading available usernames.
-        /// </summary>
-        /// <param name="userRepository">Service used to fetch the list of registered users.</param>
-        /// <param name="authenticationService">Service used to verify credentials.</param>
-        /// <param name="passwordHasher">Service passed through to the password-change flow.</param>
-        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher)
+        /// <summary>Creates the view model and kicks off loading the username dropdown.</summary>
+        public LoginViewModel(IUserRepository userRepository, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
             _passwordHasher = passwordHasher;
+            _currentUserContext = currentUserContext;
 
             Usernames = new ObservableCollection<string>();
             _isPasswordVisible = false;
@@ -159,23 +157,22 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (result.Success)
                 {
+                    var role = UserRoleParser.Parse(result.User.ProfileId);
+                    _currentUserContext.SignIn(result.User, role);
+
                     if (result.User.FirstLogin == 1)
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
                             _userRepository,
                             _passwordHasher,
+                            _currentUserContext,
                             result.User
                         );
                         FirstLoginPasswordChangeRequired?.Invoke(changePasswordViewModel);
                     }
                     else
                     {
-                        // TODO: Use an actual Role field from the User model.
-                        string role = string.Equals(result.User.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
-                            ? "Admin"
-                            : "Screener";
-
-                        LoginSucceeded?.Invoke(result.User.AccountName, role);
+                        LoginSucceeded?.Invoke(result.User.AccountName, role.ToString());
                     }
 
                     Password = string.Empty;
@@ -196,7 +193,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Raised whenever a bound property's value changes.</summary>
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

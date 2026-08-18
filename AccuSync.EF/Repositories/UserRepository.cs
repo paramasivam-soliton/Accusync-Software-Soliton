@@ -25,7 +25,7 @@ namespace AccuSync.EF
     /// and LastThreePasswords travel as hashes end-to-end and are never reversed. AccountName's
     /// encryption is non-deterministic, so uniqueness/lookup is carried by UsernameHash — a
     /// deterministic SHA-256 of the normalized username (see ComputeUsernameHash) — instead of
-    /// the encrypted column itself (blind index pattern, LOGIN_EPIC_SPEC.md §2.2).
+    /// the encrypted column itself (a "blind index" pattern).
     /// </summary>
     public class UserRepository : IUserRepository
     {
@@ -33,6 +33,7 @@ namespace AccuSync.EF
         private readonly IEncryptionService _encryptionService;
         private readonly IPasswordHasher _passwordHasher;
 
+        /// <summary>Creates a repository backed by the given context factory, encryption, and password-hashing services.</summary>
         public UserRepository(IDbContextFactory<SettingsDbContext> contextFactory, IEncryptionService encryptionService, IPasswordHasher passwordHasher)
         {
             _contextFactory = contextFactory;
@@ -75,7 +76,7 @@ namespace AccuSync.EF
         /// Deterministic SHA-256 hash of the normalized (trimmed, lowercased) username.
         /// Used only for uniqueness enforcement and login lookup — AccountName itself is
         /// encrypted non-deterministically (see <see cref="IEncryptionService"/>) and can
-        /// no longer be compared directly. Blind index pattern, LOGIN_EPIC_SPEC.md §2.2.
+        /// no longer be compared directly (a "blind index" pattern).
         /// </summary>
         private static string ComputeUsernameHash(string accountName)
         {
@@ -84,6 +85,7 @@ namespace AccuSync.EF
             return Convert.ToBase64String(hash);
         }
 
+        /// <summary>Returns every user account, decrypted.</summary>
         public async Task<List<User>> GetAllUsersAsync()
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -91,6 +93,7 @@ namespace AccuSync.EF
             return stored.Select(Decrypt).ToList();
         }
 
+        /// <summary>Looks up a single user by account name.</summary>
         // Looked up by UsernameHash (a SQL-queryable equality match on the deterministic
         // blind index) rather than decrypting every row — AccountName's encryption is
         // non-deterministic and can't be compared directly. Only the matched row is decrypted.
@@ -103,6 +106,7 @@ namespace AccuSync.EF
             return stored == null ? null : Decrypt(stored);
         }
 
+        /// <summary>Persists changes to an existing user. Returns false if the user no longer exists.</summary>
         public async Task<bool> UpdateUserAsync(User user)
         {
             try
@@ -138,6 +142,27 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Assigns a new role to the given user. Returns false if the user no longer exists.</summary>
+        public async Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userGuid);
+                if (tracked == null) return false;
+
+                tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>Creates a new user account, hashing its password on the way in.</summary>
         public async Task<bool> CreateUserAsync(User user)
         {
             try

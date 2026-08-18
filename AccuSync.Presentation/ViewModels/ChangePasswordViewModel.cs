@@ -29,6 +29,7 @@ namespace AccuSync.Presentation.ViewModels
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ICurrentUserContext _currentUserContext;
         private readonly User _currentUser;
 
         private string _oldPassword = string.Empty;
@@ -46,7 +47,7 @@ namespace AccuSync.Presentation.ViewModels
         private bool _passwordsMatch;
         private bool _notSameAsOld;
 
-        /// <summary>The user's current password, as entered for verification.</summary>
+        /// <summary>The user's current password, as typed for verification.</summary>
         public string OldPassword
         {
             get => _oldPassword;
@@ -58,7 +59,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>The password the user wants to set. Re-validates policy rules on every change.</summary>
+        /// <summary>The password being set.</summary>
         public string NewPassword
         {
             get => _newPassword;
@@ -70,7 +71,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Repeat entry of <see cref="NewPassword"/>, used to confirm the user typed it correctly.</summary>
+        /// <summary>Re-entry of <see cref="NewPassword"/>, used to confirm it was typed correctly.</summary>
         public string ConfirmPassword
         {
             get => _confirmPassword;
@@ -82,7 +83,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Error text shown to the user, or empty when there is no error.</summary>
+        /// <summary>Message shown to the user when validation or save fails.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -93,7 +94,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True while a save operation is in progress.</summary>
+        /// <summary>Whether a save is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -104,49 +105,49 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> meets the minimum length policy.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> meets the minimum length rule.</summary>
         public bool HasMinimumLength
         {
             get => _hasMinimumLength;
             set { _hasMinimumLength = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> contains an uppercase letter.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> contains an uppercase letter.</summary>
         public bool HasUpperCase
         {
             get => _hasUpperCase;
             set { _hasUpperCase = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> contains a lowercase letter.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> contains a lowercase letter.</summary>
         public bool HasLowerCase
         {
             get => _hasLowerCase;
             set { _hasLowerCase = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> contains a digit.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> contains a digit.</summary>
         public bool HasNumber
         {
             get => _hasNumber;
             set { _hasNumber = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> contains a non-alphanumeric character.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> contains a non-alphanumeric character.</summary>
         public bool HasSpecialChar
         {
             get => _hasSpecialChar;
             set { _hasSpecialChar = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> and <see cref="ConfirmPassword"/> are identical.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> and <see cref="ConfirmPassword"/> match.</summary>
         public bool PasswordsMatch
         {
             get => _passwordsMatch;
             set { _passwordsMatch = value; OnPropertyChanged(); }
         }
 
-        /// <summary>True when <see cref="NewPassword"/> differs from <see cref="OldPassword"/> as typed.</summary>
+        /// <summary>Whether <see cref="NewPassword"/> differs from <see cref="OldPassword"/>.</summary>
         public bool NotSameAsOld
         {
             get => _notSameAsOld;
@@ -159,22 +160,18 @@ namespace AccuSync.Presentation.ViewModels
         public bool CanSave => HasMinimumLength && HasUpperCase && HasLowerCase &&
                                HasNumber && HasSpecialChar && PasswordsMatch && NotSameAsOld;
 
-        /// <summary>Command that validates and persists the new password.</summary>
+        /// <summary>Command bound to the Save button; validates and persists the new password.</summary>
         public ICommand SaveCommand { get; }
 
         /// <summary>Raised after a successful password change. Carries (username, role).</summary>
         public event Action<string, string> PasswordChangeSucceeded;
 
-        /// <summary>
-        /// Creates the view model for the given user's password change flow.
-        /// </summary>
-        /// <param name="userRepository">Service used to persist the updated user record.</param>
-        /// <param name="passwordHasher">Service used to hash and verify password values.</param>
-        /// <param name="currentUser">The user whose password is being changed.</param>
-        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, User currentUser)
+        /// <summary>Creates the view model for the given signed-in user.</summary>
+        public ChangePasswordViewModel(IUserRepository userRepository, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext, User currentUser)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _currentUserContext = currentUserContext;
             _currentUser = currentUser;
 
             SaveCommand = new RelayCommand(async () => await SavePasswordAsync(), () => !IsLoading);
@@ -260,12 +257,7 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (success)
                 {
-                    // TODO: Use an actual Role field from the User model.
-                    string role = string.Equals(_currentUser.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
-                        ? "Admin"
-                        : "Screener";
-
-                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, role);
+                    PasswordChangeSucceeded?.Invoke(_currentUser.AccountName, _currentUserContext.Role.ToString());
                 }
                 else
                 {
@@ -282,7 +274,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Raised whenever a bound property's value changes.</summary>
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
