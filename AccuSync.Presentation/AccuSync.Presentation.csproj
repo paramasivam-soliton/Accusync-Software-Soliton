@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Stays net10.0-windows (not plain net10.0) solely because it references
-         AccuSync.Application, which targets net10.0-windows for OCR's System.Drawing.Common —
-         a platform-agnostic project cannot reference a Windows-specific one. UseWPF itself is
-         no longer needed: RelayCommand, SplashViewModel, and PatientViewModel's QR property
-         have all been moved off WPF-specific types. -->
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Presentation</AssemblyName>
     <RootNamespace>AccuSync.Presentation</RootNamespace>
