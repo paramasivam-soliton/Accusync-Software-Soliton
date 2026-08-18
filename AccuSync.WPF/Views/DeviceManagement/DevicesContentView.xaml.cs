@@ -11,12 +11,16 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.DeviceManagement
 {
+    /// <summary>
+    /// Devices screen content: device list/detail form plus user, facility, and
+    /// takeover-mode (ABR, DPOAE, field setup) management.
+    /// </summary>
     public partial class DevicesContentView : UserControl
     {
         private ObservableCollection<DeviceEntry> _devices = new();
@@ -43,12 +47,21 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         private DeviceSnapshot _savedState;
         private readonly Stack<DeviceSnapshot> _undoStack = new();
+
+        /// <summary>Provides access to the embedded ABR configuration view for the toolbar's takeover mode.</summary>
         public ABRConfigurationView ABRConfigView => ABRConfigurationControl;
+
+        /// <summary>Provides access to the embedded DPOAE configuration view for the toolbar's takeover mode.</summary>
         public DPOAEConfigurationView DPOAEConfigView => DPOAEConfigurationControl;
+
+        /// <summary>Provides access to the embedded device field setup view for the toolbar's takeover mode.</summary>
         public DeviceFieldSetupView FieldSetupConfigView => FieldSetupConfigurationControl;
 
         // Initialization
 
+        /// <summary>
+        /// Initializes the control and populates default device data once loaded.
+        /// </summary>
         public DevicesContentView()
         {
             InitializeComponent();
@@ -477,6 +490,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // Public Handlers (called by SidebarNavigation)
 
+        /// <summary>
+        /// Adds a new device with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var newDevice = new DeviceEntry
@@ -498,6 +514,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             DevicesListView.SelectedItem = newDevice;
         }
 
+        /// <summary>
+        /// Deletes the selected device after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             if (DevicesListView.SelectedItem is not DeviceEntry device) return;
@@ -525,6 +544,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
         }
 
         // TODO: HandleSave has no actual persistence — same pattern as all other config views.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = CaptureSnapshot();
@@ -532,6 +554,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             AppDialog.Show(Strings.DevicesContentView_DeviceSaved, Strings.DevicesContentView_Save, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -539,6 +564,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             _undoStack.Clear();
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -550,42 +578,53 @@ namespace AccuSync.WPF.Views.DeviceManagement
         // TODO: Show/Hide methods for ABR, DPOAE, and FieldSetup are identical except for the
         //       control reference. Consider a single ToggleOverlay(UIElement) method.
 
+        /// <summary>Switches from the normal device list/detail view into the ABR configuration takeover.</summary>
         public void ShowABR()
         {
             NormalDevicesGrid.Visibility = Visibility.Collapsed;
             ABRConfigurationControl.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the ABR configuration takeover to the normal device view.</summary>
         public void HideABR()
         {
             ABRConfigurationControl.Visibility = Visibility.Collapsed;
             NormalDevicesGrid.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches from the normal device list/detail view into the DPOAE configuration takeover.</summary>
         public void ShowDPOAE()
         {
             NormalDevicesGrid.Visibility = Visibility.Collapsed;
             DPOAEConfigurationControl.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the DPOAE configuration takeover to the normal device view.</summary>
         public void HideDPOAE()
         {
             DPOAEConfigurationControl.Visibility = Visibility.Collapsed;
             NormalDevicesGrid.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches from the normal device list/detail view into the field setup takeover.</summary>
         public void ShowFieldSetup()
         {
             NormalDevicesGrid.Visibility = Visibility.Collapsed;
             FieldSetupConfigurationControl.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the field setup takeover to the normal device view.</summary>
         public void HideFieldSetup()
         {
             FieldSetupConfigurationControl.Visibility = Visibility.Collapsed;
             NormalDevicesGrid.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Returns identifying info for the currently selected device, or placeholder
+        /// values ("—") when no device is selected.
+        /// </summary>
+        /// <returns>A <see cref="DeviceInfo"/> describing the selected device.</returns>
         public DeviceInfo GetSelectedDeviceInfo()
         {
             if (DevicesListView.SelectedItem is DeviceEntry device)

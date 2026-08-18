@@ -11,11 +11,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing screeners active today with their screening counts.
+    /// </summary>
     public partial class ScreenerListDialog : Window
     {
         // ── State ──
@@ -27,6 +30,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         private static readonly SolidColorBrush _cardHoverBg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f0f7ff"));
         private static readonly SolidColorBrush _cardDefaultBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5E7EB"));
 
+        /// <summary>
+        /// Initializes the dialog and loads today's screener list.
+        /// </summary>
         public ScreenerListDialog()
         {
             InitializeComponent();

@@ -10,14 +10,23 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.SitesFacilities
 {
+    /// <summary>
+    /// Immutable snapshot of a location's editable form state, used for undo/revert.
+    /// </summary>
+    /// <param name="Name">The location name.</param>
+    /// <param name="Description">The location description.</param>
+    /// <param name="Code">The location code.</param>
     public record LocationSnapshot(string Name, string Description, string Code);
 
+    /// <summary>
+    /// Locations screen content: location list/detail form with undo/revert support.
+    /// </summary>
     public partial class LocationsContentView : UserControl
     {
         private ObservableCollection<LocationEntry> _locations;
@@ -28,6 +37,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
         private LocationSnapshot _savedState;
         private Stack<LocationSnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default location list once loaded.
+        /// </summary>
         public LocationsContentView()
         {
             InitializeComponent();
@@ -125,6 +137,10 @@ namespace AccuSync.WPF.Views.SitesFacilities
         // Public Handlers (called by toolbar)
 
         // TODO: HandleSave validates fields (good!) but still has no actual persistence.
+        /// <summary>
+        /// Validates the selected location's required fields and saves the current state
+        /// as the new baseline.
+        /// </summary>
         public void HandleSave()
         {
             var location = LocationsListView.SelectedItem as LocationEntry;
@@ -163,6 +179,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -170,6 +189,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             ApplySnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -179,6 +201,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
 
         // Add and Delete
 
+        /// <summary>
+        /// Adds a new location with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var newLocation = new LocationEntry
@@ -195,6 +220,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             NameBox.SelectAll();
         }
 
+        /// <summary>
+        /// Deletes the selected location after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             var location = LocationsListView.SelectedItem as LocationEntry;

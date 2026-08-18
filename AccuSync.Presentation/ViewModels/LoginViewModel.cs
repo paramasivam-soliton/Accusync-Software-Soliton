@@ -5,14 +5,14 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
-using AccuSync.Services;
+using AccuSync.Application.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AccuSync.Resources;
+using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
 {
@@ -35,8 +35,10 @@ namespace AccuSync.Presentation.ViewModels
         private bool _isLoading;
         private bool _isPasswordVisible;
 
+        /// <summary>Account names available to sign in with, loaded on construction.</summary>
         public ObservableCollection<string> Usernames { get; set; }
 
+        /// <summary>The username currently chosen in the dropdown.</summary>
         public string SelectedUsername
         {
             get => _selectedUsername;
@@ -48,6 +50,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>The password as typed by the user.</summary>
         public string Password
         {
             get => _password;
@@ -59,6 +62,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Error text shown to the user, or empty when there is no error.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -69,6 +73,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True while a sign-in attempt is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -79,6 +84,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>True when the password field should show plain text instead of masked characters.</summary>
         public bool IsPasswordVisible
         {
             get => _isPasswordVisible;
@@ -89,6 +95,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Command that authenticates the selected username and password.</summary>
         public ICommand SignInCommand { get; }
 
         /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
@@ -97,6 +104,12 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
+        /// <summary>
+        /// Creates the view model and begins loading available usernames.
+        /// </summary>
+        /// <param name="databaseService">Service used to fetch the list of registered users.</param>
+        /// <param name="authenticationService">Service used to verify credentials.</param>
+        /// <param name="encryptionService">Service passed through to the password-change flow.</param>
         public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService, IEncryptionService encryptionService)
         {
             _databaseService = databaseService;
@@ -182,6 +195,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

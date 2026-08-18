@@ -4,8 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Helpers;
-using AccuSync.Models;
+using AccuSync.Application.Helpers;
+using AccuSync.Application.Models;
 using AccuSync.Presentation.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -26,11 +26,22 @@ namespace AccuSync.WPF.Views.PatientsTests.Tabs
         private List<CountryDialCode> _countries;
 
         // Exposed so the shell can scroll to a specific section via jump-to nav
+
+        /// <summary>The Mother section border, exposed for jump-to navigation.</summary>
         public FrameworkElement MotherSection => MotherSectionBorder;
+
+        /// <summary>The Caregiver section border, exposed for jump-to navigation.</summary>
         public FrameworkElement CaregiverSection => CaregiverSectionBorder;
+
+        /// <summary>The Referral section border, exposed for jump-to navigation.</summary>
         public FrameworkElement ReferralSection => ReferralSectionBorder;
+
+        /// <summary>The Medical section border, exposed for jump-to navigation.</summary>
         public FrameworkElement MedicalSection => MedicalSectionBorder;
 
+        /// <summary>
+        /// Initializes the control.
+        /// </summary>
         public AdditionalInfoTab()
         {
             InitializeComponent();
@@ -39,6 +50,9 @@ namespace AccuSync.WPF.Views.PatientsTests.Tabs
         // Called by the shell on LoadPatient / NewPatient to populate
         // all five dial-code ComboBoxes with the country list.
 
+        /// <summary>
+        /// Populates the mother/caregiver/referral phone dial-code combo boxes with the country list.
+        /// </summary>
         public void InitializeDialCodes()
         {
             // TODO: Hardcoded hospital IDs — this looks like test data that

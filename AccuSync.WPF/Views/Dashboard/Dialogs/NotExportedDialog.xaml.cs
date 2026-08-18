@@ -11,12 +11,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing patients whose completed screenings have not yet been exported.
+    /// </summary>
     public partial class NotExportedDialog : Window
     {
         private List<NotExportedPatientInfo> _allPatients;
@@ -26,6 +29,9 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         private static readonly SolidColorBrush _cardHoverBg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f0f7ff"));
         private static readonly SolidColorBrush _cardDefaultBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5E7EB"));
 
+        /// <summary>
+        /// Initializes the dialog and loads patients pending export.
+        /// </summary>
         public NotExportedDialog()
         {
             InitializeComponent();

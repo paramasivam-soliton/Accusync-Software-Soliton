@@ -10,16 +10,27 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.SitesFacilities
 {
+    /// <summary>
+    /// Immutable snapshot of a facility's editable form state, used for undo/revert.
+    /// </summary>
+    /// <param name="Name">The facility name.</param>
+    /// <param name="Description">The facility description.</param>
+    /// <param name="Code">The facility code.</param>
+    /// <param name="SiteIndex">The selected index in the site combo box.</param>
+    /// <param name="LocationTypeIndex">The selected index in the location type combo box.</param>
     public record FacilitySnapshot(
         string Name, string Description, string Code,
         int SiteIndex, int LocationTypeIndex);
 
+    /// <summary>
+    /// Facilities screen content: facility list/detail form with undo/revert support.
+    /// </summary>
     public partial class FacilitiesContentView : UserControl
     {
         private ObservableCollection<FacilityEntry> _facilities;
@@ -30,6 +41,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
         private FacilitySnapshot _savedState;
         private Stack<FacilitySnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the facility list once loaded.
+        /// </summary>
         public FacilitiesContentView()
         {
             InitializeComponent();
@@ -171,6 +185,10 @@ namespace AccuSync.WPF.Views.SitesFacilities
         // NOTE: This is the only config view that validates required fields in HandleSave.
         // Consider applying the same pattern to ABR, DPOAE, Comments, Devices, and Export views.
         // TODO: Still no actual persistence to database.
+        /// <summary>
+        /// Validates the selected facility's required fields and saves the current state
+        /// as the new baseline.
+        /// </summary>
         public void HandleSave()
         {
             var facility = FacilitiesListView.SelectedItem as FacilityEntry;
@@ -217,6 +235,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -224,6 +245,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             ApplySnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -233,6 +257,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
 
         // Add and Delete
 
+        /// <summary>
+        /// Adds a new facility with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var newFacility = new FacilityEntry
@@ -251,6 +278,9 @@ namespace AccuSync.WPF.Views.SitesFacilities
             NameBox.SelectAll();
         }
 
+        /// <summary>
+        /// Deletes the selected facility after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             var facility = FacilitiesListView.SelectedItem as FacilityEntry;

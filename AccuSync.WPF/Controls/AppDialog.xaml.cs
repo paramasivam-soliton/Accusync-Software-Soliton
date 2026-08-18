@@ -47,24 +47,42 @@ namespace AccuSync.WPF.Controls
 
         // ── Public API (mirrors MessageBox.Show overloads used in the app) ──────────────
 
+        /// <summary>Shows an OK-only dialog with no caption or icon.</summary>
+        /// <param name="messageBoxText">The message body to display.</param>
+        /// <returns>The button the user chose.</returns>
         public static MessageBoxResult Show(string messageBoxText)
             => Show(messageBoxText, string.Empty, MessageBoxButton.OK, MessageBoxImage.None);
 
+        /// <summary>Shows an OK-only dialog with the given caption.</summary>
+        /// <param name="messageBoxText">The message body to display.</param>
+        /// <param name="caption">The dialog title.</param>
+        /// <returns>The button the user chose.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption)
             => Show(messageBoxText, caption, MessageBoxButton.OK, MessageBoxImage.None);
 
+        /// <summary>Shows a dialog with the given caption and button set.</summary>
+        /// <param name="messageBoxText">The message body to display.</param>
+        /// <param name="caption">The dialog title.</param>
+        /// <param name="button">Which buttons to show.</param>
+        /// <returns>The button the user chose.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button)
             => Show(messageBoxText, caption, button, MessageBoxImage.None);
 
+        /// <summary>Shows a dialog with the given caption, button set, and icon kind.</summary>
+        /// <param name="messageBoxText">The message body to display.</param>
+        /// <param name="caption">The dialog title.</param>
+        /// <param name="button">Which buttons to show.</param>
+        /// <param name="icon">Which icon and accent color to use.</param>
+        /// <returns>The button the user chose.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon)
         {
             var dlg = new AppDialog();
             dlg.Build(messageBoxText, caption, button, icon);
 
-            var owner = Application.Current?.Windows
+            var owner = System.Windows.Application.Current?.Windows
                 .OfType<Window>()
                 .FirstOrDefault(w => w.IsActive && w != dlg)
-                ?? Application.Current?.MainWindow;
+                ?? System.Windows.Application.Current?.MainWindow;
 
             if (owner != null && owner != dlg && owner.IsLoaded)
             {

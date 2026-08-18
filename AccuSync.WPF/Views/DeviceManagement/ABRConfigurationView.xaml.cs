@@ -11,12 +11,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.DeviceManagement
 {
+    /// <summary>
+    /// Toolbar takeover view for configuring ABR (Auditory Brainstem Response) protocols.
+    /// </summary>
     public partial class ABRConfigurationView : UserControl
     {
         private ObservableCollection<ABRProtocolEntry> _protocols = new();
@@ -36,6 +39,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // Initialization
 
+        /// <summary>
+        /// Initializes the control and populates the default ABR protocol once loaded.
+        /// </summary>
         public ABRConfigurationView()
         {
             InitializeComponent();
@@ -183,6 +189,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // Public Handlers (called by SidebarNavigation)
 
+        /// <summary>
+        /// Adds a new ABR protocol with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var entry = new ABRProtocolEntry
@@ -203,6 +212,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             ProtocolsListView.SelectedItem = entry;
         }
 
+        /// <summary>
+        /// Deletes the selected ABR protocol after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             if (ProtocolsListView.SelectedItem is not ABRProtocolEntry protocol) return;
@@ -231,6 +243,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
 
         // TODO: HandleSave only captures a snapshot and shows a MessageBox — no actual
         //       persistence. Wire to DatabaseService or file storage.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = CaptureSnapshot();
@@ -238,6 +253,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             AppDialog.Show(Strings.ABRConfigurationView_ProtocolSaved, Strings.ABRConfigurationView_Save, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -245,6 +263,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
             _undoStack.Clear();
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

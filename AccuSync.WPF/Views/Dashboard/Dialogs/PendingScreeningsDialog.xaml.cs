@@ -13,17 +13,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing screenings that are pending (assigned but not yet completed).
+    /// </summary>
     public partial class PendingScreeningsDialog : Window
     {
         private List<PendingScreening> _allScreenings;
         private List<PendingScreening> _filteredScreenings;
 
+        /// <summary>
+        /// Initializes the dialog and asynchronously loads pending screening data.
+        /// </summary>
         public PendingScreeningsDialog()
         {
             InitializeComponent();

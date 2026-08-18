@@ -12,16 +12,27 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.UsersProfiles
 {
+    /// <summary>
+    /// Immutable snapshot of a profile's editable form state and per-permission
+    /// grants, used for undo/revert.
+    /// </summary>
+    /// <param name="Name">The profile name.</param>
+    /// <param name="Description">The profile description.</param>
+    /// <param name="Permissions">The granted state of each (component, permission) pair.</param>
     public record ProfileSnapshot(
         string Name, string Description,
         List<(string Component, string Permission, bool Granted)> Permissions);
 
+    /// <summary>
+    /// Profiles screen content: profile list/detail form with a per-component
+    /// permissions matrix and undo/revert support.
+    /// </summary>
     public partial class ProfilesContentView : UserControl
     {
         private ObservableCollection<ProfileEntry> _profiles;
@@ -34,6 +45,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
 
         private readonly List<(CheckBox ComponentCb, List<CheckBox> PermissionCbs, ComponentPermissions Data)> _componentGroups = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default profile list once loaded.
+        /// </summary>
         public ProfilesContentView()
         {
             InitializeComponent();
@@ -486,6 +500,10 @@ namespace AccuSync.WPF.Views.UsersProfiles
         // Save / Revert / Undo — called from toolbar
 
         // NOTE: HandleSave updates the in-memory model but doesn't persist to database
+        /// <summary>
+        /// Validates the selected profile's required fields and saves the current state
+        /// as the new baseline.
+        /// </summary>
         public void HandleSave()
         {
             var profile = ProfilesListView.SelectedItem as ProfileEntry;
@@ -511,6 +529,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -518,6 +539,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
             ApplySnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -527,6 +551,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
 
         // Add / Delete — called from toolbar
 
+        /// <summary>
+        /// Adds a new profile with all permissions ungranted and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var emptyComps = BuildComponents(
@@ -548,6 +575,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
             ProfilesListView.SelectedItem = newProfile;
         }
 
+        /// <summary>
+        /// Deletes the selected profile after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             var profile = ProfilesListView.SelectedItem as ProfileEntry;

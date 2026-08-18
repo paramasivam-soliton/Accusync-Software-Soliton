@@ -13,15 +13,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog showing a screener's assigned patients and pass/refer counts for the day.
+    /// </summary>
     public partial class ScreenerDetailsDialog : Window
     {
         private string _screenerName;
 
+        /// <summary>
+        /// Initializes the dialog for the given screener and loads their assigned patients.
+        /// </summary>
+        /// <param name="screenerName">The screener's display name.</param>
+        /// <param name="screenerColor">The accent color used for the screener's avatar.</param>
         public ScreenerDetailsDialog(string screenerName, SolidColorBrush screenerColor)
         {
             InitializeComponent();

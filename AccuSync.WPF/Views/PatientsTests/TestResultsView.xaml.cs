@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using System;
 using System.Collections.Generic;
@@ -16,11 +16,18 @@ using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.PatientsTests
 {
+    /// <summary>
+    /// Displays a selected patient's test results in a grid with a detail panel
+    /// (waveform placeholder, EEG stats, comments, and device info tabs).
+    /// </summary>
     public partial class TestResultsView : UserControl
     {
         private List<TestResultRow> _testRows;
         private int _currentTabIndex = 0;
 
+        /// <summary>
+        /// Initializes the control.
+        /// </summary>
         public TestResultsView()
         {
             InitializeComponent();

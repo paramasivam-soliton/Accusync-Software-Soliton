@@ -19,11 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Not-yet-extracted layers (Models/Services/Helpers) are referenced from AccuSync
-         until each is pulled into its own project in a future PR. -->
     <ProjectReference Include="..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
-    <ProjectReference Include="..\AccuSync\AccuSync.csproj" />
-    <!-- ViewModels layer, extracted. -->
+    <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

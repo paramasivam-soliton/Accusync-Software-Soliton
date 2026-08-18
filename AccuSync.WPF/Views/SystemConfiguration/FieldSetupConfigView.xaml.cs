@@ -9,8 +9,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
-using AccuSync.Helpers;
+using AccuSync.Application.Models;
+using AccuSync.Application.Helpers;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
@@ -18,6 +18,10 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 {
     // NOTE: This view and DeviceFieldSetupView share ~90% of their code. The only difference
     // is the QR column. Extract a shared FieldSetupBase with a configurable column set.
+    /// <summary>
+    /// Toolbar takeover view for system-wide configuration of which patient fields are
+    /// active, mandatory, and included in the QR code.
+    /// </summary>
     public partial class FieldSetupConfigView : UserControl
     {
         private bool _isInitialized = false;
@@ -38,6 +42,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         private readonly Dictionary<int, TextBox> _customLabelBoxes = new();
         private readonly Dictionary<int, Button> _resetButtons = new();
 
+        /// <summary>
+        /// Initializes the control and builds the field table once loaded.
+        /// </summary>
         public FieldSetupConfigView()
         {
             InitializeComponent();
@@ -509,6 +516,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         // Public API
 
         // TODO: HandleSave has no actual persistence.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = TakeSnapshot();
@@ -517,6 +527,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -524,6 +537,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             RestoreSnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

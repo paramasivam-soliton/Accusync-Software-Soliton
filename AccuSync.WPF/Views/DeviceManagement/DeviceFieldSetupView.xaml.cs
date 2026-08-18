@@ -10,8 +10,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AccuSync.Models;
-using AccuSync.Helpers;
+using AccuSync.Application.Models;
+using AccuSync.Application.Helpers;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
@@ -43,6 +43,9 @@ namespace AccuSync.WPF.Views.DeviceManagement
         private readonly Dictionary<int, TextBox> _customLabelBoxes = new();
         private readonly Dictionary<int, Button> _resetButtons = new();
 
+        /// <summary>
+        /// Initializes the control and builds the field table once loaded.
+        /// </summary>
         public DeviceFieldSetupView()
         {
             InitializeComponent();

@@ -13,8 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Models/Services/Resources aren't extracted yet — referenced from AccuSync until they are. -->
-    <ProjectReference Include="..\AccuSync\AccuSync.csproj" />
+    <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
   </ItemGroup>
 
 </Project>

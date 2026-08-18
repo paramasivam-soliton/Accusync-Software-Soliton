@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Controls;
-using AccuSync.Helpers;
+using AccuSync.Application.Helpers;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Views.UsersProfiles;
 using AccuSync.WPF.Views.About;
@@ -24,10 +24,14 @@ using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.WPF.Views.SystemConfiguration;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Resources.Constants;
-using AccuSync.Models;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
+    /// <summary>
+    /// Main navigation shell: owns the sidebar nav items, hosts each screen's
+    /// <see cref="BaseScreenView"/>, and routes ribbon button clicks to the
+    /// currently active screen (and its active takeover mode, if any).
+    /// </summary>
     public partial class SidebarNavigation : UserControl
     {
         private string _currentView = "Dashboard";
@@ -62,6 +66,10 @@ namespace AccuSync.WPF.Views.Dashboard
         private readonly SolidColorBrush _navInactiveBg = new SolidColorBrush(Color.FromArgb(0x1A, 0xFF, 0xFF, 0xFF));
         private readonly SolidColorBrush _navHoverBg = new SolidColorBrush(Color.FromArgb(0x26, 0xFF, 0xFF, 0xFF));
 
+        /// <summary>
+        /// Initializes the control, sets up each screen's base view, and
+        /// navigates to the default landing view once loaded.
+        /// </summary>
         public SidebarNavigation()
         {
             InitializeComponent();
@@ -84,6 +92,10 @@ namespace AccuSync.WPF.Views.Dashboard
 
         // Public API — called from AdminDashboardWindow
 
+        /// <summary>
+        /// Sets the current user's display name and forwards it to the dashboard greeting.
+        /// </summary>
+        /// <param name="username">The logged-in user's display name.</param>
         public void SetCurrentUser(string username)
         {
             _currentUser = username;
@@ -954,7 +966,7 @@ namespace AccuSync.WPF.Views.Dashboard
         {
             if (DevModeConfig.SkipLogin)
             {
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
                 return;
             }
 

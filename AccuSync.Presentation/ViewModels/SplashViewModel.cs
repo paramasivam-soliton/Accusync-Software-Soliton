@@ -9,8 +9,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Resources;
-using AccuSync.Services;
+using AccuSync.Application.Abstractions.Services;
+using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
 {
@@ -24,6 +24,7 @@ namespace AccuSync.Presentation.ViewModels
         private readonly IDatabaseService _databaseService;
         private string _statusMessage;
 
+        /// <summary>Current progress message shown on the splash screen.</summary>
         public string StatusMessage
         {
             get => _statusMessage;
@@ -34,11 +35,17 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
+        /// <summary>Creates the view model with the database service used for initialization.</summary>
+        /// <param name="databaseService">Service used to initialize the application database.</param>
         public SplashViewModel(IDatabaseService databaseService)
         {
             _databaseService = databaseService;
         }
 
+        /// <summary>
+        /// Initializes the database and updates <see cref="StatusMessage"/> as progress advances.
+        /// Shuts down the application if initialization fails.
+        /// </summary>
         public async Task InitializeAsync()
         {
             try
@@ -57,10 +64,11 @@ namespace AccuSync.Presentation.ViewModels
                 // from a failed database init.
                 StatusMessage = string.Format(Strings.SplashViewModel_Error, ex.Message);
                 await Task.Delay(3000);
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
             }
         }
 
+        /// <summary>Raised whenever a bound property's value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

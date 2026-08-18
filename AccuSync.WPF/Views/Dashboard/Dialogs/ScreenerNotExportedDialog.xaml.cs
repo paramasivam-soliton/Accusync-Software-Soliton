@@ -13,17 +13,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
 {
+    /// <summary>
+    /// Dialog listing a screener's completed screenings that have not yet been exported.
+    /// </summary>
     public partial class ScreenerNotExportedDialog : Window
     {
         private List<ScreenerNotExportedScreening> _allScreenings;
         private List<ScreenerNotExportedScreening> _filteredScreenings;
 
+        /// <summary>
+        /// Initializes the dialog and asynchronously loads not-exported screening data.
+        /// </summary>
         public ScreenerNotExportedDialog()
         {
             InitializeComponent();

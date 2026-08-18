@@ -11,16 +11,30 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.UsersProfiles
 {
+    /// <summary>
+    /// Immutable snapshot of a user's editable form state, used for undo/revert.
+    /// </summary>
+    /// <param name="LoginName">The user's login name.</param>
+    /// <param name="ProfileIndex">The selected index in the profile combo box.</param>
+    /// <param name="FirstName">The user's first name.</param>
+    /// <param name="LastName">The user's last name.</param>
+    /// <param name="Password">The user's password.</param>
+    /// <param name="Verify">The password verification value.</param>
+    /// <param name="LanguageIndex">The selected index in the language combo box.</param>
+    /// <param name="StatusIndex">The selected index in the status combo box.</param>
     public record UserSnapshot(
         string LoginName, int ProfileIndex, string FirstName, string LastName,
         string Password, string Verify, int LanguageIndex, int StatusIndex);
 
+    /// <summary>
+    /// Users screen content: user list/detail form plus the Profiles takeover view.
+    /// </summary>
     public partial class UsersContentView : UserControl
     {
         private ObservableCollection<UserEntry> _users;
@@ -34,6 +48,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
         private UserSnapshot _savedState;
         private Stack<UserSnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default user list once loaded.
+        /// </summary>
         public UsersContentView()
         {
             InitializeComponent();
@@ -197,6 +214,10 @@ namespace AccuSync.WPF.Views.UsersProfiles
         // Save / Revert / Undo — called from toolbar
 
         // NOTE: HandleSave updates the in-memory model but doesn't persist to database
+        /// <summary>
+        /// Validates the selected user's required fields and password match, then saves
+        /// the current state as the new baseline.
+        /// </summary>
         public void HandleSave()
         {
             var user = UsersListView.SelectedItem as UserEntry;
@@ -243,6 +264,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -250,6 +274,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
             ApplySnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
@@ -259,6 +286,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
 
         // Add / Delete / Unlock — called from toolbar
 
+        /// <summary>
+        /// Adds a new user with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var newUser = new UserEntry
@@ -277,6 +307,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
             UsersListView.SelectedItem = newUser;
         }
 
+        /// <summary>
+        /// Deletes the selected user after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             var user = UsersListView.SelectedItem as UserEntry;
@@ -295,6 +328,9 @@ namespace AccuSync.WPF.Views.UsersProfiles
             }
         }
 
+        /// <summary>
+        /// Unlocks the selected user account if it is currently locked.
+        /// </summary>
         public void HandleUnlock()
         {
             var user = UsersListView.SelectedItem as UserEntry;
@@ -442,14 +478,17 @@ namespace AccuSync.WPF.Views.UsersProfiles
 
         // Profiles Takeover — switches between Users and Profiles views
 
+        /// <summary>Provides access to the embedded profiles view for the toolbar's takeover mode.</summary>
         public ProfilesContentView ProfilesView => ProfilesContent;
 
+        /// <summary>Switches from the normal user list/detail view into the profiles takeover.</summary>
         public void ShowProfiles()
         {
             NormalUsersGrid.Visibility = Visibility.Collapsed;
             ProfilesContent.Visibility = Visibility.Visible;
         }
 
+        /// <summary>Switches back from the profiles takeover to the normal user view.</summary>
         public void HideProfiles()
         {
             ProfilesContent.Visibility = Visibility.Collapsed;

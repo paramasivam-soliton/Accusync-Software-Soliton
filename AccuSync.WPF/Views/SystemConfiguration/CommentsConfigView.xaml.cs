@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
@@ -17,6 +17,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 {
     // NOTE: Undo/snapshot/restore infrastructure is nearly identical to ABRConfigurationView.
     // If a third config view appears, extract a generic ConfigViewBase with shared undo logic.
+    /// <summary>
+    /// Toolbar takeover view for configuring predefined test comments and their translations.
+    /// </summary>
     public partial class CommentsConfigView : UserControl
     {
         private ObservableCollection<CommentEntry> _comments = new();
@@ -36,6 +39,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 
         // Initialization
 
+        /// <summary>
+        /// Initializes the control and populates the default comment list once loaded.
+        /// </summary>
         public CommentsConfigView()
         {
             InitializeComponent();
@@ -196,6 +202,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 
         // Public Handlers (called by SidebarNavigation)
 
+        /// <summary>
+        /// Adds a new comment with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             var entry = new CommentEntry
@@ -211,6 +220,10 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             CommentsListView.SelectedItem = entry;
         }
 
+        /// <summary>
+        /// Deletes the selected comment after user confirmation. Refuses to delete
+        /// a comment that is currently in use.
+        /// </summary>
         public void HandleDelete()
         {
             if (CommentsListView.SelectedItem is not CommentEntry entry) return;
@@ -246,6 +259,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         }
 
         // TODO: HandleSave has no actual persistence — same issue as ABRConfigurationView.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             _savedState = CaptureSnapshot();
@@ -253,6 +269,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             AppDialog.Show(Strings.CommentsConfigView_CommentSaved, Strings.CommentsConfigView_Save, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -260,6 +279,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             _undoStack.Clear();
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;

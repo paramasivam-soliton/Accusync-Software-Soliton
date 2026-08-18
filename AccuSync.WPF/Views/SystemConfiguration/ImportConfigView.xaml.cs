@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
-using AccuSync.Models;
+using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 
@@ -19,6 +19,10 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 {
     // NOTE: List-building, selection, and snapshot/undo patterns are near-identical to
     // ExportConfigView. Extract a shared ConfigListDetailBase.
+    /// <summary>
+    /// Toolbar takeover view for configuring import entries (format, user profile,
+    /// password, and source folder).
+    /// </summary>
     public partial class ImportConfigView : UserControl
     {
         private bool _isInitialized = false;
@@ -60,6 +64,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         private ImportSnapshot _savedState;
         private readonly Stack<ImportSnapshot> _undoStack = new();
 
+        /// <summary>
+        /// Initializes the control and populates the default import entry once loaded.
+        /// </summary>
         public ImportConfigView()
         {
             InitializeComponent();
@@ -344,6 +351,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
 
         // Public API
 
+        /// <summary>
+        /// Adds a new import entry with default values and selects it.
+        /// </summary>
         public void HandleAdd()
         {
             PushUndo();
@@ -360,6 +370,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             SelectItem(_entries.Count - 1);
         }
 
+        /// <summary>
+        /// Deletes the selected import entry after user confirmation.
+        /// </summary>
         public void HandleDelete()
         {
             if (_selectedIndex < 0 || _selectedIndex >= _entries.Count) return;
@@ -389,6 +402,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
         }
 
         // TODO: HandleSave has no actual persistence.
+        /// <summary>
+        /// Saves the current state as the new baseline and clears the undo stack.
+        /// </summary>
         public void HandleSave()
         {
             SaveCurrentToEntry();
@@ -398,6 +414,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Reverts all changes back to the last saved state.
+        /// </summary>
         public void HandleRevert()
         {
             if (_savedState == null) return;
@@ -405,6 +424,9 @@ namespace AccuSync.WPF.Views.SystemConfiguration
             RestoreSnapshot(_savedState);
         }
 
+        /// <summary>
+        /// Restores the previous state from the undo stack.
+        /// </summary>
         public void HandleUndo()
         {
             if (_undoStack.Count == 0) return;
