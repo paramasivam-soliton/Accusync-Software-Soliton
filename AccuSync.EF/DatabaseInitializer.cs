@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Data.Common;
 using System.IO;
 using System.Threading.Tasks;
 using AccuSync.Core.Abstractions.Repositories;
@@ -52,15 +51,6 @@ namespace AccuSync.EF
 
             try
             {
-                // EF Core's migration lock (__EFMigrationsLock) exists to stop two
-                // *concurrent* instances from migrating at once. This app is single-instance
-                // desktop software, so any row found here at startup is not a live lock —
-                // it's a leftover from a previous run that was killed mid-migration (crash,
-                // force-quit, debugger stop). Left alone, MigrateAsync polls for that row to
-                // clear roughly once a second, forever, since the process that owned it is
-                // gone — bricking every future launch until someone edits the database file
-                // by hand. Clearing it first is what makes migration recoverable from a
-                // mid-migration interruption instead of a one-way failure.
                 await ClearStaleMigrationsLockAsync(context);
                 await context.Database.MigrateAsync();
             }
@@ -81,18 +71,21 @@ namespace AccuSync.EF
         }
 
         /// <summary>
-        /// Deletes any row in EF Core's migrations lock table. See the comment at the
-        /// InitializeAsync call site for why this is safe and necessary here.
+        /// Deletes any row in EF Core's migrations lock table (__EFMigrationsLock), if present.
+        /// This app is single-instance, so a row found here at startup is always stale — left
+        /// over from a run killed mid-migration. Left in place, MigrateAsync polls for it to
+        /// clear forever, bricking every future launch. No-ops on first run, before the table
+        /// exists.
         /// </summary>
         private async Task ClearStaleMigrationsLockAsync(SettingsDbContext context)
         {
-            try
+            bool tableExists = await context.Database.SqlQueryRaw<string>(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name = '__EFMigrationsLock'")
+                .AnyAsync();
+
+            if (tableExists)
             {
                 await context.Database.ExecuteSqlRawAsync("DELETE FROM \"__EFMigrationsLock\";");
-            }
-            catch (DbException)
-            {
-                // Table doesn't exist yet — this is the very first run, nothing to clear.
             }
         }
 

@@ -1,9 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- No -windows, no UseWPF, no ProjectReference to anything: Core has zero
-         dependency on WPF, EF Core, or any other AccuSync project. The practical
-         test — delete every project except Core and it must still compile. -->
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Core</AssemblyName>
