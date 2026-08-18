@@ -16,10 +16,10 @@ namespace AccuSync.Core.Abstractions.Services
     public interface ICurrentUserContext
     {
         /// <summary>The signed-in user's unique identifier, or null if no one is signed in.</summary>
-        string Guid { get; }
+        string? Id { get; }
 
         /// <summary>The signed-in user's account name, or null if no one is signed in.</summary>
-        string AccountName { get; }
+        string? AccountName { get; }
 
         /// <summary>The signed-in user's role. Undefined/least-privilege when no one is signed in.</summary>
         UserRole Role { get; }

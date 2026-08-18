@@ -49,12 +49,12 @@ namespace AccuSync.EF
         {
             var entity = new User
             {
-                Guid = user.Guid,
+                Id = user.Id,
                 AccountName = _encryptionService.Encrypt(user.AccountName),
                 UsernameHash = ComputeUsernameHash(user.AccountName),
                 FirstName = _encryptionService.Encrypt(user.FirstName),
                 LastName = _encryptionService.Encrypt(user.LastName),
-                Status = user.Status,
+                IsActive = user.IsActive,
                 ProfileId = _encryptionService.Encrypt(user.ProfileId),
                 ProfilePassword = user.ProfilePassword,
                 FirstLogin = user.FirstLogin,
@@ -112,14 +112,14 @@ namespace AccuSync.EF
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                var tracked = await context.Users.FindAsync(user.Guid);
+                var tracked = await context.Users.FindAsync(user.Id);
                 if (tracked == null) return false;
 
                 tracked.AccountName = _encryptionService.Encrypt(user.AccountName);
                 tracked.UsernameHash = ComputeUsernameHash(user.AccountName);
                 tracked.FirstName = _encryptionService.Encrypt(user.FirstName);
                 tracked.LastName = _encryptionService.Encrypt(user.LastName);
-                tracked.Status = user.Status;
+                tracked.IsActive = user.IsActive;
                 tracked.ProfileId = _encryptionService.Encrypt(user.ProfileId);
                 tracked.ProfilePassword = user.ProfilePassword;
                 tracked.FirstLogin = user.FirstLogin;
@@ -143,15 +143,35 @@ namespace AccuSync.EF
         }
 
         /// <summary>Assigns a new role to the given user. Returns false if the user no longer exists.</summary>
-        public async Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role)
+        public async Task<bool> UpdateUserRoleAsync(string userId, UserRole role)
         {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                var tracked = await context.Users.FindAsync(userGuid);
+                var tracked = await context.Users.FindAsync(userId);
                 if (tracked == null) return false;
 
                 tracked.ProfileId = _encryptionService.Encrypt(role.ToString());
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>Activates or deactivates the given user. Returns false if the user no longer exists.</summary>
+        public async Task<bool> SetUserActiveStatusAsync(string userId, bool isActive)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userId);
+                if (tracked == null) return false;
+
+                tracked.IsActive = isActive;
 
                 await context.SaveChangesAsync();
                 return true;
@@ -169,11 +189,11 @@ namespace AccuSync.EF
             {
                 await InsertUserAsync(new User
                 {
-                    Guid = user.Guid,
+                    Id = user.Id,
                     AccountName = user.AccountName,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Status = user.Status,
+                    IsActive = user.IsActive,
                     ProfileId = user.ProfileId,
                     ProfilePassword = _passwordHasher.Hash(user.ProfilePassword),
                     FirstLogin = user.FirstLogin,
@@ -197,12 +217,12 @@ namespace AccuSync.EF
         {
             return new User
             {
-                Guid = stored.Guid,
+                Id = stored.Id,
                 AccountName = _encryptionService.Decrypt(stored.AccountName),
                 UsernameHash = stored.UsernameHash,
                 FirstName = _encryptionService.Decrypt(stored.FirstName),
                 LastName = _encryptionService.Decrypt(stored.LastName),
-                Status = stored.Status,
+                IsActive = stored.IsActive,
                 ProfileId = _encryptionService.Decrypt(stored.ProfileId),
                 ProfilePassword = stored.ProfilePassword,
                 FirstLogin = stored.FirstLogin,

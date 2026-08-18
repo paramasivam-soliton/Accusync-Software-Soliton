@@ -6,20 +6,19 @@ namespace AccuSync.Core.Entities
     /// Represents a user account. Field types and conventions (Unix timestamps,
     /// int-as-boolean) match the device database schema.
     /// </summary>
-    // TODO: FirstLogin, Status use int where bool would be clearer. Consider
-    //       bool properties with int-backed fields if the DB schema can't change.
     public class User
     {
         /// <summary>The user's unique identifier.</summary>
-        public string Guid { get; set; }
+        public string Id { get; set; }
         /// <summary>The user's login account name.</summary>
         public string AccountName { get; set; }
         /// <summary>The user's first name.</summary>
         public string FirstName { get; set; }
         /// <summary>The user's last name.</summary>
         public string LastName { get; set; }
-        /// <summary>The user's account status.</summary>
-        public int Status { get; set; }
+
+        /// <summary>Whether this account can authenticate. True = active, false = deactivated.</summary>
+        public bool IsActive { get; set; }
         /// <summary>The identifier of the profile assigned to the user.</summary>
         public string ProfileId { get; set; }
         /// <summary>Deterministic hash of the normalized account name, used for uniqueness/lookup since <see cref="AccountName"/> is encrypted non-deterministically.</summary>
@@ -49,14 +48,14 @@ namespace AccuSync.Core.Entities
         /// <summary>The user's last three passwords.</summary>
         public string LastThreePasswords { get; set; }
 
-        /// <summary>Creates a new user with a generated <see cref="Guid"/> and default field values.</summary>
+        /// <summary>Creates a new user with a generated <see cref="Id"/> and default field values.</summary>
         public User()
         {
-            Guid = System.Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();
             AccountName = string.Empty;
             FirstName = string.Empty;
             LastName = string.Empty;
-            Status = 0;
+            IsActive = true;
             ProfileId = string.Empty;
             UsernameHash = string.Empty;
             ProfilePassword = string.Empty;

@@ -13,8 +13,9 @@ using AccuSync.Core.Entities;
 namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
-    /// Handles user authentication with lockout protection (10 failed attempts,
-    /// 15-minute cooldown) and 90-day password expiration.
+    /// Handles user authentication: rejects deactivated accounts regardless of
+    /// password correctness, enforces lockout protection (10 failed attempts,
+    /// 15-minute cooldown), and enforces 90-day password expiration.
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
@@ -59,6 +60,17 @@ namespace AccuSync.Application.Services.Authentication
                 {
                     Success = false,
                     ErrorMessage = AuthenticationConstants.ErrorInvalidCredentials
+                };
+            }
+
+            // Deactivated accounts are blocked regardless of password correctness.
+            // Same generic message as a bad password — active status isn't leaked either.
+            if (!user.IsActive)
+            {
+                return new AuthenticationResult
+                {
+                    Success = false,
+                    ErrorMessage = "Invalid username or password."
                 };
             }
 

@@ -21,7 +21,7 @@ namespace AccuSync.EF.Configurations
         {
             builder.ToTable("Users");
 
-            builder.HasKey(u => u.Guid);
+            builder.HasKey(u => u.Id);
 
             builder.Property(u => u.AccountName).IsRequired();
 
@@ -34,7 +34,7 @@ namespace AccuSync.EF.Configurations
 
             builder.Property(u => u.ProfilePassword).IsRequired();
 
-            builder.Property(u => u.Status).HasDefaultValue(0);
+            builder.Property(u => u.IsActive).HasDefaultValue(true);
             builder.Property(u => u.FirstLogin).HasDefaultValue(1);
             builder.Property(u => u.FailedLoginAttemptCount).HasDefaultValue(0);
             builder.Property(u => u.FailedResetAttemptCount).HasDefaultValue(0);

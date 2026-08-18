@@ -44,6 +44,13 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// management UI. The new role takes effect on that user's next login, not
         /// live for any session already in progress.
         /// </summary>
-        Task<bool> UpdateUserRoleAsync(string userGuid, UserRole role);
+        Task<bool> UpdateUserRoleAsync(string userId, UserRole role);
+
+        /// <summary>
+        /// Activates or deactivates a user account directly, without requiring a full
+        /// Users management UI. Deactivated accounts are blocked from authenticating
+        /// regardless of password correctness (see <c>AuthenticationService</c>).
+        /// </summary>
+        Task<bool> SetUserActiveStatusAsync(string userId, bool isActive);
     }
 }

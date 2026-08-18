@@ -23,6 +23,9 @@ namespace AccuSync.EF.DependencyInjection
     /// </summary>
     public static class SqliteServiceCollectionExtensions
     {
+        /// <summary>Registers the SQLite-backed persistence services, including the DbContext, repositories, and database initializer.</summary>
+        /// <param name="databasePath">Path to the SQLite database file.</param>
+        /// <returns>The same <paramref name="services"/> collection, for chaining.</returns>
         public static IServiceCollection AddSqlitePersistence(this IServiceCollection services, string databasePath)
         {
             services.AddSingleton<TimestampInterceptor>();

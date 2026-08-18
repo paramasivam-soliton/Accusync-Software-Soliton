@@ -24,6 +24,7 @@ namespace AccuSync.EF
         private readonly IDbContextFactory<SettingsDbContext> _contextFactory;
         private readonly IUserRepository _userRepository;
 
+        /// <summary>Creates the initializer backed by the given context factory and user repository.</summary>
         public DatabaseInitializer(IDbContextFactory<SettingsDbContext> contextFactory, IUserRepository userRepository)
         {
             _contextFactory = contextFactory;

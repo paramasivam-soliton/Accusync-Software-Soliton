@@ -37,7 +37,8 @@ namespace AccuSync.Application.Tests.Services.Authentication
             string plainPassword,
             int failedLoginAttemptCount = 0,
             long firstFailedLoginTime = 0L,
-            long? passwordModificationDate = null)
+            long? passwordModificationDate = null,
+            bool isActive = true)
         {
             return new User
             {
@@ -45,7 +46,8 @@ namespace AccuSync.Application.Tests.Services.Authentication
                 ProfilePassword = _passwordHasher.Hash(plainPassword),
                 FailedLoginAttemptCount = failedLoginAttemptCount,
                 FirstFailedLoginTime = firstFailedLoginTime,
-                PasswordModificationDate = passwordModificationDate ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                PasswordModificationDate = passwordModificationDate ?? DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                IsActive = isActive
             };
         }
 
@@ -104,6 +106,22 @@ namespace AccuSync.Application.Tests.Services.Authentication
 
             // Assert — same message a wrong password gets, so a caller can't
             // tell "no such account" from "wrong password" (no enumeration).
+            Assert.False(result.Success);
+            Assert.Equal("Invalid username or password.", result.ErrorMessage);
+        }
+
+        [Fact]
+        public async Task GivenADeactivatedAccount_WhenAuthenticatingWithTheCorrectPassword_ThenReturnsTheSameGenericInvalidCredentialsErrorAsAWrongPassword()
+        {
+            // Arrange
+            var user = CreateUser(CorrectPassword, isActive: false);
+            GivenUserExists(user);
+
+            // Act
+            var result = await _sut.AuthenticateAsync(AccountName, CorrectPassword);
+
+            // Assert — deactivated is rejected regardless of password correctness, with
+            // the same generic message a wrong password gets (active status isn't leaked).
             Assert.False(result.Success);
             Assert.Equal("Invalid username or password.", result.ErrorMessage);
         }
