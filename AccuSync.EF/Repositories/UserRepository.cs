@@ -182,6 +182,27 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Clears the given user's lockout state. Returns false if the user no longer exists.</summary>
+        public async Task<bool> UnlockUserAsync(string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var tracked = await context.Users.FindAsync(userId);
+                if (tracked == null) return false;
+
+                tracked.FailedLoginAttemptCount = 0;
+                tracked.FirstFailedLoginTime = 0L;
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>Creates a new user account, hashing its password on the way in.</summary>
         public async Task<bool> CreateUserAsync(User user)
         {

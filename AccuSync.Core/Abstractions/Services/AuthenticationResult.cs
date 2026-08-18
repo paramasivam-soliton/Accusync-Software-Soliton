@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System;
 using AccuSync.Core.Entities;
 
 namespace AccuSync.Core.Abstractions.Services
@@ -30,14 +29,9 @@ namespace AccuSync.Core.Abstractions.Services
         /// </summary>
         public User User { get; set; }
 
-        /// <summary>
-        /// Whether the account is currently locked out due to failed login attempts.
-        /// </summary>
+        /// <summary>True when the failure is specifically account lockout (5 consecutive
+        /// failed attempts) — auto-unlocks after the configured duration elapses, or
+        /// sooner if an Admin unlocks it directly.</summary>
         public bool IsLocked { get; set; }
-
-        /// <summary>
-        /// How long the account remains locked out, when <see cref="IsLocked"/> is <c>true</c>.
-        /// </summary>
-        public TimeSpan RemainingLockTime { get; set; }
     }
 }

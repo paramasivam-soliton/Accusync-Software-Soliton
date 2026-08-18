@@ -1203,6 +1203,60 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Username and password are required..
+        /// </summary>
+        public static string AuthenticationService_ErrorCredentialsRequired {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorCredentialsRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password..
+        /// </summary>
+        public static string AuthenticationService_ErrorInvalidCredentials {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorInvalidCredentials", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password. {0} attempt(s) remaining..
+        /// </summary>
+        public static string AuthenticationService_ErrorInvalidCredentialsWithAttemptsFormat {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorInvalidCredentialsWithAttemptsFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Account locked. Try again in {0} minute(s), or contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_ErrorAccountLockedFormat {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorAccountLockedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Account is now locked due to {0} failed attempts. Try again in {1} minute(s), or contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_ErrorAccountNowLockedFormat {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorAccountNowLockedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has expired. Please contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_ErrorPasswordExpired {
+            get {
+                return ResourceManager.GetString("AuthenticationService_ErrorPasswordExpired", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Current password is incorrect..
         /// </summary>
         public static string ChangePasswordViewModel_CurrentPasswordIncorrect {

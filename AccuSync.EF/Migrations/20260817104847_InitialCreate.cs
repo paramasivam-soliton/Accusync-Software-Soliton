@@ -11,6 +11,19 @@ namespace AccuSync.EF.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppSettings",
+                columns: table => new
+                {
+                    SettingsId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LockoutDurationMinutes = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 15)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppSettings", x => x.SettingsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -18,7 +31,7 @@ namespace AccuSync.EF.Migrations
                     AccountName = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     ProfileId = table.Column<string>(type: "TEXT", nullable: false),
                     UsernameHash = table.Column<string>(type: "TEXT", nullable: false),
                     ProfilePassword = table.Column<string>(type: "TEXT", nullable: false),
@@ -47,6 +60,9 @@ namespace AccuSync.EF.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppSettings");
+
             migrationBuilder.DropTable(
                 name: "Users");
         }

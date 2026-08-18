@@ -309,6 +309,37 @@ namespace AccuSync.EF.Tests.Repositories
             Assert.False(success);
         }
 
+        [Fact]
+        public async Task UnlockUserAsync_GivenALockedOutUser_WhenUnlocked_ThenClearsTheFailedAttemptCounterAndTimestampTogether()
+        {
+            // Arrange — simulates an account locked out by 5 failed attempts.
+            var user = NewUser("Admin");
+            await _sut.CreateUserAsync(user);
+            var lockedOut = await _sut.GetUserByAccountNameAsync("Admin");
+            lockedOut!.FailedLoginAttemptCount = 5;
+            lockedOut.FirstFailedLoginTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            await _sut.UpdateUserAsync(lockedOut);
+
+            // Act — an Admin unlocking the account immediately, ahead of the configured duration.
+            bool success = await _sut.UnlockUserAsync(user.Id);
+
+            // Assert — both fields reset together, not just the counter.
+            Assert.True(success);
+            var result = await _sut.GetUserByAccountNameAsync("Admin");
+            Assert.Equal(0, result!.FailedLoginAttemptCount);
+            Assert.Equal(0L, result.FirstFailedLoginTime);
+        }
+
+        [Fact]
+        public async Task UnlockUserAsync_GivenAUserIdThatDoesNotExist_WhenCalled_ThenReturnsFalse()
+        {
+            // Act
+            bool success = await _sut.UnlockUserAsync(System.Guid.NewGuid().ToString());
+
+            // Assert
+            Assert.False(success);
+        }
+
         public void Dispose()
         {
             _context.Dispose();

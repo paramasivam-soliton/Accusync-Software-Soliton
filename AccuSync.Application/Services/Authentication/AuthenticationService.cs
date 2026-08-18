@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // <copyright file="AuthenticationService.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using AccuSync.Application.Resources;
 using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
@@ -14,27 +15,21 @@ namespace AccuSync.Application.Services.Authentication
 {
     /// <summary>
     /// Handles user authentication: rejects deactivated accounts regardless of
-    /// password correctness, enforces lockout protection (10 failed attempts,
-    /// 15-minute cooldown), and enforces 90-day password expiration.
+    /// password correctness, enforces lockout protection (5 consecutive failed
+    /// attempts locks the account for an admin-configurable duration, default 15
+    /// minutes), and enforces 90-day password expiration. An Admin can also unlock
+    /// a specific account immediately via <see cref="IUserRepository.UnlockUserAsync"/>,
+    /// overriding the timer for that one account. There is no special case for Admin
+    /// accounts — the same mandatory lock/duration applies to every role.
     /// </summary>
-    public class AuthenticationService : IAuthenticationService
+    /// <param name="userRepository">Used to look up and update user accounts.</param>
+    /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
+    /// <param name="appSettingsRepository">Used to read the admin-configurable lockout duration.</param>
+    public class AuthenticationService(
+        IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
+        IAppSettingsRepository appSettingsRepository) : IAuthenticationService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
-        private const int MaxFailedAttempts = 10;
-        private const int LockoutDurationMinutes = 15;
-
-        /// <summary>
-        /// Creates the service with its required data and password-hashing dependencies.
-        /// </summary>
-        /// <param name="userRepository">Used to look up and update user accounts.</param>
-        /// <param name="passwordHasher">Used to verify the submitted password against its stored hash.</param>
-        public AuthenticationService(IUserRepository userRepository, IPasswordHasher passwordHasher)
-        {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
-        }
-
         /// <summary>
         /// Authenticates the given credentials, applying lockout and password
         /// expiration checks. See the class-level remarks for details.
@@ -49,17 +44,17 @@ namespace AccuSync.Application.Services.Authentication
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = AuthenticationConstants.ErrorCredentialsRequired
+                    ErrorMessage = Strings.AuthenticationService_ErrorCredentialsRequired
                 };
             }
 
-            var user = await _userRepository.GetUserByAccountNameAsync(accountName);
+            var user = await userRepository.GetUserByAccountNameAsync(accountName);
             if (user == null)
             {
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = AuthenticationConstants.ErrorInvalidCredentials
+                    ErrorMessage = Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
@@ -70,37 +65,38 @@ namespace AccuSync.Application.Services.Authentication
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = "Invalid username or password."
+                    ErrorMessage = Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
-            // Lockout check — resets automatically after the cooldown period
-            if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
+            // Lockout check — auto-unlocks once the configured duration has elapsed since
+            // the lockout started, OR earlier if an Admin explicitly called UnlockUserAsync.
+            if (user.FailedLoginAttemptCount >= AuthenticationConstants.MaxFailedAttempts)
             {
+                int lockoutDurationMinutes = await appSettingsRepository.GetLockoutDurationMinutesAsync();
                 long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                long lockoutEndTime = user.FirstFailedLoginTime + (LockoutDurationMinutes * 60);
+                long lockoutEndTime = user.FirstFailedLoginTime + (lockoutDurationMinutes * 60);
 
                 if (currentTime < lockoutEndTime)
                 {
                     long remainingSeconds = lockoutEndTime - currentTime;
+                    long remainingMinutes = (remainingSeconds + 59) / 60; // round up to whole minutes
                     return new AuthenticationResult
                     {
                         Success = false,
                         IsLocked = true,
-                        RemainingLockTime = TimeSpan.FromSeconds(remainingSeconds),
-                        ErrorMessage = string.Format(AuthenticationConstants.ErrorAccountLockedFormat, TimeSpan.FromSeconds(remainingSeconds).Minutes)
+                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountLockedFormat, remainingMinutes)
                     };
                 }
-                else
-                {
-                    user.FailedLoginAttemptCount = 0;
-                    user.FirstFailedLoginTime = 0L;
-                    await _userRepository.UpdateUserAsync(user);
-                }
+
+                // Duration elapsed — auto-unlock and let this attempt proceed normally.
+                user.FailedLoginAttemptCount = 0;
+                user.FirstFailedLoginTime = 0L;
+                await userRepository.UpdateUserAsync(user);
             }
 
             // Password verification — hash-to-hash only, never decrypt/compare plaintext.
-            if (!_passwordHasher.Verify(password, user.ProfilePassword))
+            if (!passwordHasher.Verify(password, user.ProfilePassword))
             {
                 // Track the timestamp of the first failure in a streak so the
                 // lockout window is measured from when failures started.
@@ -110,17 +106,18 @@ namespace AccuSync.Application.Services.Authentication
                 }
 
                 user.FailedLoginAttemptCount++;
-                await _userRepository.UpdateUserAsync(user);
+                await userRepository.UpdateUserAsync(user);
 
-                int attemptsRemaining = MaxFailedAttempts - user.FailedLoginAttemptCount;
+                int attemptsRemaining = AuthenticationConstants.MaxFailedAttempts - user.FailedLoginAttemptCount;
 
-                if (user.FailedLoginAttemptCount >= MaxFailedAttempts)
+                if (user.FailedLoginAttemptCount >= AuthenticationConstants.MaxFailedAttempts)
                 {
+                    int lockoutDurationMinutes = await appSettingsRepository.GetLockoutDurationMinutesAsync();
                     return new AuthenticationResult
                     {
                         Success = false,
                         IsLocked = true,
-                        ErrorMessage = string.Format(AuthenticationConstants.ErrorAccountNowLockedFormat, MaxFailedAttempts, LockoutDurationMinutes)
+                        ErrorMessage = string.Format(Strings.AuthenticationService_ErrorAccountNowLockedFormat, AuthenticationConstants.MaxFailedAttempts, lockoutDurationMinutes)
                     };
                 }
 
@@ -128,8 +125,8 @@ namespace AccuSync.Application.Services.Authentication
                 {
                     Success = false,
                     ErrorMessage = attemptsRemaining > 0
-                        ? string.Format(AuthenticationConstants.ErrorInvalidCredentialsWithAttemptsFormat, attemptsRemaining)
-                        : AuthenticationConstants.ErrorInvalidCredentials
+                        ? string.Format(Strings.AuthenticationService_ErrorInvalidCredentialsWithAttemptsFormat, attemptsRemaining)
+                        : Strings.AuthenticationService_ErrorInvalidCredentials
                 };
             }
 
@@ -147,14 +144,14 @@ namespace AccuSync.Application.Services.Authentication
                 return new AuthenticationResult
                 {
                     Success = false,
-                    ErrorMessage = AuthenticationConstants.ErrorPasswordExpired
+                    ErrorMessage = Strings.AuthenticationService_ErrorPasswordExpired
                 };
             }
 
             // Success — reset the failure streak
             user.FailedLoginAttemptCount = 0;
             user.FirstFailedLoginTime = 0L;
-            await _userRepository.UpdateUserAsync(user);
+            await userRepository.UpdateUserAsync(user);
 
             return new AuthenticationResult
             {

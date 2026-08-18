@@ -52,5 +52,12 @@ namespace AccuSync.Core.Abstractions.Repositories
         /// regardless of password correctness (see <c>AuthenticationService</c>).
         /// </summary>
         Task<bool> SetUserActiveStatusAsync(string userId, bool isActive);
+
+        /// <summary>
+        /// Clears a lockout directly, without requiring a full Users management UI.
+        /// Resets <c>FailedLoginAttemptCount</c> and <c>FirstFailedLoginTime</c> together,
+        /// so the account is fully reset rather than nominally "unlocked."
+        /// </summary>
+        Task<bool> UnlockUserAsync(string userId);
     }
 }

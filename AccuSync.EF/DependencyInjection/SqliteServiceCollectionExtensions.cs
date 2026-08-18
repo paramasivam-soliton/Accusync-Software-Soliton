@@ -46,6 +46,7 @@ namespace AccuSync.EF.DependencyInjection
             });
 
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IAppSettingsRepository, AppSettingsRepository>();
             services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();
 
             return services;

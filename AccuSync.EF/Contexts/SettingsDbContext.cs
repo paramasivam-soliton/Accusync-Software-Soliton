@@ -23,10 +23,12 @@ namespace AccuSync.EF.Contexts
         }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<AppSettings> AppSettings => Set<AppSettings>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new AppSettingsConfiguration());
         }
     }
 }

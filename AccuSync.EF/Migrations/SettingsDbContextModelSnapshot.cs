@@ -16,6 +16,22 @@ namespace AccuSync.EF.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
+            modelBuilder.Entity("AccuSync.Core.Entities.AppSettings", b =>
+                {
+                    b.Property<int>("SettingsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LockoutDurationMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(15);
+
+                    b.HasKey("SettingsId");
+
+                    b.ToTable("AppSettings", (string)null);
+                });
+
             modelBuilder.Entity("AccuSync.Core.Entities.User", b =>
                 {
                     b.Property<string>("Id")

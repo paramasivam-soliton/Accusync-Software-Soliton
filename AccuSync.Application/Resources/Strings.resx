@@ -439,6 +439,25 @@
   <data name="AssignedPatientsDialog_ViewDetailsTooltip" xml:space="preserve">
     <value>View Details</value>
   </data>
+  <data name="AuthenticationService_ErrorCredentialsRequired" xml:space="preserve">
+    <value>Username and password are required.</value>
+  </data>
+  <data name="AuthenticationService_ErrorInvalidCredentials" xml:space="preserve">
+    <value>Invalid username or password.</value>
+    <comment>Same message whether the account exists or not, so attackers can't enumerate valid account names.</comment>
+  </data>
+  <data name="AuthenticationService_ErrorInvalidCredentialsWithAttemptsFormat" xml:space="preserve">
+    <value>Invalid username or password. {0} attempt(s) remaining.</value>
+  </data>
+  <data name="AuthenticationService_ErrorAccountLockedFormat" xml:space="preserve">
+    <value>Account locked. Try again in {0} minute(s), or contact your administrator.</value>
+  </data>
+  <data name="AuthenticationService_ErrorAccountNowLockedFormat" xml:space="preserve">
+    <value>Account is now locked due to {0} failed attempts. Try again in {1} minute(s), or contact your administrator.</value>
+  </data>
+  <data name="AuthenticationService_ErrorPasswordExpired" xml:space="preserve">
+    <value>Your password has expired. Please contact your administrator.</value>
+  </data>
   <data name="ChangePasswordViewModel_CurrentPasswordIncorrect" xml:space="preserve">
     <value>Current password is incorrect.</value>
   </data>
