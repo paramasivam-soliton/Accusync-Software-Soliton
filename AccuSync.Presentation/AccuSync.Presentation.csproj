@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <!-- UseWPF is needed for now: RelayCommand uses CommandManager, SplashViewModel calls
-         Application.Current.Shutdown(), and PatientViewModel exposes a BitmapImage property.
-         These are the few remaining WPF-specific touch points in this layer; everything else
-         (ICommand, INotifyPropertyChanged, ObservableCollection<T>) is plain BCL and portable. -->
-    <UseWPF>true</UseWPF>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <AssemblyName>AccuSync.Presentation</AssemblyName>
     <RootNamespace>AccuSync.Presentation</RootNamespace>

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
 

@@ -17,10 +17,15 @@ namespace AccuSync.Application.Models
     {
         /// <summary>The patient information parsed from the import file.</summary>
         public PatientData Patient { get; set; }
+
+
         /// <summary>Whether this patient is new or a duplicate of an existing record.</summary>
         public ImportStatus Status { get; set; } = ImportStatus.New;
+
+        
         /// <summary>The tests found for this patient in the import file.</summary>
-        public List<TestPreviewItem> Tests { get; set; } = new();
+        public List<TestPreview> Tests { get; set; } = new();
+        
         /// <summary>Details of how this patient differs from the existing record, if a duplicate.</summary>
         public DuplicateInfo DupInfo { get; set; }
     }

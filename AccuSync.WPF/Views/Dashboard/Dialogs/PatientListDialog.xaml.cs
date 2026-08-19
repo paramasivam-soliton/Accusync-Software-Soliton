@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs
@@ -29,8 +30,10 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         {
             /// <summary>Patients referred within the last 7 days.</summary>
             Referred,
+
             /// <summary>Patients who passed screening within the last 7 days.</summary>
             Pass,
+
             /// <summary>Patients with an incomplete screening within the last 7 days.</summary>
             Incomplete
         }

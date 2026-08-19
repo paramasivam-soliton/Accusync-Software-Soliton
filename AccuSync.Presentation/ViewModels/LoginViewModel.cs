@@ -85,6 +85,7 @@ namespace AccuSync.Presentation.ViewModels
             {
                 _isLoading = value;
                 OnPropertyChanged();
+                (SignInCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
