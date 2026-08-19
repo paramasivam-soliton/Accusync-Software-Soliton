@@ -23,7 +23,8 @@ using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Helpers;
 using AccuSync.Application.Models;
-using AccuSync.Core.Abstractions.Repositories;
+using AccuSync.Presentation.Models;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
 using AccuSync.Presentation.Mapping;
 using AccuSync.WPF.Resources;
@@ -42,7 +43,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         private ObservableCollection<Patient> _pagedPatients;
         private HashSet<string> _selectedFilters = new HashSet<string>();
         private readonly IImportService _importService = App.GetService<IImportService>();
-        private readonly IPatientRepository _patientRepository = App.GetService<IPatientRepository>();
+        private readonly IPatientService _patientService = App.GetService<IPatientService>();
         private string _importFormat;   // track format for Back navigation
         private string _importFilePath; // track file path for Back navigation
         private bool _isCompactView = false;
@@ -119,7 +120,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         }
 
         /// <summary>
-        /// Loads the patient list from <see cref="IPatientRepository"/>, replacing the removed
+        /// Loads the patient list from <see cref="IPatientService"/>, replacing the removed
         /// LoadDummyPatients()/AddDummyTestData() in-memory fixtures.
         /// </summary>
         private async Task LoadPatientsFromRepositoryAsync()
@@ -129,7 +130,7 @@ namespace AccuSync.WPF.Views.PatientsTests
                 await SeedDevPatientsIfEmptyAsync();
             }
 
-            var page = await _patientRepository.GetPagedAsync(pageNumber: 1, pageSize: int.MaxValue);
+            var page = await _patientService.GetPagedAsync(pageNumber: 1, pageSize: int.MaxValue);
 
             _allPatients = new ObservableCollection<Patient>(page.Items.Select(p => p.ToListRow()));
             _filteredPatients = new ObservableCollection<Patient>(_allPatients);
@@ -145,12 +146,12 @@ namespace AccuSync.WPF.Views.PatientsTests
         /// </summary>
         private async Task SeedDevPatientsIfEmptyAsync()
         {
-            var existing = await _patientRepository.GetPagedAsync(pageNumber: 1, pageSize: 1, includeDeleted: true);
+            var existing = await _patientService.GetPagedAsync(pageNumber: 1, pageSize: 1, includeDeleted: true);
             if (existing.TotalCount > 0) return;
 
-            await _patientRepository.CreateAsync(BuildSeedPatient("John", "Smith", "1234567890", "HOSP-001", new DateTime(2026, 1, 10)));
-            await _patientRepository.CreateAsync(BuildSeedPatient("Sarah", "Johnson", "2345678901", "HOSP-002", new DateTime(2026, 1, 15)));
-            await _patientRepository.CreateAsync(BuildSeedPatient("David", "Jones", "5678901234", "HOSP-003", new DateTime(2026, 2, 14)));
+            await _patientService.CreateAsync(BuildSeedPatient("John", "Smith", "1234567890", "HOSP-001", new DateTime(2026, 1, 10)));
+            await _patientService.CreateAsync(BuildSeedPatient("Sarah", "Johnson", "2345678901", "HOSP-002", new DateTime(2026, 1, 15)));
+            await _patientService.CreateAsync(BuildSeedPatient("David", "Jones", "5678901234", "HOSP-003", new DateTime(2026, 2, 14)));
         }
 
         private static PatientEntities.Patient BuildSeedPatient(string firstName, string lastName, string recordNumber, string hospitalId, DateTime birthDate)
@@ -163,7 +164,7 @@ namespace AccuSync.WPF.Views.PatientsTests
 
             patient.Contacts.Add(new PatientEntities.PatientContact
             {
-                ContactType = "Patient",
+                ContactType = PatientEntities.PatientContactType.Patient,
                 Forename1 = firstName,
                 Surname = lastName,
                 DateOfBirth = birthDate
@@ -980,7 +981,7 @@ namespace AccuSync.WPF.Views.PatientsTests
 
             if (PatientsListView.SelectedItem is Patient selectedPatient && int.TryParse(selectedPatient.PatientId, out int patientId))
             {
-                var entity = await _patientRepository.GetByIdAsync(patientId);
+                var entity = await _patientService.GetByIdAsync(patientId);
                 if (entity == null)
                 {
                     PatientInfoPanel.LoadPatient(null);

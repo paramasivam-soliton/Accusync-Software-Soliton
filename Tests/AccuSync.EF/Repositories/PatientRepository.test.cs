@@ -114,6 +114,39 @@ namespace AccuSync.EF.Tests.Repositories
         }
 
         [Fact]
+        public async Task GivenAPatientWithOnlyABabyContact_WhenReadById_ThenNoMotherOrCaregiverContactIsPresent()
+        {
+            // Arrange
+            var patient = NewPatient("REC-9", "Mia", "Nolan");
+
+            // Act
+            await _sut.CreateAsync(patient);
+            var result = await _sut.GetByIdAsync(patient.PatientId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Single(result!.Contacts);
+            Assert.Equal(PatientContactType.Patient, result.Contacts[0].ContactType);
+            Assert.DoesNotContain(result.Contacts, c => c.ContactType == PatientContactType.Mother);
+            Assert.DoesNotContain(result.Contacts, c => c.ContactType == PatientContactType.Caregiver);
+        }
+
+        [Fact]
+        public async Task GivenASoftDeletedPatient_WhenReadById_ThenReturnsNull()
+        {
+            // Arrange
+            var patient = NewPatient("REC-10", "Leo", "Grant");
+            await _sut.CreateAsync(patient);
+            await _sut.SoftDeleteAsync(patient.PatientId);
+
+            // Act
+            var result = await _sut.GetByIdAsync(patient.PatientId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async Task GivenAnExistingPatient_WhenUpdated_ThenTheChangeIsPersisted()
         {
             // Arrange
@@ -158,6 +191,24 @@ namespace AccuSync.EF.Tests.Repositories
             Assert.True(success);
             var defaultList = await _sut.GetPagedAsync(pageNumber: 1, pageSize: 10);
             Assert.DoesNotContain(defaultList.Items, p => p.PatientId == patient.PatientId);
+        }
+
+        [Fact]
+        public async Task GivenAnActivePatientWithContacts_WhenSoftDeleted_ThenItsContactsAreAlsoMarkedDeleted()
+        {
+            // Arrange
+            var patient = NewPatient("REC-11", "Wes", "Farrow");
+            patient.Contacts.Add(new PatientContact { ContactType = PatientContactType.Mother, Forename1 = "Mia", Surname = "Farrow" });
+            await _sut.CreateAsync(patient);
+
+            // Act
+            bool success = await _sut.SoftDeleteAsync(patient.PatientId);
+
+            // Assert
+            Assert.True(success);
+            var result = await _sut.GetPagedAsync(pageNumber: 1, pageSize: 10, includeDeleted: true);
+            var deletedPatient = result.Items.Single(p => p.PatientId == patient.PatientId);
+            Assert.All(deletedPatient.Contacts, c => Assert.True(c.IsDeleted));
         }
 
         [Fact]

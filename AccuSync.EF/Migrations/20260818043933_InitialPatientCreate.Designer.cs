@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuSync.EF.Migrations
 {
     [DbContext(typeof(PatientDbContext))]
-    [Migration("20260812103627_InitialPatientCreate")]
+    [Migration("20260818043933_InitialPatientCreate")]
     partial class InitialPatientCreate
     {
         /// <inheritdoc />
@@ -28,6 +28,12 @@ namespace AccuSync.EF.Migrations
 
                     b.Property<int?>("AssignedUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Audiologist")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AudiologyReferral")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConsentState")
                         .HasColumnType("TEXT");
@@ -99,10 +105,16 @@ namespace AccuSync.EF.Migrations
                     b.Property<string>("PatientRiskFactors")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Physician")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PredefinedComments")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RaceReferenceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ReferralDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReferralFrom")
@@ -161,6 +173,9 @@ namespace AccuSync.EF.Migrations
                     b.Property<string>("Address1")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Address2")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("BirthLocation")
                         .HasColumnType("TEXT");
 
@@ -207,6 +222,11 @@ namespace AccuSync.EF.Migrations
                     b.Property<string>("IdNumber")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("LanguageCode")
                         .HasColumnType("TEXT");
 
@@ -238,6 +258,9 @@ namespace AccuSync.EF.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Surname")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("TimeOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")

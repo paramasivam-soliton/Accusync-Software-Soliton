@@ -46,7 +46,7 @@ namespace AccuSync.EF
                 query = query.Where(p =>
                     (p.PatientRecordNumber != null && p.PatientRecordNumber.Contains(searchTerm)) ||
                     (p.HospitalId != null && p.HospitalId.Contains(searchTerm)) ||
-                    p.Contacts.Any(c => c.ContactType == "Patient" &&
+                    p.Contacts.Any(c => c.ContactType == PatientContactType.Patient &&
                         ((c.Forename1 != null && c.Forename1.Contains(searchTerm)) ||
                          (c.Surname != null && c.Surname.Contains(searchTerm)))));
             }
@@ -69,7 +69,7 @@ namespace AccuSync.EF
                 .Include(p => p.Contacts)
                 .Include(p => p.TestSessions).ThenInclude(s => s.TestRecords)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.PatientId == patientId);
+                .FirstOrDefaultAsync(p => p.PatientId == patientId && !p.IsDeleted);
         }
 
         public async Task<bool> CreateAsync(Patient patient)
@@ -140,15 +140,20 @@ namespace AccuSync.EF
             }
         }
 
+        /// <summary>Marks the patient and every one of its contacts as deleted, in one save.</summary>
         public async Task<bool> SoftDeleteAsync(int patientId)
         {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                var tracked = await context.Patients.FindAsync(patientId);
+                var tracked = await context.Patients.Include(p => p.Contacts).FirstOrDefaultAsync(p => p.PatientId == patientId);
                 if (tracked == null) return false;
 
                 tracked.IsDeleted = true;
+                foreach (var contact in tracked.Contacts)
+                {
+                    contact.IsDeleted = true;
+                }
 
                 await context.SaveChangesAsync();
                 return true;

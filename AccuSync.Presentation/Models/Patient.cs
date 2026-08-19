@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using AccuSync.Core.Entities;
 
-namespace AccuSync.Application.Models
+namespace AccuSync.Presentation.Models
 {
     /// <summary>
     /// A patient record with demographic information and associated screening tests.

@@ -59,6 +59,10 @@ namespace AccuSync.Core.Entities.Patients
         public string? ReferralFrom { get; set; }
         public string? ReferralTo { get; set; }
         public string? ReferralPhone { get; set; }
+        public string? AudiologyReferral { get; set; }
+        public DateTime? ReferralDate { get; set; }
+        public string? Physician { get; set; }
+        public string? Audiologist { get; set; }
 
         public string? FreeText1 { get; set; }
         public string? FreeText2 { get; set; }
