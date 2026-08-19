@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Abstractions.Parsing;
+using AccuSync.Core.Entities;
 using AccuSync.Presentation.Mapping;
 using AccuSync.Presentation.ViewModels;
 using Moq;
@@ -97,6 +98,149 @@ namespace AccuSync.Presentation.Tests.Mapping
             Assert.Equal("Ada", listRow.FirstName);
             Assert.Equal("Lovelace", listRow.LastName);
             Assert.Equal(new DateTime(2026, 1, 1), listRow.BirthDate);
+        }
+
+        [Fact]
+        public void GivenAnEntityWithNoMotherOrCaregiverContact_WhenMappedToViewModel_ThenTheirFieldsAreEmptyNotThrowing()
+        {
+            // Arrange — only a Patient contact exists; no Mother/Caregiver row at all.
+            var entity = new CoreEntities.Patient
+            {
+                Contacts = new List<CoreEntities.PatientContact>
+                {
+                    new() { ContactType = "Patient", Forename1 = "Ada", Surname = "Lovelace" }
+                }
+            };
+
+            // Act
+            var viewModel = entity.ToViewModel(QrGenerator);
+
+            // Assert
+            Assert.Null(viewModel.MotherFirstName);
+            Assert.Null(viewModel.MotherPhone);
+            Assert.Null(viewModel.CaregiverFirstName);
+            Assert.Null(viewModel.CaregiverPhone);
+        }
+
+        [Fact]
+        public void GivenAnEntityWithNoContactsAtAll_WhenMappedToViewModel_ThenPatientFieldsAreEmptyNotThrowing()
+        {
+            // Arrange
+            var entity = new CoreEntities.Patient();
+
+            // Act
+            var viewModel = entity.ToViewModel(QrGenerator);
+
+            // Assert
+            Assert.Null(viewModel.FirstName);
+            Assert.Null(viewModel.LastName);
+            Assert.Null(viewModel.DateOfBirth);
+        }
+
+        [Fact]
+        public void GivenAViewModelWithNoMotherOrCaregiverNameEntered_WhenAppliedToANewEntity_ThenNoMotherOrCaregiverContactIsCreated()
+        {
+            // Arrange — a brand-new entity with only the Patient contact created by ToViewModel;
+            // the user never entered a Mother or Caregiver name.
+            var entity = new CoreEntities.Patient();
+            var viewModel = entity.ToViewModel(QrGenerator);
+            viewModel.FirstName = "Ada";
+            viewModel.LastName = "Lovelace";
+
+            // Act
+            viewModel.ApplyTo(entity);
+
+            // Assert
+            Assert.DoesNotContain(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Mother);
+            Assert.DoesNotContain(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Caregiver);
+        }
+
+        [Fact]
+        public void GivenAViewModelWithAMotherNameEntered_WhenAppliedToANewEntity_ThenAMotherContactIsCreatedWithHerData()
+        {
+            // Arrange
+            var entity = new CoreEntities.Patient();
+            var viewModel = entity.ToViewModel(QrGenerator);
+            viewModel.MotherFirstName = "Jill";
+            viewModel.MotherLastName = "Baker";
+            viewModel.MotherPhone = "555-0100";
+
+            // Act
+            viewModel.ApplyTo(entity);
+
+            // Assert
+            var mother = Assert.Single(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Mother);
+            Assert.Equal("Jill", mother.Forename1);
+            Assert.Equal("Baker", mother.Surname);
+            Assert.Equal("555-0100", mother.Phone);
+        }
+
+        [Fact]
+        public void GivenAnEntityWithAnExistingCaregiverContact_WhenAppliedFromAViewModelWithBlankCaregiverFields_ThenTheExistingContactIsUpdatedNotRemoved()
+        {
+            // Arrange — caregiver was saved previously; the user has since cleared the fields
+            // in the form. The existing row must still be updated (to blank), not deleted —
+            // ApplyTo only guards against *creating* a new row out of nothing.
+            var entity = new CoreEntities.Patient
+            {
+                Contacts = new List<CoreEntities.PatientContact>
+                {
+                    new() { ContactType = CoreEntities.PatientContactType.Caregiver, Forename1 = "Sam", Surname = "Reed" }
+                }
+            };
+            var viewModel = entity.ToViewModel(QrGenerator);
+            viewModel.CaregiverFirstName = string.Empty;
+            viewModel.CaregiverLastName = string.Empty;
+
+            // Act
+            viewModel.ApplyTo(entity);
+
+            // Assert
+            var caregiver = Assert.Single(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Caregiver);
+            Assert.Equal(string.Empty, caregiver.Forename1);
+            Assert.Equal(string.Empty, caregiver.Surname);
+        }
+
+        [Fact]
+        public void GivenImportDataWithNoMotherOrCaregiverName_WhenConvertedToEntity_ThenNoMotherOrCaregiverContactIsAdded()
+        {
+            // Arrange
+            var importData = new PatientData { FirstName = "Ada", LastName = "Lovelace" };
+
+            // Act
+            var entity = importData.ToEntity();
+
+            // Assert
+            Assert.DoesNotContain(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Mother);
+            Assert.DoesNotContain(entity.Contacts, c => c.ContactType == CoreEntities.PatientContactType.Caregiver);
+        }
+
+        [Fact]
+        public void GivenImportDataWithMissingWeightAndHeight_WhenConvertedToEntity_ThenTheyAreLeftNullNotZero()
+        {
+            // Arrange — unparseable/empty weight and height must not silently become 0.
+            var importData = new PatientData { FirstName = "Ada", LastName = "Lovelace", Weight = string.Empty, Height = string.Empty };
+
+            // Act
+            var entity = importData.ToEntity();
+            var patientContact = entity.Contacts.Single(c => c.ContactType == CoreEntities.PatientContactType.Patient);
+
+            // Assert
+            Assert.Null(patientContact.Weight);
+            Assert.Null(patientContact.Height);
+        }
+
+        [Fact]
+        public void GivenImportDataWithMissingGestationalAge_WhenConvertedToEntity_ThenItIsLeftNull()
+        {
+            // Arrange
+            var importData = new PatientData { FirstName = "Ada", LastName = "Lovelace", GestationalAge = string.Empty };
+
+            // Act
+            var entity = importData.ToEntity();
+
+            // Assert
+            Assert.Null(entity.GestationalAge);
         }
     }
 }

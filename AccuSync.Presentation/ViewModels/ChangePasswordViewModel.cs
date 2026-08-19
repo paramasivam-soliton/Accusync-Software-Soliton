@@ -5,9 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AccuSync.Presentation.Helpers;
@@ -25,7 +23,7 @@ namespace AccuSync.Presentation.ViewModels
     /// <see cref="PasswordChangeSucceeded"/> so the hosting View decides which
     /// dashboard Window to open — this VM has no dependency on any concrete Window type.
     /// </summary>
-    public class ChangePasswordViewModel : INotifyPropertyChanged
+    public class ChangePasswordViewModel : ViewModelBase
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
@@ -268,14 +266,6 @@ namespace AccuSync.Presentation.ViewModels
             {
                 IsLoading = false;
             }
-        }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

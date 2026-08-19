@@ -10,9 +10,7 @@ using AccuSync.Core.Abstractions.Repositories;
 using AccuSync.Core.Abstractions.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AccuSync.Application.Resources;
@@ -26,7 +24,7 @@ namespace AccuSync.Presentation.ViewModels
     /// so the hosting View decides how to navigate — this VM has no dependency on any
     /// concrete Window type, so it works whether the View lives in this project or another.
     /// </summary>
-    public class LoginViewModel : INotifyPropertyChanged
+    public class LoginViewModel : ViewModelBase
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthenticationService _authenticationService;
@@ -193,14 +191,6 @@ namespace AccuSync.Presentation.ViewModels
             {
                 IsLoading = false;
             }
-        }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

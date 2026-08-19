@@ -28,7 +28,7 @@ namespace AccuSync.Presentation.ViewModels
     //       CaregiverMobile, ReferralPhone) are identical except for the name prefix.
     //       Extract a PhoneFieldViewModel class with DialCode, Number, Formatted,
     //       and Full properties, then compose five instances here.
-    public class PatientViewModel : INotifyPropertyChanged, IDataErrorInfo
+    public class PatientViewModel : ViewModelBase, IDataErrorInfo
     {
         // Dirty state management
 
@@ -74,9 +74,6 @@ namespace AccuSync.Presentation.ViewModels
         /// value is no longer dirty yet still has an undo entry.
         /// </summary>
         public bool CanUndo => _undoStack.Count > 0;
-
-        /// <summary>Raised whenever a bound property's value changes.</summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         // Backing fields — patient
 
@@ -1461,14 +1458,17 @@ namespace AccuSync.Presentation.ViewModels
 
         // Infrastructure
 
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        /// <summary>
+        /// Extends <see cref="ViewModelBase.SetProperty{T}"/> with dirty-state and undo tracking —
+        /// behavior specific to this form ViewModel, layered on top of the shared equality-check-
+        /// and-notify base logic rather than duplicating it.
+        /// </summary>
+        protected override bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(storage, value))
-                return false;
-
             T oldValue = storage;
-            storage = value;
-            OnPropertyChanged(propertyName);
+
+            if (!base.SetProperty(ref storage, value, propertyName))
+                return false;
 
             // Only track dirty state once a baseline has been snapshotted (BeginEdit).
             // Compare against the original so reverting a field back to its snapshot
@@ -1494,11 +1494,6 @@ namespace AccuSync.Presentation.ViewModels
             }
 
             return true;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -200,43 +200,51 @@ namespace AccuSync.Presentation.Mapping
                 c.Height = height == 0 ? null : height;
             });
 
-            UpsertContact(entity, CoreEntities.PatientContactType.Mother, c =>
+            if (HasName(viewModel.MotherFirstName, viewModel.MotherLastName) ||
+                entity.Contacts.Any(c => c.ContactType == CoreEntities.PatientContactType.Mother))
             {
-                c.Title = viewModel.MotherTitle;
-                c.SocialSecurityNumber = viewModel.MotherSSN;
-                c.IdNumber = viewModel.MotherId;
-                c.Forename1 = viewModel.MotherFirstName;
-                c.Surname = viewModel.MotherLastName;
-                c.DateOfBirth = viewModel.MotherDateOfBirth;
-                c.LanguageCode = viewModel.MotherLanguage;
-                c.Address1 = viewModel.MotherAddress1;
-                c.City = viewModel.MotherCity;
-                c.State = viewModel.MotherState;
-                c.Zip = viewModel.MotherZipCode;
-                c.Country = viewModel.MotherCountry;
-                c.Phone = viewModel.MotherPhone;
-                c.CellPhone = viewModel.MotherMobilePhone;
-                c.Fax = viewModel.MotherFax;
-                c.Email = viewModel.MotherEmail;
-            });
+                UpsertContact(entity, CoreEntities.PatientContactType.Mother, c =>
+                {
+                    c.Title = viewModel.MotherTitle;
+                    c.SocialSecurityNumber = viewModel.MotherSSN;
+                    c.IdNumber = viewModel.MotherId;
+                    c.Forename1 = viewModel.MotherFirstName;
+                    c.Surname = viewModel.MotherLastName;
+                    c.DateOfBirth = viewModel.MotherDateOfBirth;
+                    c.LanguageCode = viewModel.MotherLanguage;
+                    c.Address1 = viewModel.MotherAddress1;
+                    c.City = viewModel.MotherCity;
+                    c.State = viewModel.MotherState;
+                    c.Zip = viewModel.MotherZipCode;
+                    c.Country = viewModel.MotherCountry;
+                    c.Phone = viewModel.MotherPhone;
+                    c.CellPhone = viewModel.MotherMobilePhone;
+                    c.Fax = viewModel.MotherFax;
+                    c.Email = viewModel.MotherEmail;
+                });
+            }
 
-            UpsertContact(entity, CoreEntities.PatientContactType.Caregiver, c =>
+            if (HasName(viewModel.CaregiverFirstName, viewModel.CaregiverLastName) ||
+                entity.Contacts.Any(c => c.ContactType == CoreEntities.PatientContactType.Caregiver))
             {
-                c.Title = viewModel.CaregiverTitle;
-                c.SocialSecurityNumber = viewModel.CaregiverSSN;
-                c.Forename1 = viewModel.CaregiverFirstName;
-                c.Surname = viewModel.CaregiverLastName;
-                c.LanguageCode = viewModel.CaregiverLanguage;
-                c.Address1 = viewModel.CaregiverAddress1;
-                c.City = viewModel.CaregiverCity;
-                c.State = viewModel.CaregiverState;
-                c.Zip = viewModel.CaregiverZipCode;
-                c.Country = viewModel.CaregiverCountry;
-                c.Phone = viewModel.CaregiverPhone;
-                c.CellPhone = viewModel.CaregiverMobilePhone;
-                c.Fax = viewModel.CaregiverFax;
-                c.Email = viewModel.CaregiverEmail;
-            });
+                UpsertContact(entity, CoreEntities.PatientContactType.Caregiver, c =>
+                {
+                    c.Title = viewModel.CaregiverTitle;
+                    c.SocialSecurityNumber = viewModel.CaregiverSSN;
+                    c.Forename1 = viewModel.CaregiverFirstName;
+                    c.Surname = viewModel.CaregiverLastName;
+                    c.LanguageCode = viewModel.CaregiverLanguage;
+                    c.Address1 = viewModel.CaregiverAddress1;
+                    c.City = viewModel.CaregiverCity;
+                    c.State = viewModel.CaregiverState;
+                    c.Zip = viewModel.CaregiverZipCode;
+                    c.Country = viewModel.CaregiverCountry;
+                    c.Phone = viewModel.CaregiverPhone;
+                    c.CellPhone = viewModel.CaregiverMobilePhone;
+                    c.Fax = viewModel.CaregiverFax;
+                    c.Email = viewModel.CaregiverEmail;
+                });
+            }
         }
 
         // ---- Import DTO -> new entity -------------------------------------------------------
@@ -333,6 +341,13 @@ namespace AccuSync.Presentation.Mapping
 
             apply(contact);
         }
+
+        /// <summary>
+        /// Same "is there actually a person here" check <see cref="ToEntity"/> uses to decide
+        /// whether a Mother/Caregiver contact is worth creating.
+        /// </summary>
+        private static bool HasName(string? firstName, string? lastName) =>
+            !string.IsNullOrWhiteSpace(firstName) || !string.IsNullOrWhiteSpace(lastName);
 
         /// <summary>
         /// TestFacility/TestLocation/Examiner have no source column in the new TestRecord

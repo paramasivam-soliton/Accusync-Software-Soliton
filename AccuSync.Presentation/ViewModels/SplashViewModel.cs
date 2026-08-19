@@ -5,8 +5,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Presentation.Abstractions;
@@ -19,7 +17,7 @@ namespace AccuSync.Presentation.ViewModels
     /// progress status. Navigation after completion is handled by
     /// <c>SplashWindow.xaml.cs</c> via <c>App.NavigateAfterSplash()</c>.
     /// </summary>
-    public class SplashViewModel : INotifyPropertyChanged
+    public class SplashViewModel : ViewModelBase
     {
         private readonly IDatabaseInitializer _databaseInitializer;
         private readonly IApplicationLifecycle _applicationLifecycle;
@@ -69,14 +67,6 @@ namespace AccuSync.Presentation.ViewModels
                 await Task.Delay(3000);
                 _applicationLifecycle.Shutdown();
             }
-        }
-
-        /// <summary>Raised whenever a bound property's value changes.</summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
