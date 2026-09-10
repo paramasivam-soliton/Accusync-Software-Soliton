@@ -16,7 +16,7 @@ namespace AccuSync.Adapters.DataParser.Services
     /// <summary>
     /// Parses AccuLink XML export files (also used by AccuScreen devices)
     /// into <see cref="ImportPatientData"/> records with per-test
-    /// <see cref="TestPreviewItem"/>s.
+    /// <see cref="TestPreview"/>s.
     ///
     /// Key differences from ALGO 5:
     ///   - ISO 8601 dates (<c>2026-02-11T09:35:22</c>) instead of US-style.
@@ -200,14 +200,14 @@ namespace AccuSync.Adapters.DataParser.Services
         // Test parsing
 
         /// <summary>
-        /// Extracts <see cref="TestPreviewItem"/>s from all three test containers.
+        /// Extracts <see cref="TestPreview"/>s from all three test containers.
         /// Unlike ALGO 5 (where each Plugin has both ears), AccuLink stores one
         /// ear per test element, so each produces exactly one item.
         /// Results are sorted chronologically.
         /// </summary>
-        private static List<TestPreviewItem> ParseTests(XElement patientEl)
+        private static List<TestPreview> ParseTests(XElement patientEl)
         {
-            var items = new List<TestPreviewItem>();
+            var items = new List<TestPreview>();
             var testsEl = patientEl.Element("Tests");
             if (testsEl == null) return items;
 
@@ -245,7 +245,7 @@ namespace AccuSync.Adapters.DataParser.Services
         /// Parses a single test element. <c>TestObject</c> indicates which ear
         /// ("Left Ear", "Right Ear", or "Binaural").
         /// </summary>
-        private static TestPreviewItem ParseSingleTest(XElement test, string testType)
+        private static TestPreview ParseSingleTest(XElement test, string testType)
         {
             string testDateRaw = Val(test, "TestDate");
             ParseDateTimeParts(testDateRaw, out string date, out string time);
@@ -261,7 +261,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
             string result = Val(test, "TestResult");
 
-            return new TestPreviewItem
+            return new TestPreview
             {
                 Date = date,
                 Time = time,
@@ -356,7 +356,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
         /// <summary>
         /// AccuLink results are already human-readable. Normalize to the
-        /// standard three values for <see cref="TestPreviewItem"/>.
+        /// standard three values for <see cref="TestPreview"/>.
         /// </summary>
         private static string NormalizeResult(string result)
         {

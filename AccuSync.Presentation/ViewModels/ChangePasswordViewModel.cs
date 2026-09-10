@@ -125,6 +125,7 @@ namespace AccuSync.Presentation.ViewModels
             {
                 _isLoading = value;
                 OnPropertyChanged();
+                (SaveCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -231,8 +232,7 @@ namespace AccuSync.Presentation.ViewModels
                            !string.IsNullOrEmpty(ConfirmPassword) &&
                            NewPassword == ConfirmPassword;
 
-            // Only compares against what the user typed in the Old Password field,
-            // not the stored password — the stored check happens on save.
+            // Compares against the typed Old Password, not the stored one — checked on save.
             NotSameAsOld = !string.IsNullOrEmpty(NewPassword) &&
                          !string.IsNullOrEmpty(OldPassword) &&
                          NewPassword != OldPassword;

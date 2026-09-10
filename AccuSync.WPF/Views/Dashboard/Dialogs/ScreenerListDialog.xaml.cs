@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.Dashboard.Dialogs

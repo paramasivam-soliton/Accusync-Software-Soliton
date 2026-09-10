@@ -8,9 +8,9 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.Core.Entities;
+using AccuSync.Presentation.Abstractions;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
@@ -23,12 +23,15 @@ namespace AccuSync.Presentation.ViewModels
     public class SplashViewModel : INotifyPropertyChanged
     {
         private readonly IDatabaseInitializer _databaseInitializer;
+        private readonly IApplicationLifecycle _applicationLifecycle;
 
         /// <summary>Creates the view model with the initializer used to bring the database up to date.</summary>
         /// <param name="databaseInitializer">Service used to initialize the application database.</param>
-        public SplashViewModel(IDatabaseInitializer databaseInitializer)
+        /// <param name="applicationLifecycle">Used to shut the application down if initialization fails.</param>
+        public SplashViewModel(IDatabaseInitializer databaseInitializer, IApplicationLifecycle applicationLifecycle)
         {
             _databaseInitializer = databaseInitializer;
+            _applicationLifecycle = applicationLifecycle;
         }
 
         private string _statusMessage;
@@ -71,7 +74,7 @@ namespace AccuSync.Presentation.ViewModels
                 // isn't something an end user should see.
                 StatusMessage = string.Format(Strings.SplashViewModel_UnexpectedError, ErrorCode.Unexpected.ToDisplayCode());
                 await Task.Delay(3000);
-                System.Windows.Application.Current.Shutdown();
+                _applicationLifecycle.Shutdown();
             }
         }
 

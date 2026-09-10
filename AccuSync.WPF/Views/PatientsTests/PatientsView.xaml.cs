@@ -21,6 +21,7 @@ using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
 using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
+using AccuSync.Presentation.Models;
 using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 
@@ -1205,7 +1206,17 @@ namespace AccuSync.WPF.Views.PatientsTests
                     }
                 }
 
-                return results;
+                // ImportService (AccuSync.Application) returns ImportOutcome — the
+                // Application-side shape — mapped here to ImportResultItem, the
+                // UI-bound Presentation shape ImportReview actually displays.
+                return results.Select(r => new ImportResultItem
+                {
+                    Name = r.Name,
+                    PatientId = r.PatientId,
+                    Detail = r.Detail,
+                    Badge = r.Badge,
+                    Patient = r.Patient
+                }).ToList();
             };
         }
 

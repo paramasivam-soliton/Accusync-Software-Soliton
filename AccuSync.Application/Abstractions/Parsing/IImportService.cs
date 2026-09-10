@@ -29,7 +29,7 @@ namespace AccuSync.Application.Abstractions.Parsing
         /// selected patients. Each patient produces an <see cref="ImportResultItem"/>
         /// categorized as Imported, Duplicate, or Error.
         /// </summary>
-        Func<List<PatientData>, List<ImportResultItem>> GetImportFunction(
+        Func<List<PatientData>, List<ImportOutcome>> GetImportFunction(
             Func<PatientData, bool> existsInDatabase = null,
             Func<PatientData, bool> saveToDatabase = null);
 

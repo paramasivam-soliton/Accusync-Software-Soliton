@@ -269,26 +269,26 @@ namespace AccuSync.Adapters.DataParser.Services
 
         /// <summary>
         /// Returns an import function that validates, deduplicates, and saves
-        /// selected patients. Each patient produces an <see cref="ImportResultItem"/>
+        /// selected patients. Each patient produces an <see cref="ImportOutcome"/>
         /// categorized as Imported, Duplicate, or Error.
         /// </summary>
         // NOTE: This returns a Func rather than executing directly because
         //       PatientsView.WrapImportFunction() adapts it to the newer
         //       ImportRequest-aware delegate signature.
-        public Func<List<PatientData>, List<ImportResultItem>> GetImportFunction(
+        public Func<List<PatientData>, List<ImportOutcome>> GetImportFunction(
             Func<PatientData, bool> existsInDatabase = null,
             Func<PatientData, bool> saveToDatabase = null)
         {
             return (selectedPatients) =>
             {
-                var results = new List<ImportResultItem>();
+                var results = new List<ImportOutcome>();
 
                 foreach (var patient in selectedPatients)
                 {
                     var validationError = ValidatePatient(patient);
                     if (validationError != null)
                     {
-                        results.Add(new ImportResultItem
+                        results.Add(new ImportOutcome
                         {
                             Name = FormatName(patient),
                             PatientId = patient.PatientId ?? "",
@@ -300,7 +300,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
                     if (existsInDatabase != null && existsInDatabase(patient))
                     {
-                        results.Add(new ImportResultItem
+                        results.Add(new ImportOutcome
                         {
                             Name = FormatName(patient),
                             PatientId = patient.PatientId ?? "",
@@ -312,7 +312,7 @@ namespace AccuSync.Adapters.DataParser.Services
 
                     bool saved = saveToDatabase != null ? saveToDatabase(patient) : true;
 
-                    results.Add(new ImportResultItem
+                    results.Add(new ImportOutcome
                     {
                         Name = FormatName(patient),
                         PatientId = patient.PatientId ?? "",

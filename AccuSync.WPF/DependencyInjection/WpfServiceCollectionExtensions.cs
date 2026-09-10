@@ -12,6 +12,7 @@ using AccuSync.Application.Services.Authentication;
 using AccuSync.Application.Services.Users;
 using AccuSync.Core.Abstractions.Services;
 using AccuSync.EF.DependencyInjection;
+using AccuSync.Presentation.Abstractions;
 using AccuSync.Presentation.ViewModels;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Services;
@@ -69,6 +70,7 @@ namespace AccuSync.WPF.DependencyInjection
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
 
             // Services
+            services.AddSingleton<IApplicationLifecycle, WpfApplicationLifecycle>();
             services.AddSingleton<IEncryptionService, EncryptionService>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IUserService, UserService>();
