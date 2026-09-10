@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AccuSync.Application.Tests</AssemblyName>
+    <RootNamespace>AccuSync.Application.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <!-- Used directly by EncryptionServiceTests for the standalone
+         DataProtectionProvider.Create(...) factory, which needs no DI container/
+         hosting — constructs a real, private (per-test, temp-folder-backed)
+         IDataProtectionProvider. -->
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- System under test — this test project exercises AccuSync.Application's
+         services (PasswordHasher, EncryptionService, AuthenticationService). -->
+    <ProjectReference Include="..\..\AccuSync.Application\AccuSync.Application.csproj" />
+  </ItemGroup>
+
+</Project>

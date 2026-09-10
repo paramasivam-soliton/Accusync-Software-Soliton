@@ -439,14 +439,39 @@
   <data name="AssignedPatientsDialog_ViewDetailsTooltip" xml:space="preserve">
     <value>View Details</value>
   </data>
+  <data name="AuthenticationService_AccountLocked" xml:space="preserve">
+    <value>Account locked. Try again in {0} minute(s), or contact your administrator.</value>
+  </data>
+  <data name="AuthenticationService_AccountNowLocked" xml:space="preserve">
+    <value>Account is now locked due to {0} failed attempts. Try again in {1} minute(s), or contact your administrator.</value>
+  </data>
+  <data name="AuthenticationService_AuthenticationFailed" xml:space="preserve">
+    <value>Invalid username or password.</value>
+    <comment>Same message whether the account exists or not, so attackers can't enumerate valid account names.</comment>
+  </data>
+  <data name="AuthenticationService_CredentialsRequired" xml:space="preserve">
+    <value>Username and password are required.</value>
+  </data>
+  <data name="AuthenticationService_InvalidCredentialsWithAttempts" xml:space="preserve">
+    <value>Invalid username or password. {0} attempt(s) remaining.</value>
+  </data>
+  <data name="AuthenticationService_UnexpectedFailure" xml:space="preserve">
+    <value>Unexpected failure on user login ({0}). Please contact your administrator.</value>
+  </data>
   <data name="ChangePasswordViewModel_CurrentPasswordIncorrect" xml:space="preserve">
     <value>Current password is incorrect.</value>
+  </data>
+  <data name="ChangePasswordViewModel_PasswordExpiredNotice" xml:space="preserve">
+    <value>Your password has expired. Please set a new password to continue.</value>
   </data>
   <data name="ChangePasswordViewModel_PasswordReused" xml:space="preserve">
     <value>Password cannot be the same as your last three passwords.</value>
   </data>
+  <data name="ChangePasswordViewModel_PasswordSameAsCurrent" xml:space="preserve">
+    <value>New password must be different from your current password.</value>
+  </data>
   <data name="ChangePasswordViewModel_UnexpectedError" xml:space="preserve">
-    <value>An error occurred: {0}</value>
+    <value>An unexpected error occurred while changing your password ({0}). Please contact your administrator.</value>
   </data>
   <data name="ChangePasswordViewModel_UpdateFailed" xml:space="preserve">
     <value>Failed to update password. Please try again.</value>
@@ -1803,10 +1828,10 @@ This may take a few minutes.</value>
     <value>Validation</value>
   </data>
   <data name="LoginViewModel_FailedToLoadUsers" xml:space="preserve">
-    <value>Failed to load users: {0}</value>
+    <value>Failed to load users ({0}). Please contact your administrator.</value>
   </data>
   <data name="LoginViewModel_UnexpectedError" xml:space="preserve">
-    <value>An error occurred: {0}</value>
+    <value>An unexpected error occurred while signing in ({0}). Please contact your administrator.</value>
   </data>
   <data name="LoginWindow_AppName" xml:space="preserve">
     <value>AccuSync</value>
@@ -1923,7 +1948,7 @@ This may take a few minutes.</value>
     <value>Discharged</value>
   </data>
   <data name="PatientDetailsTab_ErrorCopying" xml:space="preserve">
-    <value>Error copying: {0}</value>
+    <value>Unable to copy to clipboard ({0}). If the issue persists, please contact your administrator.</value>
   </data>
   <data name="PatientDetailsTab_Female" xml:space="preserve">
     <value>Female</value>
@@ -2266,7 +2291,7 @@ Implement using NuGet packages.</value>
     <value>Export Complete</value>
   </data>
   <data name="PatientsView_ExportError" xml:space="preserve">
-    <value>Error exporting data: {0}</value>
+    <value>Unable to export patient data ({0}). Please contact your administrator.</value>
   </data>
   <data name="PatientsView_ExportErrorCaption" xml:space="preserve">
     <value>Export Error</value>
@@ -2891,9 +2916,6 @@ Patient ID: {1}</value>
   <data name="ScreenerDashboardWindow_ImportNotImplemented" xml:space="preserve">
     <value>Import — not yet implemented.</value>
   </data>
-  <data name="ScreenerDashboardWindow_LogoutSuccessMessage" xml:space="preserve">
-    <value>Logout successful. Returning to login...</value>
-  </data>
   <data name="ScreenerDashboardWindow_NavAbout" xml:space="preserve">
     <value>About</value>
   </data>
@@ -3279,14 +3301,14 @@ Not yet implemented.</value>
   <data name="SitesContentView_ValidationCaption" xml:space="preserve">
     <value>Validation</value>
   </data>
-  <data name="SplashViewModel_Error" xml:space="preserve">
-    <value>Error: {0}</value>
-  </data>
   <data name="SplashViewModel_InitializingDatabase" xml:space="preserve">
     <value>Initializing database...</value>
   </data>
   <data name="SplashViewModel_LoadingApplication" xml:space="preserve">
     <value>Loading application...</value>
+  </data>
+  <data name="SplashViewModel_UnexpectedError" xml:space="preserve">
+    <value>An unexpected failure occurred during application startup ({0}). Please contact your administrator.</value>
   </data>
   <data name="SplashWindow_Title" xml:space="preserve">
     <value>AccuSync</value>
@@ -3570,6 +3592,12 @@ Drag and drop or click Browse to replace</value>
   </data>
   <data name="UserProfileConfigView_Title" xml:space="preserve">
     <value>USER MANAGEMENT CONFIGURATION</value>
+  </data>
+  <data name="UserService_RoleAssignmentFailed" xml:space="preserve">
+    <value>Unable to assign the selected role.</value>
+  </data>
+  <data name="UserService_UserNotFound" xml:space="preserve">
+    <value>The selected user account no longer exists.</value>
   </data>
   <data name="UsersContentView_Admin" xml:space="preserve">
     <value>ADMIN</value>

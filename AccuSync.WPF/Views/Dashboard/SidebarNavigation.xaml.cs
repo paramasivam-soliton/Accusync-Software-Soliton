@@ -6,10 +6,13 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 using AccuSync.WPF.Controls;
 using AccuSync.Application.Helpers;
 using AccuSync.Presentation.ViewModels;
@@ -216,7 +219,7 @@ namespace AccuSync.WPF.Views.Dashboard
                 CornerRadius = new CornerRadius(12),
                 Padding = new Thickness(40),
                 Margin = new Thickness(0),
-                Effect = new System.Windows.Media.Effects.DropShadowEffect
+                Effect = new DropShadowEffect
                 {
                     Color = Colors.Black,
                     Direction = 270,
@@ -239,7 +242,7 @@ namespace AccuSync.WPF.Views.Dashboard
             iconBorder.Background = new LinearGradientBrush(
                 (Color)ColorConverter.ConvertFromString("#473089"),
                 (Color)ColorConverter.ConvertFromString("#6B4BA8"), 0);
-            var iconPath = new System.Windows.Shapes.Path
+            var iconPath = new Path
             {
                 Width = 28,
                 Height = 28,
@@ -296,25 +299,41 @@ namespace AccuSync.WPF.Views.Dashboard
         // for Add, Delete, Save, Revert, and Undo. Consider extracting into a dispatch table
         // keyed by (_currentView, active takeover mode) to reduce the repetition.
 
-        private void OnRibbonItemClicked(object sender, RibbonItemClickEventArgs e)
+        private async void OnRibbonItemClicked(object sender, RibbonItemClickEventArgs e)
         {
             Debug.WriteLine($"[Ribbon] {_currentView} → {e.ItemName}");
 
             switch (e.ItemName)
             {
-                case "Add": HandleAdd(); break;
-                case "Edit": HandleEdit(); break;
-                case "Delete": HandleDelete(); break;
-                case "Save": HandleSave(); break;
-                case "Revert": HandleRevert(); break;
-                case "Undo": HandleUndo(); break;
-                case "Help": HandleHelp(); break;
+                case "Add":
+                    HandleAdd();
+                    break;
+                case "Edit":
+                    HandleEdit();
+                    break;
+                case "Delete":
+                    HandleDelete();
+                    break;
+                case "Save":
+                    await HandleSave();
+                    break;
+                case "Revert":
+                    HandleRevert();
+                    break;
+                case "Undo":
+                    HandleUndo();
+                    break;
+                case "Help":
+                    HandleHelp();
+                    break;
 
                 case "Unlock":
                     if (_currentView == "Users") _usersContent.HandleUnlock();
                     break;
 
-                case "Profiles": EnterProfilesMode(); break;
+                case "Profiles":
+                    EnterProfilesMode();
+                    break;
 
                 case "Back":
                     if (_isProfilesMode) ExitProfilesMode();
@@ -332,25 +351,57 @@ namespace AccuSync.WPF.Views.Dashboard
                     else if (_isDeviceFieldSetupMode) ExitDeviceFieldSetupMode();
                     break;
 
-                case "Facilities": EnterFacilitiesMode(); break;
-                case "Location": EnterLocationsMode(); break;
+                case "Facilities":
+                    EnterFacilitiesMode();
+                    break;
+                case "Location":
+                    EnterLocationsMode();
+                    break;
 
-                case "ABR": EnterABRMode(); break;
-                case "DPOAE": EnterDPOAEMode(); break;
-                case "Firmware": HandleFirmware(); break;
-                case "DeviceFieldSetup": EnterDeviceFieldSetupMode(); break;
+                case "ABR":
+                    EnterABRMode();
+                    break;
+                case "DPOAE":
+                    EnterDPOAEMode();
+                    break;
+                case "Firmware":
+                    HandleFirmware();
+                    break;
+                case "DeviceFieldSetup":
+                    EnterDeviceFieldSetupMode();
+                    break;
 
-                case "RiskFactors": EnterRiskFactorsMode(); break;
-                case "Comments": EnterCommentsMode(); break;
-                case "FieldSetup": EnterFieldSetupMode(); break;
-                case "UserProfile": EnterUserProfileMode(); break;
-                case "SiteFacility": EnterSiteFacilityMode(); break;
-                case "ImportConfig": EnterImportConfigMode(); break;
-                case "ExportConfig": EnterExportConfigMode(); break;
+                case "RiskFactors":
+                    EnterRiskFactorsMode();
+                    break;
+                case "Comments":
+                    EnterCommentsMode();
+                    break;
+                case "FieldSetup":
+                    EnterFieldSetupMode();
+                    break;
+                case "UserProfile":
+                    EnterUserProfileMode();
+                    break;
+                case "SiteFacility":
+                    EnterSiteFacilityMode();
+                    break;
+                case "ImportConfig":
+                    EnterImportConfigMode();
+                    break;
+                case "ExportConfig":
+                    EnterExportConfigMode();
+                    break;
 
-                case "Import": HandleImport(); break;
-                case "Export": HandleExport(); break;
-                case "Print": HandlePrint(); break;
+                case "Import":
+                    HandleImport();
+                    break;
+                case "Export":
+                    HandleExport();
+                    break;
+                case "Print":
+                    HandlePrint();
+                    break;
 
                 case "CopyInfo":
                     Clipboard.SetText("AccuSync v1.0.0 — Build 2025.10.17");
@@ -467,11 +518,11 @@ namespace AccuSync.WPF.Views.Dashboard
             }
         }
 
-        private void HandleSave()
+        private async Task HandleSave()
         {
             if (_currentView == "Settings")
             {
-                _settingsContent.SaveState();
+                await _settingsContent.SaveState();
                 return;
             }
             if (_currentView == "Users")
@@ -975,7 +1026,7 @@ namespace AccuSync.WPF.Views.Dashboard
 
             if (result == MessageBoxResult.Yes)
             {
-                App.NavigateAfterLogin(Window.GetWindow(this), null, null);
+                App.Logout(Window.GetWindow(this));
             }
         }
 

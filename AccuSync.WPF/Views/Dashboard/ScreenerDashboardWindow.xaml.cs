@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Views.Dashboard.Dialogs;
+using AccuSync.WPF.Views.Settings;
 using AccuSync.WPF.Controls;
 
 namespace AccuSync.WPF.Views.Dashboard
@@ -20,6 +21,7 @@ namespace AccuSync.WPF.Views.Dashboard
     {
         private Border? _activeNavItem;
         private string _username = "Screener";
+        private readonly SettingsContentView _settingsContent = new();
 
         // Card hover brushes — matches DashboardContentView pattern
         private static readonly SolidColorBrush _cardDefaultBg =
@@ -34,6 +36,11 @@ namespace AccuSync.WPF.Views.Dashboard
         public ScreenerDashboardWindow()
         {
             InitializeComponent();
+
+            SettingsView.SetRibbonDefinition(RibbonDefinitions.Settings());
+            SettingsView.SetContent(_settingsContent);
+            SettingsView.RibbonItemClicked += OnSettingsRibbonItemClicked;
+
             _activeNavItem = NavDashboard;
             //ShowView("Dashboard");
             ShowView("Patients");
@@ -55,10 +62,6 @@ namespace AccuSync.WPF.Views.Dashboard
             UpdateGreeting();
         }
 
-        // ══════════════════════════════════════════
-        //  GREETING + DATE
-        // ══════════════════════════════════════════
-
         private void UpdateGreeting()
         {
             var hour = DateTime.Now.Hour;
@@ -72,10 +75,6 @@ namespace AccuSync.WPF.Views.Dashboard
             DateText.Text = DateTime.Now.ToString("MMM d, yyyy");
             CalMonthLabel.Text = DateTime.Now.ToString("MMMM yyyy");
         }
-
-        // ══════════════════════════════════════════
-        //  CALENDAR
-        // ══════════════════════════════════════════
 
         private void HighlightCurrentDay()
         {
@@ -184,10 +183,6 @@ namespace AccuSync.WPF.Views.Dashboard
             // TODO: implement month navigation
         }
 
-        // ══════════════════════════════════════════
-        //  NAVIGATION
-        // ══════════════════════════════════════════
-
         private void NavDashboard_Click(object sender, MouseButtonEventArgs e)
         {
             SetActiveNavItem(NavDashboard);
@@ -206,6 +201,35 @@ namespace AccuSync.WPF.Views.Dashboard
             ShowView("About");
         }
 
+        private void NavSettings_Click(object sender, MouseButtonEventArgs e)
+        {
+            SetActiveNavItem(NavSettings);
+            ShowView("Settings");
+        }
+
+        // Reuses the same RibbonDefinitions.Settings() + SettingsContentView pair the
+        // Admin dashboard's SidebarNavigation uses, so Save/Revert/Undo/Help behave
+        // identically for every role rather than each having its own version.
+        private async void OnSettingsRibbonItemClicked(object sender, RibbonItemClickEventArgs e)
+        {
+            switch (e.ItemName)
+            {
+                case "Save":
+                    await _settingsContent.SaveState();
+                    break;
+                case "Revert":
+                    _settingsContent.Revert();
+                    break;
+                case "Undo":
+                    _settingsContent.Undo();
+                    break;
+                case "Help":
+                    AppDialog.Show(string.Format(Strings.SidebarNavigation_HelpMessage, "Settings"),
+                        Strings.SidebarNavigation_HelpCaption, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+            }
+        }
+
         private void Logout_Click(object sender, MouseButtonEventArgs e)
         {
             var result = AppDialog.Show(
@@ -216,9 +240,7 @@ namespace AccuSync.WPF.Views.Dashboard
 
             if (result == MessageBoxResult.Yes)
             {
-                AppDialog.Show(Strings.ScreenerDashboardWindow_LogoutSuccessMessage, Strings.ScreenerDashboardWindow_NavLogout,
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-                this.Close();
+                App.Logout(this);
             }
         }
 
@@ -237,6 +259,7 @@ namespace AccuSync.WPF.Views.Dashboard
             DashboardView.Visibility = Visibility.Collapsed;
             PatientsView.Visibility = Visibility.Collapsed;
             AboutView.Visibility = Visibility.Collapsed;
+            SettingsView.Visibility = Visibility.Collapsed;
 
             switch (viewName)
             {
@@ -252,12 +275,12 @@ namespace AccuSync.WPF.Views.Dashboard
                     AboutView.Visibility = Visibility.Visible;
                     HeaderTitle.Text = Strings.ScreenerDashboardWindow_HeaderAboutAccuSync;
                     break;
+                case "Settings":
+                    SettingsView.Visibility = Visibility.Visible;
+                    HeaderTitle.Text = Strings.ScreenerDashboardWindow_NavSettings;
+                    break;
             }
         }
-
-        // ══════════════════════════════════════════
-        //  HOVER EFFECTS
-        // ══════════════════════════════════════════
 
         private void NavItem_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -289,10 +312,6 @@ namespace AccuSync.WPF.Views.Dashboard
             }
         }
 
-        // ══════════════════════════════════════════
-        //  STAT CARD CLICKS
-        // ══════════════════════════════════════════
-
         private void StatCard_Click(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is FrameworkElement fe) || !(fe.Tag is string tag)) return;
@@ -319,10 +338,6 @@ namespace AccuSync.WPF.Views.Dashboard
                     break;
             }
         }
-
-        // ══════════════════════════════════════════
-        //  QUICK ACTION CLICKS
-        // ══════════════════════════════════════════
 
         private void QuickAction_Click(object sender, MouseButtonEventArgs e)
         {

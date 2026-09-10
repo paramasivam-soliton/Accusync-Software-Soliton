@@ -6,6 +6,7 @@
 
 using System.Windows;
 using AccuSync.Application.Helpers;
+using AccuSync.Presentation.ViewModels;
 
 namespace AccuSync.WPF.Views.Dashboard
 {
@@ -15,15 +16,15 @@ namespace AccuSync.WPF.Views.Dashboard
     /// </summary>
     public partial class AdminDashboardWindow : Window
     {
-        /// <summary>
-        /// Initializes the window and appends the dev mode label to the title when applicable.
-        /// </summary>
+        /// <summary>Creates the window and applies the dev-mode title suffix if active.</summary>
         public AdminDashboardWindow()
         {
             InitializeComponent();
 
             if (DevModeConfig.IsAnyDevMode)
+            {
                 Title += DevModeConfig.GetDevModeLabel();
+            }
         }
 
         /// <summary>
@@ -33,6 +34,15 @@ namespace AccuSync.WPF.Views.Dashboard
         public void SetCurrentUser(string username)
         {
             Shell.SetCurrentUser(username);
+        }
+
+        /// <summary>
+        /// Shows/hides sidebar nav items per the logged-in user's role. Call once,
+        /// right after <see cref="SetCurrentUser"/> and before <c>Show()</c>.
+        /// </summary>
+        public void SetPermissions(UserPermissionsViewModel permissions)
+        {
+            Shell.SetPermissions(permissions);
         }
 
         /// <summary>

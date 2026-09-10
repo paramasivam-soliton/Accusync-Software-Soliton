@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Matches AccuSync.Presentation's own UseWPF — RelayCommand (used by every
+         ViewModel's Command properties) depends on WPF's CommandManager. -->
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AccuSync.Presentation.Tests</AssemblyName>
+    <RootNamespace>AccuSync.Presentation.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- System under test — AccuSync.Presentation's view models (LoginViewModel,
+         ChangePasswordViewModel, UserPermissionsViewModel). IUserService/
+         IAuthenticationService/IPasswordHasher are mocked; these ViewModels have
+         no pure-logic collaborator to keep real. -->
+    <ProjectReference Include="..\..\AccuSync.Presentation\AccuSync.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>

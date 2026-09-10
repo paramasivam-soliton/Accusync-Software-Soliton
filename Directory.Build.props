@@ -5,6 +5,11 @@
        Debug/Release first so each config's full set of outputs sits in its own folder,
        instead of scattering bin/obj under each project folder. -->
   <PropertyGroup>
+    <!-- This file evaluates before the SDK applies its own Configuration=Debug
+         default, so $(Configuration) can still be empty on the next line. Default
+         it here too, or OutputPath below loses this folder segment entirely. -->
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+
     <!-- build\bin\<Configuration>\<ProjectName>\<TFM>\ -->
     <OutputPath>$(MSBuildThisFileDirectory)build\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
 

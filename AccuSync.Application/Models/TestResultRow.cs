@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows.Media;
+using AccuSync.Core.Entities;
 
 namespace AccuSync.Application.Models
 {
@@ -37,26 +37,19 @@ namespace AccuSync.Application.Models
 
         /// <summary>The result symbol for the left ear column, blank if the test was not on the left ear.</summary>
         public string LeftSymbol => Source.IsLeftEar ? GetSymbol(Source.TestResult) : "";
-        /// <summary>The result color for the left ear column, transparent if the test was not on the left ear.</summary>
-        public Brush LeftColor => Source.IsLeftEar ? GetBrush(Source.TestResult) : Brushes.Transparent;
+        /// <summary>The left ear's raw result string, null if the test was not on the left ear (mapped to a transparent color by the View).</summary>
+        public string LeftResult => Source.IsLeftEar ? Source.TestResult : null;
 
         /// <summary>The result symbol for the right ear column, blank if the test was not on the right ear.</summary>
         public string RightSymbol => Source.IsRightEar ? GetSymbol(Source.TestResult) : "";
-        /// <summary>The result color for the right ear column, transparent if the test was not on the right ear.</summary>
-        public Brush RightColor => Source.IsRightEar ? GetBrush(Source.TestResult) : Brushes.Transparent;
+        /// <summary>The right ear's raw result string, null if the test was not on the right ear (mapped to a transparent color by the View).</summary>
+        public string RightResult => Source.IsRightEar ? Source.TestResult : null;
 
         private static string GetSymbol(string result) => result switch
         {
             "Pass" => "✓",
             "Refer" => "✗",
             _ => "?"
-        };
-
-        private static Brush GetBrush(string result) => result switch
-        {
-            "Pass" => new SolidColorBrush(Color.FromRgb(0x42, 0x9C, 0x10)),
-            "Refer" => new SolidColorBrush(Color.FromRgb(0xdc, 0x35, 0x45)),
-            _ => new SolidColorBrush(Color.FromRgb(0x9E, 0xA2, 0xAC))
         };
     }
 }

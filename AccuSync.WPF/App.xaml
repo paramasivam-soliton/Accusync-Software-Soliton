@@ -17,6 +17,10 @@
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
             <converters:BooleanToCheckIconConverter x:Key="BooleanToCheckIconConverter"/>
             <converters:BooleanToColorConverter x:Key="BooleanToColorConverter"/>
+            <converters:StatusToBrushConverter x:Key="StatusToBrushConverter"/>
+            <converters:TestResultToBrushConverter x:Key="TestResultToBrushConverter"/>
+            <converters:StringToThicknessConverter x:Key="StringToThicknessConverter"/>
+            <converters:BoolToThicknessConverter x:Key="BoolToThicknessConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

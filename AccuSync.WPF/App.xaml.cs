@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using AccuSync.Application.Abstractions.Services;
 using AccuSync.Application.Helpers;
-using AccuSync.Application.Services;
+using AccuSync.Core.Abstractions.Services;
 using AccuSync.Presentation.ViewModels;
+using AccuSync.WPF.DependencyInjection;
+using AccuSync.WPF.Services;
 using AccuSync.WPF.Views.Dashboard;
 using AccuSync.WPF.Views.Splash;
 using AccuSync.WPF.Views.Login;
@@ -12,7 +13,7 @@ using AccuSync.WPF.Views.Login;
 namespace AccuSync.WPF
 {
     /// <summary>
-    /// Application entry point. Wires up dependency injection and starts the app
+    /// The composition root. Wires up dependency injection and starts the app
     /// with the splash screen, which in turn drives navigation to login or dashboard.
     /// </summary>
     public partial class App : System.Windows.Application
@@ -23,33 +24,15 @@ namespace AccuSync.WPF
         public App()
         {
             var services = new ServiceCollection();
-            ConfigureServices(services);
+            services.AddWpfServices();
             _serviceProvider = services.BuildServiceProvider();
-        }
-
-        private void ConfigureServices(IServiceCollection services)
-        {
-            // Services
-            services.AddSingleton<IDatabaseService, DatabaseService>();
-            services.AddSingleton<IEncryptionService, EncryptionService>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-            // ViewModels
-            services.AddTransient<SplashViewModel>();
-            services.AddTransient<LoginViewModel>();
-            services.AddTransient<ChangePasswordViewModel>();
-
-            // Views
-            services.AddTransient<SplashWindow>();
-            services.AddTransient<LoginWindow>();
-            services.AddTransient<ChangePasswordWindow>();
-            services.AddTransient<AdminDashboardWindow>();
-            services.AddTransient<ScreenerDashboardWindow>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            _serviceProvider.GetRequiredService<AutoLogoutCoordinator>().Start();
 
             // Log dev mode status on startup
             if (DevModeConfig.IsAnyDevMode)
@@ -70,6 +53,19 @@ namespace AccuSync.WPF
             // The splash will call NavigateAfterSplash() when done
             var splashWindow = _serviceProvider.GetRequiredService<SplashWindow>();
             splashWindow.Show();
+        }
+
+        /// <summary>
+        /// Disposes the DI container, which closes the EF Core DbContext's SQLite
+        /// connection cleanly. Without this, the connection stays open for the whole
+        /// process lifetime and relies on the OS to release the file handle on process
+        /// exit — usually fine, but leaves a window where a fast relaunch (e.g. restarting
+        /// under a debugger) can find the file still locked by the previous process.
+        /// </summary>
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _serviceProvider?.Dispose();
+            base.OnExit(e);
         }
 
         /// <summary>
@@ -121,18 +117,35 @@ namespace AccuSync.WPF
             currentWindow.Close();
         }
 
+        /// <summary>
+        /// Ends the current session and returns to the login screen. Purpose-built for
+        /// logout rather than reusing <see cref="NavigateAfterLogin"/> — that method routes
+        /// to a dashboard based on a just-authenticated (username, role); logout has no role
+        /// to route with, it just needs to go back to login.
+        /// </summary>
+        public static void Logout(Window currentWindow)
+        {
+            GetService<ICurrentUserContext>().Unset();
+
+            var loginWindow = GetService<LoginWindow>();
+            loginWindow.Show();
+
+            currentWindow.Close();
+        }
+
         private static void NavigateToDashboard(string username, string role)
         {
             if (role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase))
             {
                 var dashboard = GetService<AdminDashboardWindow>();
                 dashboard.SetCurrentUser(username);
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
                 dashboard.Show();
             }
             else
             {
                 var dashboard = GetService<ScreenerDashboardWindow>();
-                // TODO: Add SetCurrentUser to ScreenerDashboardWindow when implemented
+                dashboard.SetUsername(username);
                 dashboard.Show();
             }
         }
@@ -146,12 +159,14 @@ namespace AccuSync.WPF
             if (role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase))
             {
                 dashboard = GetService<AdminDashboardWindow>();
+                dashboard.SetPermissions(UserPermissionsViewModel.Admin());
             }
             else
             {
                 // For non-admin roles, open ScreenerDashboard instead
                 // (ScreenerDashboard would need similar NavigateToView support)
                 var screenerDash = GetService<ScreenerDashboardWindow>();
+                screenerDash.SetUsername(username);
                 screenerDash.Show();
                 return;
             }

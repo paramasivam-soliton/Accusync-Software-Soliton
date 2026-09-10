@@ -1,0 +1,944 @@
+<?xml version="1.0"?>
+<Algo5>
+<Culture>en-US</Culture>
+<PatientTestRecord>
+<Patient>
+    <DemographicData>
+      <Id>c45a6004-a43e-44ae-b2e8-dbdc92d8f5c5</Id>
+      <MedicalRecordNumber>11111111111</MedicalRecordNumber>
+      <FirstName>I</FirstName>
+      <LastName>H</LastName>
+      <MiddleInitial></MiddleInitial>
+      <AlsoKnownAs></AlsoKnownAs>
+      <Birthdate>2-3-2025 11:59:59 PM</Birthdate>
+      <BirthLocation></BirthLocation>
+      <Gender>1</Gender>
+      <Address1></Address1>
+      <Address2></Address2>
+      <City></City>
+      <State></State>
+      <PostalCode></PostalCode>
+      <Country></Country>
+      <Nationality></Nationality>
+      <Height></Height>
+      <Weight></Weight>
+      <Telephone></Telephone>
+      <MobilePhone></MobilePhone>
+      <CurrentPediatrician></CurrentPediatrician>
+      <MothersFirstName></MothersFirstName>
+      <MothersLastName></MothersLastName>
+      <CaregiverFirstName></CaregiverFirstName>
+      <CaregiverLastName></CaregiverLastName>
+      <Comment></Comment>
+      <Other></Other>
+      <DischargeDate></DischargeDate>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <CreationDate>6-16-2025 9:42:51 PM</CreationDate>
+      <LastModified>10-2-2025 9:25:29 AM</LastModified>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+      <MothersBirthdate></MothersBirthdate>
+    </DemographicData>
+    <RiskFactors>
+      <RiskFactorName>Family History of Permanent Childhood Hearing Loss</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Bacterial Meningitis</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Craniofacial Anomalies-Microtia/Atresia, Clefting</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Hyperbilirubinemia with Exchange Transfusion</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Low Birth Weight</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Ototoxic Medications</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Perinatal or Postnatal Infection</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Prolonged Ventilation</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Asphyxia- Hypoxic Ischemic Encephalopathy (HIE)</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Syndromes &amp; Genetic Disorders of Hearing Loss</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Aminoglycosides for >5 Days</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>In Utero Infections such as CMV &amp; Zika</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Caregiver Concern</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>NICU >5 Days</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Exposure to Head Trauma or Chemotherapy</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>ECMO-Extracorporeal Membrane Oxygenation</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+    </RiskFactors>
+  </Patient>
+  <Test>
+    <Plugin type="ABR">
+      <ResultId>041cd916-2873-402e-a71f-c4071e74e95b</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>2-7-2025 10:25:59 AM</StartTime>
+      <MyogenicNoise>0</MyogenicNoise>
+      <AmbientNoise>55</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>3270ae09-6789-4287-b4a5-d641a8628d07</DetailsId>
+        <AABRResultId>041cd916-2873-402e-a71f-c4071e74e95b</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>12</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>6970</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>a25ac3ce-7f76-4533-bca2-f9ce94c0a8d1</DetailsId>
+        <AABRResultId>041cd916-2873-402e-a71f-c4071e74e95b</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>7</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>7180</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>42b12bc6-d51f-40ab-bb8c-2fa8097c3ef0</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <Plugin type="ABR">
+      <ResultId>017e8eb6-78b8-40b5-8a8e-ff915ca60241</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>6-4-2025 1:59:17 PM</StartTime>
+      <MyogenicNoise>35</MyogenicNoise>
+      <AmbientNoise>72</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>fb2edabf-c553-43eb-aae8-b6c39f5dd244</DetailsId>
+        <AABRResultId>017e8eb6-78b8-40b5-8a8e-ff915ca60241</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>298</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>ffc1cadf-a728-4322-ba05-5b28a2cfa530</DetailsId>
+        <AABRResultId>017e8eb6-78b8-40b5-8a8e-ff915ca60241</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>266</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>d4238f36-eb83-4235-af66-fccfd62a7cb4</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <Plugin type="ABR">
+      <ResultId>fb42de34-eec0-4437-b01c-f3a3f954dd86</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>6-4-2025 2:03:25 PM</StartTime>
+      <MyogenicNoise>13</MyogenicNoise>
+      <AmbientNoise>10</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>d79fd19b-13c0-4d01-b23e-b6fb0cb2d525</DetailsId>
+        <AABRResultId>fb42de34-eec0-4437-b01c-f3a3f954dd86</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>5</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>2133</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>5ef9a1de-e48f-4046-b203-ef6cafcee712</DetailsId>
+        <AABRResultId>fb42de34-eec0-4437-b01c-f3a3f954dd86</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>1</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>2345</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>dee913cf-3156-4d75-9f76-70be0547811d</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <Plugin type="ABR">
+      <ResultId>a25ffbf8-c791-4ca4-a41a-3b4fffa0382b</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>6-4-2025 2:06:42 PM</StartTime>
+      <MyogenicNoise>78</MyogenicNoise>
+      <AmbientNoise>1</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>e38cb80a-9e49-4cc1-ad91-ef9e9762f396</DetailsId>
+        <AABRResultId>a25ffbf8-c791-4ca4-a41a-3b4fffa0382b</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>221</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>c610d902-d998-4450-aab1-575e8fc1cfc6</DetailsId>
+        <AABRResultId>a25ffbf8-c791-4ca4-a41a-3b4fffa0382b</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>217</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>b05d2715-436b-48ee-95c2-4e0c6d9b840f</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <TestResult>
+      <Id>42b12bc6-d51f-40ab-bb8c-2fa8097c3ef0</Id>
+      <PatientId>c45a6004-a43e-44ae-b2e8-dbdc92d8f5c5</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>2-7-2025 11:05:26 AM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+    <TestResult>
+      <Id>d4238f36-eb83-4235-af66-fccfd62a7cb4</Id>
+      <PatientId>c45a6004-a43e-44ae-b2e8-dbdc92d8f5c5</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>6-4-2025 2:03:10 PM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+    <TestResult>
+      <Id>dee913cf-3156-4d75-9f76-70be0547811d</Id>
+      <PatientId>c45a6004-a43e-44ae-b2e8-dbdc92d8f5c5</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>6-4-2025 2:06:01 PM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+    <TestResult>
+      <Id>b05d2715-436b-48ee-95c2-4e0c6d9b840f</Id>
+      <PatientId>c45a6004-a43e-44ae-b2e8-dbdc92d8f5c5</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>6-4-2025 2:08:09 PM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+  </Test>
+</PatientTestRecord>
+<PatientTestRecord>
+<Patient>
+    <DemographicData>
+      <Id>b8085ae6-45b3-4a89-bfd0-0cdca75bb3df</Id>
+      <MedicalRecordNumber>123456</MedicalRecordNumber>
+      <FirstName>Test</FirstName>
+      <LastName>Test</LastName>
+      <MiddleInitial></MiddleInitial>
+      <AlsoKnownAs></AlsoKnownAs>
+      <Birthdate>2-4-2025 11:59:59 PM</Birthdate>
+      <BirthLocation></BirthLocation>
+      <Gender>1</Gender>
+      <Address1></Address1>
+      <Address2></Address2>
+      <City></City>
+      <State></State>
+      <PostalCode></PostalCode>
+      <Country></Country>
+      <Nationality></Nationality>
+      <Height></Height>
+      <Weight></Weight>
+      <Telephone></Telephone>
+      <MobilePhone></MobilePhone>
+      <CurrentPediatrician></CurrentPediatrician>
+      <MothersFirstName></MothersFirstName>
+      <MothersLastName></MothersLastName>
+      <CaregiverFirstName></CaregiverFirstName>
+      <CaregiverLastName></CaregiverLastName>
+      <Comment></Comment>
+      <Other></Other>
+      <DischargeDate></DischargeDate>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <CreationDate>6-16-2025 9:42:51 PM</CreationDate>
+      <LastModified>10-2-2025 9:25:29 AM</LastModified>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+      <MothersBirthdate></MothersBirthdate>
+    </DemographicData>
+    <RiskFactors>
+      <RiskFactorName>Family History of Permanent Childhood Hearing Loss</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Bacterial Meningitis</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Craniofacial Anomalies-Microtia/Atresia, Clefting</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Hyperbilirubinemia with Exchange Transfusion</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Low Birth Weight</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Ototoxic Medications</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Perinatal or Postnatal Infection</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Prolonged Ventilation</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Asphyxia- Hypoxic Ischemic Encephalopathy (HIE)</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Syndromes &amp; Genetic Disorders of Hearing Loss</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Aminoglycosides for >5 Days</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>In Utero Infections such as CMV &amp; Zika</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Caregiver Concern</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>NICU >5 Days</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>Exposure to Head Trauma or Chemotherapy</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+      <RiskFactorName>ECMO-Extracorporeal Membrane Oxygenation</RiskFactorName>
+      <RiskFactorValue>2</RiskFactorValue>
+    </RiskFactors>
+  </Patient>
+  <Test>
+    <Plugin type="ABR">
+      <ResultId>2eff90e4-32a5-4cd0-9b74-2f0966321f71</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>2-6-2025 10:15:04 AM</StartTime>
+      <MyogenicNoise>4</MyogenicNoise>
+      <AmbientNoise>62</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>0233a96f-47d6-42b1-ab8c-cc6b19022baf</DetailsId>
+        <AABRResultId>2eff90e4-32a5-4cd0-9b74-2f0966321f71</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>14</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>3798</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>851c25d2-a6d4-4780-a3fb-3768dcd61872</DetailsId>
+        <AABRResultId>2eff90e4-32a5-4cd0-9b74-2f0966321f71</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>3</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>5585</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>42c4dd4c-6453-4748-8ca4-59f77e9b745a</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <Plugin type="ABR">
+      <ResultId>72b258a3-8198-41a3-95d6-782cbacf8a52</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>1009</Duration>
+      <StartTime>2-6-2025 10:31:43 AM</StartTime>
+      <MyogenicNoise>0</MyogenicNoise>
+      <AmbientNoise>57</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>1e40d04f-fcfc-4b46-9771-4b7e15951ffe</DetailsId>
+        <AABRResultId>72b258a3-8198-41a3-95d6-782cbacf8a52</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>20</LikehoodRatio>
+        <TemplateShift>6</TemplateShift>
+        <ABRSummaryData>39,-123,-97,-407,-648,-434,-175,174,-215,-241,-18,-222,-324,-244,-212,-320,-145,-39,-207,61,66,-124,-264,-358,-59,-33,57,-31,-198,-350,-216,-230,-117,-82,-214,-264,4,-134,-137,171,-13,143,183,205,-277,-203,-468,-184,-241,-291,39,-56,-158,-29,39,-43,70,-147,-42,-40,-260,-49,-494,-359,-218,77,91,-71,146,-158,-143,85,-125,-258,-170,-296,-214,-202,149,110,-153,174,6,-202,23,-9,-302,-553,-124,-96,-81,-224,-185,-343,-503,-445,-101,27,-116,-77</ABRSummaryData>
+        <Result>Refer</Result>
+        <FullResult>Refer</FullResult>
+        <Sweeps>15000</Sweeps>
+        <BinoRan>7409000,7471000,7445500,7382500,7395000,7305000,7314500,7470500,7447000,7380000,7456500,7484000,7403500,7420000,7497000,7447000,7428000,7491500,7511500,7515000,7539000,7504500,7483500,7449500,7463000,7528000,7554500,7538000,7425000,7375500,7371000,7410500,7475000,7457500,7448000,7442500,7416500,7418000,7442000,7481000,7470500,7538000,7587500,7574000,7545000,7445000,7383000,7417000,7465500,7420000,7448000,7538000,7512000,7498000,7512000,7471500,7435000,7447000,7471000,7485000,7502000,7454500,7361500,7413000,7469000,7480500,7520500,7490500,7487500,7484000,7490000,7514500,7473500,7433000,7456500,7484500,7457000,7430500,7442500,7496500,7464000,7424000,7525000,7506000,7453500,7464000,7409500,7378000,7433500,7466000,7498000,7490500,7446000,7394000,7331000,7372000,7446000,7480500,7479500,7478000</BinoRan>
+        <LikehoodRatioHistory>2,8,6,16,0,2,0,1,3,0,2,1,3,13,13,15,18,28,18,10,8,9,9,9,11,15,14,13,15,20</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>30</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>42ac50ba-d143-4e14-9f67-2bb196032f5b</DetailsId>
+        <AABRResultId>72b258a3-8198-41a3-95d6-782cbacf8a52</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>-2</TemplateShift>
+        <ABRSummaryData>-113,96,-179,-536,-266,-576,-335,-519,-311,-149,-131,-78,-35,-24,-72,-121,-3,-23,70,-154,328,54,-397,-232,-437,-360,-110,-72,108,-102,-77,-69,-113,100,-72,-600,-191,-198,56,-159,-147,-209,-211,37,-78,-46,136,148,-74,-176,-392,-266,-202,150,145,-101,-411,-215,-309,-39,119,80,-150,85,-178,133,-8,-288,-279,-286,-108,-223,-291,-293,-73,126,92,-146,-365,73,-120,-38,57,-154,-388,-428,-424,42,94,315,86,-178,62,-75,-310,141,97,-70,-157,-26</ABRSummaryData>
+        <Result>Refer</Result>
+        <FullResult>Refer</FullResult>
+        <Sweeps>15000</Sweeps>
+        <BinoRan>7531000,7517000,7474000,7376500,7347000,7326000,7294500,7317000,7344500,7447500,7491000,7513500,7497500,7480000,7519500,7529500,7514500,7487500,7479500,7485000,7495000,7528500,7504500,7474000,7446000,7413500,7477000,7515500,7538500,7530000,7459000,7434500,7450500,7488000,7496500,7426000,7422000,7472500,7481000,7477000,7495500,7457500,7433000,7457000,7444000,7485000,7512500,7519000,7522000,7524000,7500000,7427000,7433500,7449000,7508500,7521000,7425000,7402000,7395000,7379000,7434000,7482500,7480000,7484000,7459000,7492500,7521500,7444000,7415500,7427500,7449500,7422000,7394000,7474000,7506000,7502000,7473500,7460000,7430000,7431000,7472500,7438500,7484000,7490500,7382500,7398000,7408000,7358000,7450000,7518000,7459500,7409500,7444000,7485000,7439000,7441500,7534500,7515500,7450500,7488500</BinoRan>
+        <LikehoodRatioHistory>2,3,7,3,6,4,4,5,8,5,4,3,6,2,1,1,0,2,2,1,2,2,2,2,2,0,1,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>30</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>e9a771d8-9bb0-44cd-b9ff-2db20718acb7</TestResultId>
+      <TotalTestTime>1009.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <Plugin type="ABR">
+      <ResultId>414607c3-6b83-4b15-9f2a-679ce71d9a36</ResultId>
+      <Method>LeftRightSimultaneous</Method>
+      <Application>Amplitude35dBSPL</Application>
+      <Duration>0</Duration>
+      <StartTime>6-4-2025 2:09:53 PM</StartTime>
+      <MyogenicNoise>0</MyogenicNoise>
+      <AmbientNoise>0</AmbientNoise>
+      <ImpedanceVertexCommon>0</ImpedanceVertexCommon>
+      <ImpedanceNapeCommon>0</ImpedanceNapeCommon>
+      <PreAmplifier>
+        <Id>123e4567-e89b-12d3-a456-426614174000</Id>
+        <SerialNumber>P12345678</SerialNumber>
+        <Version>Ver1.3</Version>
+        <Type>0</Type>
+        <CompatibleType>1</CompatibleType>
+        <ManufacturingDate>10-31-2024 7:00:00 PM</ManufacturingDate>
+      </PreAmplifier>
+      <Probe>
+        <Id>e4bc4e02-062a-494e-8d72-5636329ef160</Id>
+        <SerialNumber>XA00021</SerialNumber>
+        <Version>1</Version>
+        <Type>ATA</Type>
+        <CompatibleType></CompatibleType>
+        <CalibrationDate>2-6-2025 10:13:35 AM</CalibrationDate>
+        <NextCalibrationDate>2-6-2026 10:13:35 AM</NextCalibrationDate>
+        <CalibrationData></CalibrationData>
+      </Probe>
+      <SystemInfo>
+        <Id>e5b0356b-dec0-404c-b402-c59e001175e5</Id>
+        <FWVersion>ALGOX-1.0.0-jenkins-241</FWVersion>
+        <HWVersion>C0:EE:40:AF:C7:F7</HWVersion>
+        <SWVersion>1.0.0.37</SWVersion>
+        <HwSerialNumber>24160025</HwSerialNumber>
+        <HwType></HwType>
+        <CompatibleHwType>None</CompatibleHwType>
+        <ManufacturingDate>5-9-2024 12:13:55 PM</ManufacturingDate>
+      </SystemInfo>
+      <LeftEarAABRDetails>
+        <DetailsId>1c42c327-da83-4016-8af7-51114cd9b727</DetailsId>
+        <AABRResultId>414607c3-6b83-4b15-9f2a-679ce71d9a36</AABRResultId>
+        <TestedEar>Left</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>0</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </LeftEarAABRDetails>
+      <RightEarAABRDetails>
+        <DetailsId>5a4563bf-0004-4658-afd5-5793c690897f</DetailsId>
+        <AABRResultId>414607c3-6b83-4b15-9f2a-679ce71d9a36</AABRResultId>
+        <TestedEar>Right</TestedEar>
+        <RejectedSweeps></RejectedSweeps>
+        <LikehoodRatio>0</LikehoodRatio>
+        <TemplateShift>0</TemplateShift>
+        <ABRSummaryData>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ABRSummaryData>
+        <Result>Incomplete</Result>
+        <FullResult>Halted</FullResult>
+        <Sweeps>0</Sweeps>
+        <BinoRan>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</BinoRan>
+        <LikehoodRatioHistory>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</LikehoodRatioHistory>
+        <LikehoodRatioNumberHistory>0</LikehoodRatioNumberHistory>
+      </RightEarAABRDetails>
+      <RawDataId></RawDataId>
+      <TestResultId>0e54895c-c8b1-4036-84de-488ff63d4b5a</TestResultId>
+      <TotalTestTime>0.0</TotalTestTime>
+      <ScreeningInterrupts></ScreeningInterrupts>
+    </Plugin>
+    <TestResult>
+      <Id>42c4dd4c-6453-4748-8ca4-59f77e9b745a</Id>
+      <PatientId>b8085ae6-45b3-4a89-bfd0-0cdca75bb3df</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>2-6-2025 10:22:21 AM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+    <TestResult>
+      <Id>e9a771d8-9bb0-44cd-b9ff-2db20718acb7</Id>
+      <PatientId>b8085ae6-45b3-4a89-bfd0-0cdca75bb3df</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>2</LE_Result>
+      <RE_Result>2</RE_Result>
+      <TestDateTime>2-6-2025 10:49:37 AM</TestDateTime>
+      <Duration>1009</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+    <TestResult>
+      <Id>0e54895c-c8b1-4036-84de-488ff63d4b5a</Id>
+      <PatientId>b8085ae6-45b3-4a89-bfd0-0cdca75bb3df</PatientId>
+      <TestType>1</TestType>
+      <LE_Result>1</LE_Result>
+      <RE_Result>1</RE_Result>
+      <TestDateTime>6-4-2025 2:10:39 PM</TestDateTime>
+      <Duration>0</Duration>
+      <Pediatrician></Pediatrician>
+      <Medication></Medication>
+      <Physician></Physician>
+      <Examiner>Admin</Examiner>
+      <Reason></Reason>
+      <ReferredBy></ReferredBy>
+      <TestFacility></TestFacility>
+      <Comment></Comment>
+      <Other></Other>
+      <Conclusion></Conclusion>
+      <Recommendation></Recommendation>
+      <Interpretation></Interpretation>
+      <TestInfo></TestInfo>
+      <Location></Location>
+      <LocationType></LocationType>
+      <ArchiveDate></ArchiveDate>
+      <ExportDate>10-2-2025 9:27:58 AM</ExportDate>
+      <UserAccountId>7efd7967-29ae-4af6-ad0e-f3c2728daa8d</UserAccountId>
+      <UserText1></UserText1>
+      <UserText2></UserText2>
+      <UserText3></UserText3>
+      <UserText4></UserText4>
+      <UserText5></UserText5>
+      <UserDate1></UserDate1>
+      <UserDate2></UserDate2>
+      <UserDate3></UserDate3>
+      <UserDate4></UserDate4>
+      <UserDate5></UserDate5>
+    </TestResult>
+  </Test>
+</PatientTestRecord>
+</Algo5>

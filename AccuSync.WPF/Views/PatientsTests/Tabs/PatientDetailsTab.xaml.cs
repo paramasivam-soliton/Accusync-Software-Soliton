@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------------------
 
 using AccuSync.Application.Helpers;
+using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 using AccuSync.Presentation.ViewModels;
 using System;
@@ -111,8 +112,9 @@ namespace AccuSync.WPF.Views.PatientsTests.Tabs
             var vm = DataContext as PatientViewModel;
             if (vm != null && !string.IsNullOrWhiteSpace(vm.PatientId))
             {
+                // TODO: Log the exception once a logger is introduced into the solution.
                 try { Clipboard.SetText(vm.PatientId); }
-                catch (Exception ex) { AppDialog.Show(string.Format(Strings.PatientDetailsTab_ErrorCopying, ex.Message)); }
+                catch (Exception) { AppDialog.Show(string.Format(Strings.PatientDetailsTab_ErrorCopying, ErrorCode.Unexpected.ToDisplayCode())); }
             }
         }
 
@@ -121,8 +123,9 @@ namespace AccuSync.WPF.Views.PatientsTests.Tabs
             var vm = DataContext as PatientViewModel;
             if (vm != null && !string.IsNullOrWhiteSpace(vm.HospitalId))
             {
+                // TODO: Log the exception once a logger is introduced into the solution.
                 try { Clipboard.SetText(vm.HospitalId); }
-                catch (Exception ex) { AppDialog.Show(string.Format(Strings.PatientDetailsTab_ErrorCopying, ex.Message)); }
+                catch (Exception) { AppDialog.Show(string.Format(Strings.PatientDetailsTab_ErrorCopying, ErrorCode.Unexpected.ToDisplayCode())); }
             }
         }
 

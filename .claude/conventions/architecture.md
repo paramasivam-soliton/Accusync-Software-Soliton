@@ -1,0 +1,11 @@
+# Architecture convention
+
+Enforceable rules distilled from `AccuSync Architecture.md` — read that file for the full narrative and diagrams; this is the checklist to apply when writing code.
+
+- **Dependency direction:** everything points inward to `AccuSync.Core`. `AccuSync.Application`, `AccuSync.EF`, `AccuSync.Adapters.DataParser`, and `AccuSync.Adapters.DeviceCommunication` depend on `Core` only — never on each other. Only `AccuSync.WPF` (the exe) references every project.
+- **Interface ownership:** the innermost layer declares the interface; outer layers implement or adapt it. New `IRepository`/`IService`/adapter interfaces go in `Core`; implementations go in `Application`/`EF`/the adapter projects. Never add a public interface in an outer project that another outer project needs to depend on.
+- **Technology isolation:** `Core` and `Application` must never reference `DbContext`, `DbSet<T>`, `IQueryable<T>`, WPF types, or any adapter package — directly or transitively. Sanity check: delete every project except `Core` — it must still compile.
+- **DTO boundary:** `Core`'s `IService` methods return entities. `AccuSync.Presentation` converts them to DTOs immediately at the boundary. An entity may be passed *into* a converter but must never be stored on a ViewModel property or bound to a View — every property XAML binds to is a DTO or a primitive.
+- **ViewModels call services, never repositories:** a ViewModel injects `IXService` (e.g. `IUserService`), never `IXRepository` (e.g. `IUserRepository`) directly. Repositories are plain persistence — no encryption/hashing/validation — and are meant to be called only by the matching Application-layer service, which owns that business logic. A ViewModel bypassing the service loses whatever the service enforces (e.g. encrypting/decrypting fields transparently).
+- **Placement test for new code:** does this need EF Core / WPF / a device / a file format? Yes → the matching adapter project. No → `Core` (domain rule/abstraction) or `Application` (use-case orchestration).
+- **Keeping the doc in sync:** update the mermaid diagrams and dependency table in `AccuSync Architecture.md` whenever a structural rule actually changes (new project, new cross-project dependency, new cross-cutting pattern) — not on every feature.

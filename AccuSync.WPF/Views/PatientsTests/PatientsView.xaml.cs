@@ -19,8 +19,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AccuSync.WPF.Controls;
 using AccuSync.WPF.Views.PatientsTests.Dialogs;
+using AccuSync.Application.Abstractions.Parsing;
 using AccuSync.Application.Models;
-using AccuSync.Application.Services;
+using AccuSync.Core.Entities;
 using AccuSync.WPF.Resources;
 
 namespace AccuSync.WPF.Views.PatientsTests
@@ -35,7 +36,7 @@ namespace AccuSync.WPF.Views.PatientsTests
         private ObservableCollection<Patient> _filteredPatients;
         private ObservableCollection<Patient> _pagedPatients;
         private HashSet<string> _selectedFilters = new HashSet<string>();
-        private readonly ImportService _importService = new();
+        private readonly IImportService _importService = App.GetService<IImportService>();
         private string _importFormat;   // track format for Back navigation
         private string _importFilePath; // track file path for Back navigation
         private bool _isCompactView = false;
@@ -657,9 +658,10 @@ namespace AccuSync.WPF.Views.PatientsTests
                     AppDialog.Show(string.Format(Strings.PatientsView_ExportSuccess, saveDialog.FileName),
                         Strings.PatientsView_ExportCompleteCaption, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    AppDialog.Show(string.Format(Strings.PatientsView_ExportError, ex.Message), Strings.PatientsView_ExportErrorCaption,
+                    // TODO: Log the exception once a logger is introduced into the solution.
+                    AppDialog.Show(string.Format(Strings.PatientsView_ExportError, ErrorCode.Unexpected.ToDisplayCode()), Strings.PatientsView_ExportErrorCaption,
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -1087,7 +1089,7 @@ namespace AccuSync.WPF.Views.PatientsTests
 
             if (PatientsListView.SelectedItem is Patient selectedPatient)
             {
-                var viewModel = new PatientViewModel
+                var viewModel = new PatientViewModel(App.GetService<IQrCodeGenerator>())
                 {
                     PatientId = selectedPatient.PatientId,
                     HospitalId = selectedPatient.HospitalId ?? "HOSP-001",
@@ -1162,7 +1164,7 @@ namespace AccuSync.WPF.Views.PatientsTests
 
             // Facesheet formats yield a single patient for editable review;
             // batch formats (XML/JSON) go to multi-patient preview table
-            if (ImportService.IsFacesheetFormat(format))
+            if (_importService.IsFacesheetFormat(format))
                 EnterFacesheetReviewMode(result.Patients.First().Patient, filePath, format);
             else
                 EnterImportMode(result.Patients);

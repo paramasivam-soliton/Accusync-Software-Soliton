@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // <copyright file="SplashViewModel.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
@@ -9,7 +9,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Core.Abstractions.Services;
+using AccuSync.Core.Entities;
 using AccuSync.Application.Resources;
 
 namespace AccuSync.Presentation.ViewModels
@@ -21,7 +22,15 @@ namespace AccuSync.Presentation.ViewModels
     /// </summary>
     public class SplashViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IDatabaseInitializer _databaseInitializer;
+
+        /// <summary>Creates the view model with the initializer used to bring the database up to date.</summary>
+        /// <param name="databaseInitializer">Service used to initialize the application database.</param>
+        public SplashViewModel(IDatabaseInitializer databaseInitializer)
+        {
+            _databaseInitializer = databaseInitializer;
+        }
+
         private string _statusMessage;
 
         /// <summary>Current progress message shown on the splash screen.</summary>
@@ -35,12 +44,8 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Creates the view model with the database service used for initialization.</summary>
-        /// <param name="databaseService">Service used to initialize the application database.</param>
-        public SplashViewModel(IDatabaseService databaseService)
-        {
-            _databaseService = databaseService;
-        }
+        /// <summary>Raised whenever a bound property's value changes.</summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes the database and updates <see cref="StatusMessage"/> as progress advances.
@@ -48,28 +53,27 @@ namespace AccuSync.Presentation.ViewModels
         /// </summary>
         public async Task InitializeAsync()
         {
+            // TODO: Log the exception once a logger is introduced into the solution.
             try
             {
                 StatusMessage = Strings.SplashViewModel_InitializingDatabase;
                 await Task.Delay(500); // Brief pause so the user sees each status message
 
-                await _databaseService.InitializeDatabaseAsync();
+                await _databaseInitializer.InitializeAsync();
 
                 StatusMessage = Strings.SplashViewModel_LoadingApplication;
                 await Task.Delay(500);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Show the error for 3 seconds then shut down — there's no recovery
-                // from a failed database init.
-                StatusMessage = string.Format(Strings.SplashViewModel_Error, ex.Message);
+                // Show a generic message for 3 seconds then shut down — there's no
+                // recovery from a failed database init, and the raw exception detail
+                // isn't something an end user should see.
+                StatusMessage = string.Format(Strings.SplashViewModel_UnexpectedError, ErrorCode.Unexpected.ToDisplayCode());
                 await Task.Delay(3000);
                 System.Windows.Application.Current.Shutdown();
             }
         }
-
-        /// <summary>Raised whenever a bound property's value changes.</summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

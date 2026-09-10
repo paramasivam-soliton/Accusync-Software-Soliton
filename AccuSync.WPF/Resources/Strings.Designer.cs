@@ -1221,7 +1221,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred: {0}.
+        ///   Looks up a localized string similar to An unexpected error occurred while changing your password ({0}). Please contact your administrator..
         /// </summary>
         public static string ChangePasswordViewModel_UnexpectedError {
             get {
@@ -1235,6 +1235,15 @@ namespace AccuSync.WPF.Resources {
         public static string ChangePasswordViewModel_UpdateFailed {
             get {
                 return ResourceManager.GetString("ChangePasswordViewModel_UpdateFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string ChangePasswordWindow_Close {
+            get {
+                return ResourceManager.GetString("ChangePasswordWindow_Close", resourceCulture);
             }
         }
 
@@ -5280,7 +5289,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load users: {0}.
+        ///   Looks up a localized string similar to Failed to load users ({0}). Please contact your administrator..
         /// </summary>
         public static string LoginViewModel_FailedToLoadUsers {
             get {
@@ -5289,7 +5298,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred: {0}.
+        ///   Looks up a localized string similar to An unexpected error occurred while signing in ({0}). Please contact your administrator..
         /// </summary>
         public static string LoginViewModel_UnexpectedError {
             get {
@@ -5312,6 +5321,15 @@ namespace AccuSync.WPF.Resources {
         public static string LoginWindow_Authenticating {
             get {
                 return ResourceManager.GetString("LoginWindow_Authenticating", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string LoginWindow_Close {
+            get {
+                return ResourceManager.GetString("LoginWindow_Close", resourceCulture);
             }
         }
 
@@ -5640,7 +5658,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error copying: {0}.
+        ///   Looks up a localized string similar to Unable to copy to clipboard ({0}). If the issue persists, please contact your administrator..
         /// </summary>
         public static string PatientDetailsTab_ErrorCopying {
             get {
@@ -6657,7 +6675,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error exporting data: {0}.
+        ///   Looks up a localized string similar to Unable to export patient data ({0}). Please contact your administrator..
         /// </summary>
         public static string PatientsView_ExportError {
             get {
@@ -8520,15 +8538,6 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Logout successful. Returning to login....
-        /// </summary>
-        public static string ScreenerDashboardWindow_LogoutSuccessMessage {
-            get {
-                return ResourceManager.GetString("ScreenerDashboardWindow_LogoutSuccessMessage", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string ScreenerDashboardWindow_NavAbout {
@@ -8561,6 +8570,15 @@ namespace AccuSync.WPF.Resources {
         public static string ScreenerDashboardWindow_NavPatients {
             get {
                 return ResourceManager.GetString("ScreenerDashboardWindow_NavPatients", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ScreenerDashboardWindow_NavSettings {
+            get {
+                return ResourceManager.GetString("ScreenerDashboardWindow_NavSettings", resourceCulture);
             }
         }
 
@@ -9051,6 +9069,24 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed. Use it the next time you log in..
+        /// </summary>
+        public static string SettingsContentView_PasswordChanged {
+            get {
+                return ResourceManager.GetString("SettingsContentView_PasswordChanged", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please meet all password requirements before saving..
+        /// </summary>
+        public static string SettingsContentView_PasswordRequirementsNotMet {
+            get {
+                return ResourceManager.GetString("SettingsContentView_PasswordRequirementsNotMet", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string SettingsContentView_SaveCaption {
@@ -9069,7 +9105,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Settings saved..
+        ///   Looks up a localized string similar to Settings successfully saved..
         /// </summary>
         public static string SettingsContentView_SettingsSaved {
             get {
@@ -10437,7 +10473,7 @@ namespace AccuSync.WPF.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Password requires a minimum of 8 characters for a password including • min. 1 uppercase (A-Z), • 1 lower case (a-z) and • one number.
+        ///   Looks up a localized string similar to Password requires a minimum of 8 characters for a password including • min. 1 uppercase (A-Z), • 1 lower case (a-z), • one number and • one special character.
         /// </summary>
         public static string UserProfileConfigView_PasswordDescComplex {
             get {
@@ -10901,6 +10937,29 @@ namespace AccuSync.WPF.Resources {
         public static string UsersContentView_Verification {
             get {
                 return ResourceManager.GetString("UsersContentView_Verification", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to AccuSync - Startup Error.
+        /// </summary>
+        public static string WpfServiceCollectionExtensions_DatabaseFolderErrorCaption {
+            get {
+                return ResourceManager.GetString("WpfServiceCollectionExtensions_DatabaseFolderErrorCaption", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to AccuSync could not prepare the database folder:
+        ///{0}
+        ///
+        ///{1}
+        ///
+        ///The application cannot start..
+        /// </summary>
+        public static string WpfServiceCollectionExtensions_DatabaseFolderErrorMessage {
+            get {
+                return ResourceManager.GetString("WpfServiceCollectionExtensions_DatabaseFolderErrorMessage", resourceCulture);
             }
         }
     }

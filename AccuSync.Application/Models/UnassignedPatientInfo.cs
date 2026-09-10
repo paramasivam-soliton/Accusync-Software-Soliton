@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Windows;
 
 namespace AccuSync.Application.Models
 {
@@ -44,10 +43,8 @@ namespace AccuSync.Application.Models
                     OnPropertyChanged(nameof(IsSelected));
                     OnPropertyChanged(nameof(CardBackground));
                     OnPropertyChanged(nameof(CardBorder));
-                    OnPropertyChanged(nameof(CardBorderThickness));
                     OnPropertyChanged(nameof(CheckboxBackground));
                     OnPropertyChanged(nameof(CheckboxBorder));
-                    OnPropertyChanged(nameof(CheckmarkVisibility));
                 }
             }
         }
@@ -56,18 +53,12 @@ namespace AccuSync.Application.Models
         public string CardBackground => IsSelected ? "#EFF6FF" : "White";
         /// <summary>The card's border color, reflecting <see cref="IsSelected"/>.</summary>
         public string CardBorder => IsSelected ? "#3B82F6" : "#E5E7EB";
-        /// <summary>The card's border thickness, reflecting <see cref="IsSelected"/>.</summary>
-        public Thickness CardBorderThickness => IsSelected ? new Thickness(2) : new Thickness(1);
         /// <summary>The selection checkbox's background color, reflecting <see cref="IsSelected"/>.</summary>
         public string CheckboxBackground => IsSelected ? "#3B82F6" : "White";
         /// <summary>The selection checkbox's border color, reflecting <see cref="IsSelected"/>.</summary>
         public string CheckboxBorder => IsSelected ? "#3B82F6" : "#D1D5DB";
-        /// <summary>Whether the selection checkmark is visible, reflecting <see cref="IsSelected"/>.</summary>
-        public Visibility CheckmarkVisibility => IsSelected ? Visibility.Visible : Visibility.Collapsed;
 
         // Priority badge — shown only for high-priority patients (matches PriorityText).
-        /// <summary>Whether the priority badge is visible, shown only for high-priority patients.</summary>
-        public Visibility PriorityVisibility => IsHighPriority ? Visibility.Visible : Visibility.Collapsed;
         /// <summary>Background color for the priority badge.</summary>
         public string PriorityBackground => "#FEE2E2";
         /// <summary>Foreground color for the priority badge.</summary>

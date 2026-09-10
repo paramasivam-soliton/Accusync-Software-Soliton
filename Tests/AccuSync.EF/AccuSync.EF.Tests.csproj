@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AccuSync.EF.Tests</AssemblyName>
+    <RootNamespace>AccuSync.EF.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="MockQueryable.Moq" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <!-- Used directly by the tests that still run against a real in-memory Sqlite
+         connection — the ones verifying actual DB constraint enforcement, which a
+         mocked DbContext can't authentically reproduce. -->
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- System under test — UserRepository. Most tests mock IDbContextFactory/DbContext;
+         a few that verify real DB constraint enforcement run against a private,
+         per-test in-memory Sqlite database instead (see UserRepositoryTests's summary). -->
+    <ProjectReference Include="..\..\AccuSync.EF\AccuSync.EF.csproj" />
+  </ItemGroup>
+
+</Project>

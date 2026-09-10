@@ -96,7 +96,7 @@
                 <!-- Body -->
                 <StackPanel Grid.Row="1" Margin="24,20,24,24">
 
-                    <!-- Format selector — Tag values must match ImportService.ParseFile switch arms -->
+                    <!-- Format selector — Tag values must match IImportService.ParseFile switch arms -->
                     <TextBlock Text="{x:Static res:Strings.ImportFileDialog_FileFormat}" FontSize="13" FontWeight="SemiBold"
                                Foreground="{StaticResource MidnightBrush}" Margin="0,0,0,6"/>
                     <ComboBox x:Name="FormatComboBox" Height="40" FontSize="14" Padding="10,0"

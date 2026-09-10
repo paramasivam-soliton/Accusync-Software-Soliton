@@ -4,9 +4,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Input;
+using AccuSync.WPF.Helpers;
 using AccuSync.WPF.Resources;
 using AccuSync.Presentation.ViewModels;
 
@@ -17,12 +19,6 @@ namespace AccuSync.WPF.Views.Login
         private readonly LoginViewModel _viewModel;
         private bool _isPasswordVisible = false;
 
-        // Eye icon (show password)
-        private const string EyeIconData = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
-
-        // Eye-off icon (hide password)
-        private const string EyeOffIconData = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z";
-
         public LoginWindow(LoginViewModel viewModel)
         {
             InitializeComponent();
@@ -30,7 +26,31 @@ namespace AccuSync.WPF.Views.Login
             DataContext = _viewModel;
 
             _viewModel.LoginSucceeded += OnLoginSucceeded;
-            _viewModel.FirstLoginPasswordChangeRequired += OnFirstLoginPasswordChangeRequired;
+            _viewModel.FirstLoginPasswordChangeRequired += OnPasswordChangeRequired;
+            _viewModel.PasswordExpiredPasswordChangeRequired += OnPasswordChangeRequired;
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        /// <summary>
+        /// PasswordBox.Password can't be data-bound (WPF security restriction), so it's
+        /// synced manually via PasswordChanged below — but that only covers box → ViewModel.
+        /// This covers the other direction: when the ViewModel clears Password itself (e.g.
+        /// after a failed login attempt), push that back down to the visible control so it
+        /// doesn't keep showing stale text the ViewModel no longer has.
+        /// </summary>
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(LoginViewModel.Password))
+            {
+                return;
+            }
+
+            if (PasswordBox.Password == _viewModel.Password)
+            {
+                return;
+            }
+
+            PasswordBox.Password = _viewModel.Password;
         }
 
         private void OnLoginSucceeded(string username, string role)
@@ -38,50 +58,41 @@ namespace AccuSync.WPF.Views.Login
             App.NavigateAfterLogin(this, username, role);
         }
 
-        private void OnFirstLoginPasswordChangeRequired(ChangePasswordViewModel changePasswordViewModel)
+        // Shared by FirstLoginPasswordChangeRequired and PasswordExpiredPasswordChangeRequired —
+        // both are "redirect to the change-password screen before granting access" flows that
+        // differ only in the ChangePasswordViewModel the LoginViewModel constructs.
+        private void OnPasswordChangeRequired(ChangePasswordViewModel changePasswordViewModel)
         {
             var changePasswordWindow = new ChangePasswordWindow(changePasswordViewModel);
             changePasswordWindow.Show();
             Close();
         }
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        // The window has no native title bar (WindowStyle="None"), so the card
+        // background itself doubles as the drag handle. Controls that handle their
+        // own mouse-down (Button, ComboBox, TextBox, PasswordBox) mark it Handled,
+        // so this never fires when the user is actually interacting with them.
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is PasswordBox passwordBox)
+            if (e.ButtonState == MouseButtonState.Pressed)
             {
-                _viewModel.Password = passwordBox.Password;
+                DragMove();
             }
         }
 
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e) =>
+            PasswordFieldHelper.SyncToProperty(sender, value => _viewModel.Password = value);
+
         private void TogglePasswordVisibility_Click(object sender, RoutedEventArgs e)
         {
-            _isPasswordVisible = !_isPasswordVisible;
-
-            if (_isPasswordVisible)
-            {
-                // Show password as text
-                PasswordTextBox.Text = PasswordBox.Password;
-                PasswordBox.Visibility = Visibility.Collapsed;
-                PasswordTextBox.Visibility = Visibility.Visible;
-                PasswordTextBox.Focus();
-                PasswordTextBox.CaretIndex = PasswordTextBox.Text.Length;
-
-                // Change icon to eye-off
-                EyeIcon.Data = Geometry.Parse(EyeOffIconData);
-                TogglePasswordButton.ToolTip = Strings.LoginWindow_HidePassword;
-            }
-            else
-            {
-                // Hide password
-                PasswordBox.Password = PasswordTextBox.Text;
-                PasswordTextBox.Visibility = Visibility.Collapsed;
-                PasswordBox.Visibility = Visibility.Visible;
-                PasswordBox.Focus();
-
-                // Change icon to eye
-                EyeIcon.Data = Geometry.Parse(EyeIconData);
-                TogglePasswordButton.ToolTip = Strings.LoginWindow_ShowPassword;
-            }
+            PasswordFieldHelper.ToggleVisibility(ref _isPasswordVisible, PasswordBox, PasswordTextBox,
+                EyeIcon, TogglePasswordButton,
+                Strings.LoginWindow_HidePassword, Strings.LoginWindow_ShowPassword);
 
             _viewModel.IsPasswordVisible = _isPasswordVisible;
         }

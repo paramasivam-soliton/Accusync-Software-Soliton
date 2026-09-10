@@ -214,7 +214,7 @@ namespace AccuSync.WPF.Views.PatientsTests.Dialogs
             ValidationMessage.Visibility = Visibility.Collapsed;
         }
 
-        // Utility — format tags must match ImportService.ParseFile switch arms
+        // Utility — format tags must match IImportService.ParseFile switch arms
 
         private string GetFileFilter()
         {

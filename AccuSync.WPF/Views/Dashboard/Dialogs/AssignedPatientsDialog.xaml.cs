@@ -10,7 +10,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using AccuSync.Application.Models;
 using AccuSync.WPF.Resources;
 using AccuSync.WPF.Controls;
@@ -71,8 +70,8 @@ namespace AccuSync.WPF.Views.Dashboard.Dialogs
         // TODO: All hardcoded test data. Replace with real patient service call.
         private List<AssignedPatient> GetAssignedPatients()
         {
-            var skyBlue = new SolidColorBrush(Color.FromRgb(0x42, 0x8F, 0xEC));
-            var orange = new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B));
+            const string skyBlue = "#428FEC";
+            const string orange = "#F59E0B";
 
             return new List<AssignedPatient>
             {

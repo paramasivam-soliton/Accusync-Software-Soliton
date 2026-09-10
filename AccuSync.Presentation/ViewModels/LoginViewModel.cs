@@ -1,14 +1,17 @@
-﻿// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // <copyright file="LoginViewModel.cs" company="Natus Sensory">
 //     Copyright (c) 2026 Natus Sensory. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------
 
 using AccuSync.Presentation.Helpers;
-using AccuSync.Application.Abstractions.Services;
+using AccuSync.Application.Helpers;
+using AccuSync.Core.Abstractions.Services;
+using AccuSync.Core.Entities;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,26 +22,48 @@ namespace AccuSync.Presentation.ViewModels
     /// <summary>
     /// Drives the login screen. Loads available usernames into a dropdown
     /// and delegates credential verification to <see cref="IAuthenticationService"/>.
-    /// Raises <see cref="LoginSucceeded"/> or <see cref="FirstLoginPasswordChangeRequired"/>
-    /// so the hosting View decides how to navigate — this VM has no dependency on any
-    /// concrete Window type, so it works whether the View lives in this project or another.
+    /// Raises <see cref="LoginSucceeded"/>, <see cref="FirstLoginPasswordChangeRequired"/>,
+    /// or <see cref="PasswordExpiredPasswordChangeRequired"/> so the hosting View decides
+    /// how to navigate — this VM has no dependency on any concrete Window type, so it
+    /// works whether the View lives in this project or another.
     /// </summary>
     public class LoginViewModel : INotifyPropertyChanged
     {
-        private readonly IDatabaseService _databaseService;
+        private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEncryptionService _encryptionService;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly ICurrentUserContext _currentUserContext;
 
-        private string _selectedUsername;
-        private string _password = string.Empty;
-        private string _errorMessage = string.Empty;
-        private bool _isLoading;
-        private bool _isPasswordVisible;
+        /// <summary>
+        /// Creates the view model and begins loading available usernames.
+        /// </summary>
+        /// <param name="userService">Service used to fetch the list of registered users.</param>
+        /// <param name="authenticationService">Service used to verify credentials.</param>
+        /// <param name="passwordHasher">Service passed through to the password-change flow.</param>
+        /// <param name="currentUserContext">Signed in with the authenticated user and their role on a successful, non-first-login sign-in.</param>
+        public LoginViewModel(IUserService userService, IAuthenticationService authenticationService, IPasswordHasher passwordHasher, ICurrentUserContext currentUserContext)
+        {
+            _userService = userService;
+            _authenticationService = authenticationService;
+            _passwordHasher = passwordHasher;
+            _currentUserContext = currentUserContext;
 
-        /// <summary>Account names available to sign in with, loaded on construction.</summary>
+            Usernames = new ObservableCollection<string>();
+            _isPasswordVisible = false;
+            SignInCommand = new RelayCommand(async () => await SignInAsync(), () => !IsLoading);
+
+            // BUG: fire-and-forget — if this throws after the constructor returns,
+            //      the exception is unobserved and the dropdown stays empty with no
+            //      error shown. Consider an async initialization pattern.
+            _ = LoadUsernamesAsync();
+        }
+
+        /// <summary>Account names for the dropdown, loaded once on construction.</summary>
         public ObservableCollection<string> Usernames { get; set; }
 
-        /// <summary>The username currently chosen in the dropdown.</summary>
+        private string _selectedUsername;
+
+        /// <summary>The username currently selected in the dropdown.</summary>
         public string SelectedUsername
         {
             get => _selectedUsername;
@@ -50,7 +75,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>The password as typed by the user.</summary>
+        private string _password = string.Empty;
+
+        /// <summary>The password as typed.</summary>
         public string Password
         {
             get => _password;
@@ -62,7 +89,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Error text shown to the user, or empty when there is no error.</summary>
+        private string _errorMessage = string.Empty;
+
+        /// <summary>Message shown to the user when loading usernames or signing in fails.</summary>
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -73,7 +102,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True while a sign-in attempt is in progress.</summary>
+        private bool _isLoading;
+
+        /// <summary>Whether a sign-in attempt is in progress.</summary>
         public bool IsLoading
         {
             get => _isLoading;
@@ -84,7 +115,9 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>True when the password field should show plain text instead of masked characters.</summary>
+        private bool _isPasswordVisible;
+
+        /// <summary>Whether the password field shows plaintext instead of masked characters.</summary>
         public bool IsPasswordVisible
         {
             get => _isPasswordVisible;
@@ -95,7 +128,7 @@ namespace AccuSync.Presentation.ViewModels
             }
         }
 
-        /// <summary>Command that authenticates the selected username and password.</summary>
+        /// <summary>Command bound to the Sign In button.</summary>
         public ICommand SignInCommand { get; }
 
         /// <summary>Raised after a successful, non-first-login sign-in. Carries (username, role).</summary>
@@ -104,34 +137,21 @@ namespace AccuSync.Presentation.ViewModels
         /// <summary>Raised when the authenticated user must change their password before continuing.</summary>
         public event Action<ChangePasswordViewModel> FirstLoginPasswordChangeRequired;
 
-        /// <summary>
-        /// Creates the view model and begins loading available usernames.
-        /// </summary>
-        /// <param name="databaseService">Service used to fetch the list of registered users.</param>
-        /// <param name="authenticationService">Service used to verify credentials.</param>
-        /// <param name="encryptionService">Service passed through to the password-change flow.</param>
-        public LoginViewModel(IDatabaseService databaseService, IAuthenticationService authenticationService, IEncryptionService encryptionService)
-        {
-            _databaseService = databaseService;
-            _authenticationService = authenticationService;
-            _encryptionService = encryptionService;
+        /// <summary>Raised when the authenticated user's password is 90+ days old and must
+        /// be changed before continuing.</summary>
+        public event Action<ChangePasswordViewModel> PasswordExpiredPasswordChangeRequired;
 
-            Usernames = new ObservableCollection<string>();
-            _isPasswordVisible = false;
-            SignInCommand = new RelayCommand(async () => await SignInAsync(), () => !IsLoading);
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            // BUG: async void fire-and-forget — if this throws after the constructor
-            //      returns, the exception is unobserved and the dropdown stays empty
-            //      with no error shown. Consider an async initialization pattern.
-            LoadUsernamesAsync();
-        }
-
-        private async void LoadUsernamesAsync()
+        // internal (not private): lets tests await this deterministically instead of
+        // relying on the constructor's fire-and-forget call having already completed.
+        internal async Task LoadUsernamesAsync()
         {
             try
             {
-                var users = await _databaseService.GetAllUsersAsync();
-                foreach (var user in users)
+                var users = await _userService.GetAllUsersAsync();
+                foreach (var user in users.Where(u => u.IsActive))
                 {
                     Usernames.Add(user.AccountName);
                 }
@@ -141,13 +161,16 @@ namespace AccuSync.Presentation.ViewModels
                     SelectedUsername = Usernames[0];
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ErrorMessage = string.Format(Strings.LoginViewModel_FailedToLoadUsers, ex.Message);
+                // TODO: Log the exception once a logger is introduced into the solution.
+                ErrorMessage = string.Format(Strings.LoginViewModel_FailedToLoadUsers, ErrorCode.Unexpected.ToDisplayCode());
             }
         }
 
-        private async Task SignInAsync()
+        // internal (not private): lets tests await the command's underlying operation
+        // directly instead of racing RelayCommand's async-void Execute.
+        internal async Task SignInAsync()
         {
             ErrorMessage = string.Empty;
             IsLoading = true;
@@ -158,45 +181,57 @@ namespace AccuSync.Presentation.ViewModels
 
                 if (result.Success)
                 {
+                    var role = UserRoleParser.Parse(result.User.ProfileId);
+                    _currentUserContext.Set(result.User, role);
+
                     if (result.User.FirstLogin == 1)
                     {
                         var changePasswordViewModel = new ChangePasswordViewModel(
-                            _databaseService,
-                            _encryptionService,
+                            _userService,
+                            _passwordHasher,
+                            _currentUserContext,
                             result.User
                         );
                         FirstLoginPasswordChangeRequired?.Invoke(changePasswordViewModel);
                     }
+                    else if (result.IsPasswordExpired)
+                    {
+                        var changePasswordViewModel = new ChangePasswordViewModel(
+                            _userService,
+                            _passwordHasher,
+                            _currentUserContext,
+                            result.User,
+                            isPasswordExpiredReset: true
+                        );
+                        PasswordExpiredPasswordChangeRequired?.Invoke(changePasswordViewModel);
+                    }
                     else
                     {
-                        // TODO: Use an actual Role field from the User model.
-                        string role = string.Equals(result.User.AccountName, "Admin", StringComparison.OrdinalIgnoreCase)
-                            ? "Admin"
-                            : "Screener";
-
-                        LoginSucceeded?.Invoke(result.User.AccountName, role);
+                        LoginSucceeded?.Invoke(result.User.AccountName, role.ToString());
                     }
 
                     Password = string.Empty;
                 }
                 else
                 {
-                    ErrorMessage = result.ErrorMessage;
+                    // Order matters: the Password setter itself clears ErrorMessage
+                    // (so a fresh attempt starts without a stale error), so it must run
+                    // before ErrorMessage is set here — not after, or the message set on
+                    // this line would be wiped out immediately.
                     Password = string.Empty;
+                    ErrorMessage = result.ErrorMessage;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ErrorMessage = string.Format(Strings.LoginViewModel_UnexpectedError, ex.Message);
+                // TODO: Log the exception once a logger is introduced into the solution.
+                ErrorMessage = string.Format(Strings.LoginViewModel_UnexpectedError, ErrorCode.Unexpected.ToDisplayCode());
             }
             finally
             {
                 IsLoading = false;
             }
         }
-
-        /// <summary>Raised whenever a bound property's value changes.</summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

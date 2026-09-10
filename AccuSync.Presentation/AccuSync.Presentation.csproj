@@ -13,7 +13,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Application: still needed for QRCodeHelper and other non-abstraction helpers.
+         Core: User entity + IUserService/IAuthenticationService/IEncryptionService. -->
     <ProjectReference Include="..\AccuSync.Application\AccuSync.Application.csproj" />
+    <ProjectReference Include="..\AccuSync.Core\AccuSync.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Lets tests call the internal async methods behind each RelayCommand (e.g.
+         LoginViewModel.SignInAsync) directly, instead of racing ICommand.Execute's
+         async-void fire-and-forget. -->
+    <InternalsVisibleTo Include="AccuSync.Presentation.Tests" />
   </ItemGroup>
 
 </Project>

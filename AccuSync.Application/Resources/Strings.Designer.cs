@@ -1203,11 +1203,74 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Account locked. Try again in {0} minute(s), or contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_AccountLocked {
+            get {
+                return ResourceManager.GetString("AuthenticationService_AccountLocked", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Account is now locked due to {0} failed attempts. Try again in {1} minute(s), or contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_AccountNowLocked {
+            get {
+                return ResourceManager.GetString("AuthenticationService_AccountNowLocked", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password..
+        /// </summary>
+        public static string AuthenticationService_AuthenticationFailed {
+            get {
+                return ResourceManager.GetString("AuthenticationService_AuthenticationFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Username and password are required..
+        /// </summary>
+        public static string AuthenticationService_CredentialsRequired {
+            get {
+                return ResourceManager.GetString("AuthenticationService_CredentialsRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password. {0} attempt(s) remaining..
+        /// </summary>
+        public static string AuthenticationService_InvalidCredentialsWithAttempts {
+            get {
+                return ResourceManager.GetString("AuthenticationService_InvalidCredentialsWithAttempts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected failure on user login ({0}). Please contact your administrator..
+        /// </summary>
+        public static string AuthenticationService_UnexpectedFailure {
+            get {
+                return ResourceManager.GetString("AuthenticationService_UnexpectedFailure", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Current password is incorrect..
         /// </summary>
         public static string ChangePasswordViewModel_CurrentPasswordIncorrect {
             get {
                 return ResourceManager.GetString("ChangePasswordViewModel_CurrentPasswordIncorrect", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has expired. Please set a new password to continue..
+        /// </summary>
+        public static string ChangePasswordViewModel_PasswordExpiredNotice {
+            get {
+                return ResourceManager.GetString("ChangePasswordViewModel_PasswordExpiredNotice", resourceCulture);
             }
         }
 
@@ -1221,7 +1284,16 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred: {0}.
+        ///   Looks up a localized string similar to New password must be different from your current password..
+        /// </summary>
+        public static string ChangePasswordViewModel_PasswordSameAsCurrent {
+            get {
+                return ResourceManager.GetString("ChangePasswordViewModel_PasswordSameAsCurrent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error occurred while changing your password ({0}). Please contact your administrator..
         /// </summary>
         public static string ChangePasswordViewModel_UnexpectedError {
             get {
@@ -5280,7 +5352,7 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Failed to load users: {0}.
+        ///   Looks up a localized string similar to Failed to load users ({0}). Please contact your administrator..
         /// </summary>
         public static string LoginViewModel_FailedToLoadUsers {
             get {
@@ -5289,7 +5361,7 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred: {0}.
+        ///   Looks up a localized string similar to An unexpected error occurred while signing in ({0}). Please contact your administrator..
         /// </summary>
         public static string LoginViewModel_UnexpectedError {
             get {
@@ -5640,7 +5712,7 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error copying: {0}.
+        ///   Looks up a localized string similar to Unable to copy to clipboard ({0}). If the issue persists, please contact your administrator..
         /// </summary>
         public static string PatientDetailsTab_ErrorCopying {
             get {
@@ -6657,7 +6729,7 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error exporting data: {0}.
+        ///   Looks up a localized string similar to Unable to export patient data ({0}). Please contact your administrator..
         /// </summary>
         public static string PatientsView_ExportError {
             get {
@@ -8520,15 +8592,6 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Logout successful. Returning to login....
-        /// </summary>
-        public static string ScreenerDashboardWindow_LogoutSuccessMessage {
-            get {
-                return ResourceManager.GetString("ScreenerDashboardWindow_LogoutSuccessMessage", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string ScreenerDashboardWindow_NavAbout {
@@ -9654,15 +9717,6 @@ namespace AccuSync.Application.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Error: {0}.
-        /// </summary>
-        public static string SplashViewModel_Error {
-            get {
-                return ResourceManager.GetString("SplashViewModel_Error", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Initializing database....
         /// </summary>
         public static string SplashViewModel_InitializingDatabase {
@@ -9677,6 +9731,15 @@ namespace AccuSync.Application.Resources {
         public static string SplashViewModel_LoadingApplication {
             get {
                 return ResourceManager.GetString("SplashViewModel_LoadingApplication", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected failure occurred during application startup ({0}). Please contact your administrator..
+        /// </summary>
+        public static string SplashViewModel_UnexpectedError {
+            get {
+                return ResourceManager.GetString("SplashViewModel_UnexpectedError", resourceCulture);
             }
         }
 
@@ -10505,6 +10568,24 @@ namespace AccuSync.Application.Resources {
         public static string UserProfileConfigView_Title {
             get {
                 return ResourceManager.GetString("UserProfileConfigView_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to assign the selected role..
+        /// </summary>
+        public static string UserService_RoleAssignmentFailed {
+            get {
+                return ResourceManager.GetString("UserService_RoleAssignmentFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The selected user account no longer exists..
+        /// </summary>
+        public static string UserService_UserNotFound {
+            get {
+                return ResourceManager.GetString("UserService_UserNotFound", resourceCulture);
             }
         }
 

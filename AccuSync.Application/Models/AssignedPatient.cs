@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace AccuSync.Application.Models
 {
@@ -32,7 +31,7 @@ namespace AccuSync.Application.Models
         /// <summary>The result of the patient's screening, if screened.</summary>
         public string ScreeningResult { get; set; } = string.Empty;
         /// <summary>Accent color used for the card's left border.</summary>
-        public SolidColorBrush AccentColor { get; set; }
+        public string AccentColor { get; set; }
         /// <summary>Badges shown on the patient's card.</summary>
         public List<Badge> Badges { get; set; } = new List<Badge>();
 

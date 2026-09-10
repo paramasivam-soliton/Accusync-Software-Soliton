@@ -446,10 +446,13 @@
     <value>Password cannot be the same as your last three passwords.</value>
   </data>
   <data name="ChangePasswordViewModel_UnexpectedError" xml:space="preserve">
-    <value>An error occurred: {0}</value>
+    <value>An unexpected error occurred while changing your password ({0}). Please contact your administrator.</value>
   </data>
   <data name="ChangePasswordViewModel_UpdateFailed" xml:space="preserve">
     <value>Failed to update password. Please try again.</value>
+  </data>
+  <data name="ChangePasswordWindow_Close" xml:space="preserve">
+    <value>Close</value>
   </data>
   <data name="ChangePasswordWindow_ConfirmNewPassword" xml:space="preserve">
     <value>Confirm New Password</value>
@@ -1803,16 +1806,19 @@ This may take a few minutes.</value>
     <value>Validation</value>
   </data>
   <data name="LoginViewModel_FailedToLoadUsers" xml:space="preserve">
-    <value>Failed to load users: {0}</value>
+    <value>Failed to load users ({0}). Please contact your administrator.</value>
   </data>
   <data name="LoginViewModel_UnexpectedError" xml:space="preserve">
-    <value>An error occurred: {0}</value>
+    <value>An unexpected error occurred while signing in ({0}). Please contact your administrator.</value>
   </data>
   <data name="LoginWindow_AppName" xml:space="preserve">
     <value>AccuSync</value>
   </data>
   <data name="LoginWindow_Authenticating" xml:space="preserve">
     <value>Authenticating...</value>
+  </data>
+  <data name="LoginWindow_Close" xml:space="preserve">
+    <value>Close</value>
   </data>
   <data name="LoginWindow_HidePassword" xml:space="preserve">
     <value>Hide password</value>
@@ -1923,7 +1929,7 @@ This may take a few minutes.</value>
     <value>Discharged</value>
   </data>
   <data name="PatientDetailsTab_ErrorCopying" xml:space="preserve">
-    <value>Error copying: {0}</value>
+    <value>Unable to copy to clipboard ({0}). If the issue persists, please contact your administrator.</value>
   </data>
   <data name="PatientDetailsTab_Female" xml:space="preserve">
     <value>Female</value>
@@ -2266,7 +2272,7 @@ Implement using NuGet packages.</value>
     <value>Export Complete</value>
   </data>
   <data name="PatientsView_ExportError" xml:space="preserve">
-    <value>Error exporting data: {0}</value>
+    <value>Unable to export patient data ({0}). Please contact your administrator.</value>
   </data>
   <data name="PatientsView_ExportErrorCaption" xml:space="preserve">
     <value>Export Error</value>
@@ -2891,9 +2897,6 @@ Patient ID: {1}</value>
   <data name="ScreenerDashboardWindow_ImportNotImplemented" xml:space="preserve">
     <value>Import — not yet implemented.</value>
   </data>
-  <data name="ScreenerDashboardWindow_LogoutSuccessMessage" xml:space="preserve">
-    <value>Logout successful. Returning to login...</value>
-  </data>
   <data name="ScreenerDashboardWindow_NavAbout" xml:space="preserve">
     <value>About</value>
   </data>
@@ -2905,6 +2908,9 @@ Patient ID: {1}</value>
   </data>
   <data name="ScreenerDashboardWindow_NavPatients" xml:space="preserve">
     <value>Patients</value>
+  </data>
+  <data name="ScreenerDashboardWindow_NavSettings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="ScreenerDashboardWindow_PanelHeader" xml:space="preserve">
     <value>SCREENER DASHBOARD</value>
@@ -3068,6 +3074,12 @@ Patient ID: {1}</value>
   <data name="SettingsContentView_Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="SettingsContentView_PasswordChanged" xml:space="preserve">
+    <value>Your password has been changed. Use it the next time you log in.</value>
+  </data>
+  <data name="SettingsContentView_PasswordRequirementsNotMet" xml:space="preserve">
+    <value>Please meet all password requirements before saving.</value>
+  </data>
   <data name="SettingsContentView_SaveCaption" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -3075,7 +3087,7 @@ Patient ID: {1}</value>
     <value>SETTINGS</value>
   </data>
   <data name="SettingsContentView_SettingsSaved" xml:space="preserve">
-    <value>Settings saved.</value>
+    <value>Settings successfully saved.</value>
   </data>
   <data name="SettingsContentView_ShowPassword" xml:space="preserve">
     <value>Show password</value>
@@ -3547,8 +3559,9 @@ Drag and drop or click Browse to replace</value>
   <data name="UserProfileConfigView_PasswordDescComplex" xml:space="preserve">
     <value>Password requires a minimum of 8 characters for a password including
 • min. 1 uppercase (A-Z),
-• 1 lower case (a-z) and
-• one number</value>
+• 1 lower case (a-z),
+• one number and
+• one special character</value>
   </data>
   <data name="UserProfileConfigView_PasswordDescNone" xml:space="preserve">
     <value>No password rules</value>
@@ -3702,5 +3715,16 @@ Drag and drop or click Browse to replace</value>
   </data>
   <data name="UsersContentView_Verification" xml:space="preserve">
     <value>Verification</value>
+  </data>
+  <data name="WpfServiceCollectionExtensions_DatabaseFolderErrorCaption" xml:space="preserve">
+    <value>AccuSync - Startup Error</value>
+  </data>
+  <data name="WpfServiceCollectionExtensions_DatabaseFolderErrorMessage" xml:space="preserve">
+    <value>AccuSync could not prepare the database folder:
+{0}
+
+{1}
+
+The application cannot start.</value>
   </data>
 </root>

@@ -1,0 +1,49 @@
+name: CI
+
+# Runs only for pull requests targeting main — this is the gate before a merge,
+# not a per-push build. Pushes to feature branches are deliberately not built.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A new push to an open PR makes the in-flight run obsolete; cancel it rather than
+# paying for both (Windows runners bill at 2x on private repos).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    # Windows is required, not a preference: the test projects target net10.0-windows
+    # and AccuSync.Presentation.Tests sets UseWPF.
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore AccuSync.sln
+
+      - name: Build
+        run: dotnet build AccuSync.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test AccuSync.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/*.trx

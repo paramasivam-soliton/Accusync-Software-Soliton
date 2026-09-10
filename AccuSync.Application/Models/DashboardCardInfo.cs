@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------
 
-using System.Windows;
-
 namespace AccuSync.Application.Models
 {
     /// <summary>
@@ -25,7 +23,7 @@ namespace AccuSync.Application.Models
         public string Label { get; set; }
         /// <summary>The stat value shown on the card. Used by stat cards only.</summary>
         public string Value { get; set; }
-        /// <summary>Margin applied around the card.</summary>
-        public Thickness CardMargin { get; set; }
+        /// <summary>Margin applied around the card, as "left,top,right,bottom" (parsed by StringToThicknessConverter).</summary>
+        public string CardMargin { get; set; }
     }
 }
