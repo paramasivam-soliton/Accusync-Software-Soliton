@@ -62,7 +62,7 @@ namespace AccuSync.Application.Tests.Services.Users
             bool success = await _userService.CreateUserAsync(user);
 
             Assert.True(success);
-            Assert.NotEqual("Admi", persisted.AccountName);
+            Assert.NotEqual("Admin", persisted.AccountName);
         }
 
         [Fact]
