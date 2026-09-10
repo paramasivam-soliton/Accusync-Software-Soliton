@@ -1,0 +1,61 @@
+name: Build App
+
+# Two triggers, deliberately not tied to pull requests:
+#   workflow_dispatch — an on-demand build from any branch, via the Run workflow
+#                       button in the Actions tab.
+#   push to main     — every merge leaves a downloadable build behind, so the
+#                       latest main is always installable without asking anyone.
+on:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: Build configuration
+        type: choice
+        options: [Release, Debug]
+        default: Release
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build EXE
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # --self-contained bundles the .NET runtime into the output, so a tester can
+      # unzip and double-click without installing the .NET Desktop Runtime first.
+      # DebugType overrides the repo-wide 'none' so a crash report carries line
+      # numbers; SatelliteResourceLanguages drops the localised framework resources
+      # the app never surfaces.
+      - name: Publish
+        run: >
+          dotnet publish AccuSync.WPF/AccuSync.WPF.csproj
+          --configuration ${{ inputs.configuration || 'Release' }}
+          --runtime win-x64
+          --self-contained true
+          -p:DebugType=embedded
+          -p:SatelliteResourceLanguages=en
+          --output publish
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: AccuSync-${{ inputs.configuration || 'Release' }}-${{ github.run_number }}-${{ github.sha }}
+          path: publish
+          retention-days: 30
