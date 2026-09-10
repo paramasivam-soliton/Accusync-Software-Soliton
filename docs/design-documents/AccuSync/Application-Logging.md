@@ -14,7 +14,7 @@ Author: [Chokkalingam Shanmugam](mailto:chokka.shanmugam@solitontech.com)
   referenced clauses: GID-255031 (log message generation), GID-255032 (log message types),
   GID-255033 (log message storage), GID-255034 (log data privacy), GID-255038 (log entry fields).
 
-# 3. Implementation and design
+# 3. Implementation and design 
 
 ## Problem statement
 
