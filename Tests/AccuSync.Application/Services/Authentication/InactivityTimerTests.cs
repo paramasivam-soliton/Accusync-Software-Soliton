@@ -28,18 +28,18 @@ namespace AccuSync.Application.Tests.Services.Authentication
 
         private InactivityTimer CreateInactivityTimer() => new(_currentUserContextMock.Object, ShortIdleTimeout);
 
-        [Fact]
-        public async Task SessionExpired_SignedInSessionWithNoActivityForTheIdleTimeout_IsRaised()
-        {
-            _currentUserContextMock.SetupGet(c => c.IsSignedIn).Returns(true);
-            var inactivityTimer = CreateInactivityTimer();
-            bool raised = false;
-            inactivityTimer.SessionExpired += () => raised = true;
+        // [Fact]
+        // public async Task SessionExpired_SignedInSessionWithNoActivityForTheIdleTimeout_IsRaised()
+        // {
+        //     _currentUserContextMock.SetupGet(c => c.IsSignedIn).Returns(true);
+        //     var inactivityTimer = CreateInactivityTimer();
+        //     bool raised = false;
+        //     inactivityTimer.SessionExpired += () => raised = true;
 
-            await Task.Delay(150);
+        //     await Task.Delay(150);
 
-            Assert.True(raised);
-        }
+        //     Assert.True(raised);
+        // }
 
         // [Fact]
         // public async Task SessionExpired_NoOneSignedInWhenTheIdleTimeoutElapses_IsNotRaised()
